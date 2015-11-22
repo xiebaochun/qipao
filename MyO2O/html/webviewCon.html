@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <title>私信</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css" />    
+    <style>
+        body{background-color:#fff}
+        .chat-win{width:100%}
+        .check-more-info-wrap{margin-top:.5rem;text-align:center}
+        .check-more-info{font-size:.6rem;color:#999}
+        .my-message-wrap{position:relative;padding-top:0;clear:both}
+        .message-sent-time{text-align:center;padding-top:.6rem;padding-bottom:.2rem;clear:both}
+        .message-sent-time>span{color:#999;font-size:.5rem}
+        .avator{width:26px;height:26px;border:1px solid #eee;border-radius:50%;margin:0 12px}
+        .my-avator{float:right}
+        .my-message{position:relative;float:right;background-color:#ffd600}
+        .message{max-width:10rem;padding:.3rem .4rem;font-size:.7rem;line-height:1rem;border-radius:.3rem;color:#333;z-index:2}
+        .other-message-wrap{position:relative;padding-top:.1rem;clear:both}
+        .other-avator{float:left}
+        .other-message{float:left;background-color:#fff;border:1px solid #999;box-shadow:0 0 1px #666}
+        .my-message-tail{position:absolute;right:54px;top:6px;width:20px;height:28px;border-bottom:13px solid #ffd600;border-bottom-right-radius:5rem;-webkit-transform:rotate(60deg);transform:rotate(68deg);z-index:0}
+        .other-message-tail{position:absolute;left:53px;top:15px;width:15px;height:15px;background-image:url(../image/other-message-tail.png);background-size:15px 15px}
+        .input-box-wrap{width:100%;position:fixed;bottom:0;height:40px;line-height:40px;border-top:1px solid #999;background-color:#fff;z-index:100}
+        .input-avator{line-height:2.5rem;vertical-align:middle}
+        .chat-input{width:68%!important;display:inline-block;line-height:28px!important;height:28px!important;border:none!important;outline:0;margin-bottom:0!important;vertical-align:middle;border-radius:.3rem;font-size:.8rem;box-shadow:0 0 1px #ccc}
+        .send-bt{color:#333;padding:0 .5rem;line-height:26px;margin-left:.1rem;border:1px solid #ccc;border-radius:3px;font-size:.55rem}
+        #topPopover{position:fixed;width:5.5rem;top:10px!important;right:6px;text-align:center;background-color:#fff}
+        .mui-table-view-cell:after{left:0;margin:0 .5rem}
+        #topPopover .mui-popover-arrow{left:auto;right:6px}
+        span.mui-icon{font-size:14px;color:#007aff;margin-left:-15px;padding-right:10px}
+        .mui-popover{height:6rem}
+        .mui-content{padding:10px}
+        .report-user{display:none;z-index:500;position:fixed}
+        .pop-wrap{position:fixed}
+        .choose-item-list{position:absolute;bottom:0;width:100%}
+        .choose-item-list>li{background-color:#FFF;text-align:center;line-height:2rem}
+        .choose-item-list>li>span{display:inline-block;width:95%;border-bottom:1px solid #EEE}
+        .mui-popover .mui-table-view{background-color:#fff}   
+    </style>
+<script>
+ 		
+function iFrameHeight() {   
+	try
+	{
+		var ifm= document.getElementById("c_i");   
+		var subWeb = document.frames ? document.frames["c_i"].document : ifm.contentDocument;   
+		if(ifm != null && subWeb != null) {
+		   ifm.height = subWeb.body.scrollHeight;
+		   ifm.width = subWeb.body.scrollWidth;
+		}   
+	}
+	catch ()
+	{
+	}
+} 
+</script>
+
+</head>
+<body>
+    <div id="wrap">
+    	<div class="chat-win clearfix" id="pm">
+				<iframe id="c_i" name="c_i" src="" 
+				frameborder="0" scrolling="yes" marginheight="0" marginwidth="0" 
+				width="100%" height="100%" 
+				onLoad="iFrameHeight();" >
+					脚本之家使用了框架技术，但是您的浏览器不支持框架，请升级您的浏览器以便正常访问脚本之家。
+				</iframe>
+		</div>	
+    </div>        
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script>
+	
+apiready = function(){
+        var width = api.winWidth;
+        var height = api.winHeight;
+     	var title = api.pageParam.title;
+    	var url = api.pageParam.url;
+		var ifm = $("#c_i");
+		ifm.width(width);
+		ifm.height(height);
+    	window.frames["c_i"].location.href = url;
+}
+ 
+</script>
+</html>

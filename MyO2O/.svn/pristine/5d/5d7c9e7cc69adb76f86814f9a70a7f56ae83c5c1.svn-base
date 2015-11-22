@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>全部回复</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../css/topicDetail.css" />
+    <style>
+        body{background-color:#fff}
+        #wrap{height:100%;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-flow:column;flex-flow:column}
+        #main{-webkit-box-flex:1;-webkit-flex:1;flex:1;background-color:#fff}
+        #header{position:fixed;top:0}
+        .comment-item li{list-style-type:none}
+        .input-wrap{margin-left:10px}
+        .dianzan-wrap{position:absolute;right:2rem;display:inline-block}
+        .user-avator{display:inline-block;width:1.8rem!important;height:1.8rem!important;border:1px solid #eee;border-radius:50%;vertical-align:middle;margin-bottom:0!important}
+        .author-info-box{vertical-align:middle;height:1.3rem;line-height:.5rem;margin-left:.3rem}
+        .author-info-box>.nick-name{font-size:.6rem}
+        .author-info-box>.create-time{position:relative;left:0;font-size:.5rem;color:#999;vertical-align:middle}
+        .author-info-box .floor-index{color:#999}
+        .dianzan-wrap{right:1.8rem;line-height:1.8rem;font-size:.8rem;color:#999}
+        .dianzan-wrap i{vertical-align:middle}
+        .fa-commenting-o:before{content:none}
+        .fa-commenting-o{display:inline-block;width:19px;height:19px;background-image:url(../image/ico_cmt.png);background-size:19px 19px}
+        .dianzan-count{margin-left:.3rem;font-size:.6rem;vertical-align:middle;text-align:center;color:#999}
+        .commend-wrap{right:.5rem}
+        .commend-wrap i{margin-top:-.2rem}
+        .user-reply-avator{display:inline-block;width:1.3rem!important;height:1.3rem!important;line-height:1.5rem;margin-left:.5rem;margin-bottom:0!important;border-radius:50%;vertical-align:middle}
+        .user-reply-input-wrap{display:inline-block;width:78%}
+        #comment-bt>a{line-height:1.3rem;font-size:.55rem;padding:0 .5rem;border-radius:5px;color:#ff6263!important;vertical-align:middle;box-shadow:0 0 1px #ff6263}
+        .none-comment{text-align:center}
+        .none-comment>img{margin-top:8rem;width:40%!important}
+        .fa-commenting-o{height:30px;width:30px;background-image:url(../image/comment_ico.png);background-size:30px 30px}
+        .fa-commenting-o:before{content:none}
+        .reply-to-user{background-image:none!important}
+        .fa-heart-o:before{content:none}
+        .fa-heart-o{display:inline-block;height:18px;width:18px;background-size:18px 18px;background-image:url(../image/dianzan_ico.png)}
+        .fa-heart:before{content:none}
+        .fa-heart{display:inline-block;height:18px;width:18px;background-size:18px 18px;background-image:url(../image/dianzan_selected_ico.png)}
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <!-- <div id="header">
+            <a class="back-icon" tapmode="" onclick="api.closeWin()"></a>
+            <h1>全部回复(<span class="reply-count">4</span>)</h1>
+        </div> -->
+        <div id="main">
+            <div class="none-comment none">
+                <img src="../image/none_comment_express.png" alt="">
+            </div>
+            <div class="comment-list">
+                <!-- <div class="comment-item">
+                    <div class="comment-item-header">
+                        
+                        <img class="user-avator" src="" width="30px"/>  
+                        
+                        <div class="author-info-box">
+                            <span class="nick-name">昵称</span><br>
+                            <span class="create-time"><span class="floor-index">1F</span>2天前</span>
+                        </div>
+                        <div class="dianzan-wrap">
+                            <i class="fa fa-heart-o"></i><span class="dianzan-count">3</span>
+                        </div>
+                        <div class="dianzan-wrap commend-wrap">
+                            <i class="fa fa-commenting-o"></i><span class="dianzan-count">3</span>
+                        </div> 
+                    </div>
+                    <div class="comment-item-body">
+                        <ul id="reply-content-list">
+                            <li class="reply-content-item"></li>
+                        </ul>
+                    </div>
+                   
+                </div>  -->   
+            </div>
+            <div style="height:50px;"></div>
+            <div id="comment" style="display:none;">
+                <ul>
+                    <li style="width:83%;">
+                        <img class="default-avator user-reply-avator" src="" alt="">
+                        <div class="user-reply-input-wrap input-wrap">
+                            <input type="text" placeholder="" onfocus="edit(this)" onblur="cancel(this)" id="comment-content" class="txt" value="我也说一句~" /> <!-- <i class="del" tapmode="" onclick="delWord(this)"></i> -->
+                        </div>
+                    </li>
+                    <li id="comment-bt">
+                        <a tapmode="">发表</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/common.js"></script>
+    <script>
+        var fid = '';
+        var tid = '';
+        var uid = '';
+        var current_page = 1,total_page;isTopicLoaded = false;
+        apiready = function(){
+            isDev =false;
+            fid = api.pageParam.fid;
+            tid = api.pageParam.tid;
+            console.log(fid);
+            /*
+            if(typeof fid == 'undefined'){
+                fid = 60;
+            }
+            if(typeof tid == 'undefined'){
+                tid = 9506;
+            }
+			*/
+            //alert(tid);
+            uid = $api.getStorage('uid');
+            var userImageUrl = $api.getStorage('userimage');
+            
+            var toUserInfo = api.pageParam.toUserInfo;
+            var comment_item = $('.comment-item');
+
+            comment_item.html(toUserInfo);
+
+            loadComments();
+
+            api.addEventListener({
+                     name: 'scrolltobottom',
+                     extra:{
+                         threshold:200    //设置距离底部多少距离时触发，默认值为0，数字类型
+                     }
+                 }, function (ret, err) {
+                     
+                     //console.log(current_page+':'+total_page);
+                     if(current_page<total_page && isTopicLoaded){
+                         isTopicLoaded = false;
+                         //console.log(current_page);
+                         current_page++;
+                         loadComments(current_page);
+                         if(current_page==total_page){
+                             if($('.no-more').length < 1){
+                                 $('#main').append('<div class="no-more color-999" style="line-height:2rem;font-size:0.5rem;text-align:center;">没有更多了</div>');
+                             }  
+                         }
+                     }
+                     
+                 });
+
+            $('.user-reply-avator').attr('src',userImageUrl).click(function(){
+                openUserSpace(uid);
+            });
+            $('.reply-bt').remove(); 
+            $('#authcode').attr('placeholder','@'+ $('.nick-name').html());
+            $('#comment-content').click(function(){
+                $(this).val('').css({'color':'#333'});
+
+            });
+            //alert($api.jsonToStr(postData));
+            $('#comment-bt').on('click',function(){
+                if($('#comment-content').val() == ''){
+                    myToast('说点什么吧');
+                    return false;
+                }
+                var reply_text = $('#comment-content').val();
+                var postData = {    
+                            fid: fid,
+                            tid: tid,
+                            uid: uid,
+                            //parentCommentId:$('.user-id').html(),
+                            content:reply_text
+                             };
+                    
+               api_ajax(2,
+                	'topic_comment_add.php',
+                	 postData,
+   		             function(ret,_,postData,_){
+   		             	if (ret.code == 100) {
+	                    	console.log(ret);
+	                    	$('.none-comment').hide();
+							var uid = postData.uid;
+							var fid = postData.fid;
+							var tid = postData.tid;
+							var reply_text = postData.content;
+							
+	                    	var html = '<div class="comment-item" data-pid="16906">'+
+	                                  '<div class="comment-item-header">'+
+	                                      '<img class="default-avator user-avator" src="'+ret.comments.userImageUrl+'" width="30px" onclick="openUserSpace('+uid+',event);">  '+                            
+	                                      '<div class="author-info-box">'+
+	                                          '<span class="nick-name" onclick="openUserSpace('+uid+',event);">'+$api.getStorage('username')+'</span>';
+	                         if  ($api.getStorage('username') == 1)
+	                            html += '<i class="gender-ico gender-male-ico fa fa-mars"></i><br>';
+	                         else if ($api.getStorage('username') == 2)
+	                         	html += '<i class="gender-ico gender-female-ico fa fa-mars"></i><br>';
+	                         	
+	                            html += '<span class="create-time"><span class="floor-index"></span>&nbsp;刚刚</span>'+
+	                                      '</div>'+
+	                                      '<div class="reply-bt"> <i class="reply-img fa fa-heart-o" style="margin-bottom:0px;vertical-align:middle;font-size: 0.8rem;color:#999;" onclick="dianzanToUser(this,event);"></i>'+
+	                                          '<span class="dianzan-count color-999" onclick="dianzanToUser(this,event);">0</span>'+
+	                                          '<img class="reply-img reply-to-user ml10" style="width:18px;height:18px;margin-bottom:0px;vertical-align:middle;" data-position="4" src="../image/comment_ico.png">'+
+	                                       '</div>'+
+	                                  '</div>'+
+	                                  '<div class="comment-item-body">'+
+	                                      '<ul id="reply-content-list">'+
+	                                          '<li class="reply-content-item">'+reply_text+'</li>'+
+	                                      '</ul>'+
+	                                  '</div>'+
+	                             ' </div>';
+	                              
+	                    $('.comment-list').append($(html));
+	                    myToast('评论成功！');
+	                    $('#comment-content').val('');
+	                    }
+                },
+                0,
+                0);                
+
+            });
+            
+            api.setRefreshHeaderInfo({
+                visible: true,
+                // loadingImgae: 'wgt://image/refresh-white.png',
+                bgColor: '#f2f2f2',
+                textColor: '#4d4d4d',
+                textDown: '下拉刷新...',
+                textUp: '松开刷新...',
+                showTime: true
+            }, function (ret, err) {
+                loadComments();
+                api.hideProgress();
+                api.refreshHeaderLoadDone();
+            });
+
+
+            var obj = api.require('inputField');
+            obj.open({
+                bgColor:'#fff',
+                lineColor:'#eee',
+                fileBgColor:'#fff',
+                borderColor:'#eee',
+                sendImg:'widget://image/sendImg.png'
+            },function(ret,err) {
+                //api.alert({title: '输入的内容', msg: ret.msg});
+                postReply(ret.msg);
+            });
+           //  $('#main').on('focus', 'input', function () {
+           //          $('#comment').hide();
+
+
+           // }).on('focusout', 'input', function () {
+
+           //          $('#comment').show();
+
+           // });
+
+
+        }
+        function postReply(msg){
+            if(msg == ''){
+                myToast('说点什么吧');
+                return false;
+            }
+            var reply_text;// = $('#comment-content').val();
+            var postData = {    
+                        fid: fid,
+                        tid: tid,
+                        uid: uid,
+                        //parentCommentId:$('.user-id').html(),
+                        content:msg
+                         };
+                
+           api_ajax(2,
+                'topic_comment_add.php',
+                 postData,
+                 function(ret,_,postData,_){
+                    if (ret.code == 100) {
+                        console.log(ret);
+                        $('.none-comment').hide();
+                        var uid = postData.uid;
+                        var fid = postData.fid;
+                        var tid = postData.tid;
+                        var reply_text = postData.content;
+                        
+                        var html = '<div class="comment-item" data-pid="16906">'+
+                                  '<div class="comment-item-header">'+
+                                      '<img class="default-avator user-avator" src="'+ret.comments.userImageUrl+'" width="30px" onclick="openUserSpace('+uid+',event);">  '+                            
+                                      '<div class="author-info-box">'+
+                                          '<span class="nick-name" onclick="openUserSpace('+uid+',event);">'+$api.getStorage('username')+'</span>';
+                         if  ($api.getStorage('username') == 1)
+                            html += '<i class="gender-ico gender-male-ico fa fa-mars"></i><br>';
+                         else if ($api.getStorage('username') == 2)
+                            html += '<i class="gender-ico gender-female-ico fa fa-mars"></i><br>';
+                            
+                            html += '<span class="create-time"><span class="floor-index"></span>&nbsp;刚刚</span>'+
+                                      '</div>'+
+                                      '<div class="reply-bt"> <i class="reply-img fa fa-heart-o" style="margin-bottom:0px;vertical-align:middle;font-size: 0.8rem;color:#999;" onclick="dianzanToUser(this,event);"></i>'+
+                                          '<span class="dianzan-count color-999" onclick="dianzanToUser(this,event);">0</span>'+
+                                          '<img class="reply-img reply-to-user ml10" style="width:18px;height:18px;margin-bottom:0px;vertical-align:middle;" data-position="4" src="../image/comment_ico.png">'+
+                                       '</div>'+
+                                  '</div>'+
+                                  '<div class="comment-item-body">'+
+                                      '<ul id="reply-content-list">'+
+                                          '<li class="reply-content-item">'+reply_text+'</li>'+
+                                      '</ul>'+
+                                  '</div>'+
+                             ' </div>';
+                              
+                    $('.comment-list').append($(html));
+                    myToast('评论成功！');
+                    $('#comment-content').val('');
+                    }
+            },
+            0,
+            0); 
+        }
+        
+        function dianzanToUser(dianzan_dom,e){
+            if(e){e.cancelBubble = true;}
+            var comment_item = $(dianzan_dom).parent().parent().parent();
+            var pid = comment_item.data('pid');
+            
+            //var uid = $api.getStorage('uid');
+            //console.log(uid);
+
+            //播放点赞动画
+            playHeart();
+ 			
+ 			var others = {
+ 				pid:pid,
+ 				dianzan_dom:dianzan_dom
+ 				};
+            api_ajax(2,
+            	'topic_comment_recommend.php',
+            	{pid:pid},    
+                function(ret, _, _ ,others){
+                    //console.log(ret);
+                    	var pid = others.pid;
+                    	var dianzan_dom = others.dianzan_dom;
+                    	var uid = $api.getStorage('uid');
+                    	
+						console.log(pid+''+uid);
+						$api.setStorage(pid+''+uid,1);
+						if($(dianzan_dom).hasClass('fa-heart-o')){
+							$(dianzan_dom).addClass('fa-heart').removeClass('fa-heart-o').css('color','#ff6263');    
+						}
+						var $dianzan_count = $(dianzan_dom).next('span');
+                        if($dianzan_count.length<1){
+                            $dianzan_count = $(dianzan_dom);
+                        }
+						var current_count = parseInt($dianzan_count.text());
+							current_count++;
+							if(current_count>99){
+								current_count = 99+'+';
+							}
+						$dianzan_count.text(current_count);
+	            },
+                others,
+            0);
+        }
+        
+        function loadComments(page){
+            //alert(tid);
+            if(page){
+                _page = 1;
+            }else{
+                _page = page;
+            }
+            api_ajax(0,
+            	'topic_comment_list.php', 
+            	{
+                    page:_page,
+            		tid:tid,
+                    psize:20
+            	},   
+                function(data, _, _, _){
+					if (data.code == 100) {
+                        isTopicLoaded = true;
+						console.log(data);
+						var commentHtml = '';
+                        //alert(data.commentlist);
+                        total_page = data.pageinfo.totalpage;;
+                        if(data.commentlist){
+                            api.execScript({
+                                name:'reply-'+tid,
+                                script:'setReplyCount('+data.pageinfo.recordcount+')'
+                            });
+                        }
+                        
+						for(var index in data.commentlist){
+							var comment = data.commentlist[index];
+                            
+							var genderHtml = '<i class="gender-ico gender-male-ico fa fa-mars"></i>';
+							if(comment.sex == 0){
+								
+							}else{
+								genderHtml = '<i class="gender-ico gender-female-ico fa fa-venus"></i>';
+							}
+
+
+							//点赞ico
+							
+                            var dianzanIcoHtml = '<i class="reply-img fa fa-heart-o" style="margin-bottom:0px;vertical-align:middle;font-size: 0.8rem;color:#999;" onclick="dianzanToUser(this,event);"></i>';
+                            if($api.getStorage(comment.pid+''+uid) == 1){
+                                dianzanIcoHtml = '<i class="reply-img fa fa-heart" style="margin-bottom:0px;vertical-align:middle;font-size: 0.8rem;color:#ff6263;" onclick="dianzanToUser(this,event);"></i>';
+                            }
+
+							//点赞数
+							if(comment.recommend_add>99){
+								comment.recommend_add = '99+';
+							}  
+                            var subCommentHtml = '<div class="sub-comment">';
+
+                           for(var sindex in comment.subcommentlist){
+                                var subComment = comment.subcommentlist[sindex];
+                                var html = '<div class="sub-comment-item">'+
+                                                '<span class="sub-comment-username" onclick="openUserSpace('+subComment.authorid+',event);">'+subComment.nickname+'</span>:&nbsp;'+    
+                                                '<span class="sub-comment-content">'+subComment.content+'</span>'+
+                                            '</div>';
+                                subCommentHtml += html;
+                                if(sindex>1){
+                                    break;
+                                }
+                           }
+                           
+                           if(comment.subcommentlist.length<1){
+                                subCommentHtml = '';
+                           }else if(comment.subcommentlist.length>2){
+                            subCommentHtml+='<div class="checkmore-subcomment">查看更多'+comment.subcommentlist.length+'条回复<i class="fa fa-angle-down"></i></div></div>';
+                           } else{
+                                subCommentHtml+='</div>';
+                           }         
+
+						    var html = '<div class="comment-item" data-pid="'+comment.pid+'" onclick="replyToUser(this);">'+
+											'<div class="comment-item-header">'+
+												
+												'<img class="default-avator user-avator" src="'+comment.authorimage+'" width="30px" onclick="openUserSpace('+comment.authorid+',event);"/>  '+
+												
+												'<div class="author-info-box">'+
+													'<span class="nick-name" onclick="openUserSpace('+comment.authorid+',event);">'+comment.nickname+'</span>'+genderHtml+'<br>'+
+													'<span class="create-time"><span class="floor-index">'+comment.position+'F</span>&nbsp;'+comment.createdate+'</span>'+
+'<div id="comment_uid" style="display:none;">'+comment.authorid+'</div>'+
+'<div id="comment_nick" style="display:none;">'+comment.nickname+'</div>'+														
+												'</div>'+
+												'<div class="reply-bt">'+dianzanIcoHtml+'<span class="dianzan-count color-999" onclick="dianzanToUser(this,event);">'+comment.recommend_add+'</span><img class="reply-img reply-to-user ml10" style="width:18px;height:18px;margin-bottom:0px;vertical-align:middle;" data-position="'+comment.position+'" src="../image/comment_ico.png" data-authorid="'+comment.authorid+'">'+
+                                                 '</div>'+
+											'</div>'+
+											'<div class="comment-item-body">'+
+												'<ul id="reply-content-list">'+
+													'<li class="reply-content-item">'+comment.content+'</li>'+
+												'</ul>'+
+											'</div>'+
+                                                subCommentHtml+
+										'</div>';
+							commentHtml += html;
+						}
+
+                        if(page){
+                            $('.comment-list').append($(commentHtml));
+                        }else{
+                            $('.comment-list').html(commentHtml);
+                        }
+
+                        $('.reply-to-user').on('click',function(){
+                            var authorid = $(this).data('authorid');
+                            if($api.getStorage('uid') == authorid) return false;
+                            var comment_item = $(this).parent().parent().parent();
+                            var toUserInfo = $("<p>").append(comment_item.clone()).html();
+                            var pid = comment_item.data('pid');
+                            var position = $(this).data('position');
+                            api.openWin({
+                                name:   'replyUser',
+                                url:    'replyUser.html',
+                                pageParam: {toUserInfo: toUserInfo,
+                                            pid:pid,
+                                            position:position
+                                        },
+                                reload: false,
+                                bounces: true,
+                                opaque: true,
+                                vScrollBarEnabled: true,
+                                softInputMode: 'resize'
+                            });
+                            return false;
+                        });
+
+		        } else {
+	                $('.none-comment').show();	    
+                }
+                $('#main').show();
+            },
+            0,
+            0);
+        }
+        function dianzanToUserV(count_dom,e){
+            if(e){e.cancelBubble = true;}
+            $(count_dom).prev('.reply-img').trigger('click');
+            return false;
+        }
+        function openReplyUser(self,pid){
+            $(self).find('.reply-to-user').trigger('click');
+        }
+    </script>
+</body>
+</html>

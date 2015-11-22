@@ -1,0 +1,201 @@
+<!doctype html>
+<html class="feedback">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <title>发表
+    话题</title>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../css/feedback-page.css" />
+    <style>
+        body{background-color:#fff!important}
+        .body-gray{background-color:rgba(0,0,0,.5)!important}
+        .fb-wrap{padding:0 .8rem}
+        p{background-color:#fff}
+        .mui-content{background-color:#fff}
+        #content{font-size:.6rem;height:6rem;padding:.5rem 0 0 0}
+        #submit{margin:.5rem .5rem 0 .5rem;padding:.5rem .5rem;font-size:.6rem;color:#FFF;display:block;text-align:center;background-color:#f46f59}
+        #contact{border:1px solid #eee!important;border-radius:.2rem}
+        .title{margin-top:.5rem;border-bottom:1px solid #eee}
+        .topic-circle-info{display:inline-block;vertical-align:middle;height:1.6rem;margin-left:.5rem;color:#999;font-size:.7rem}
+        .topic-circle-info>span{text-overflow:ellipsis;color:#999;font-weight:500;color:#333;font-size:.6rem}
+        .topic-circle-info .member-count{color:#999}
+        .topic-circle-info>.topic-circle-desc{max-width:10rem;overflow:hidden!important;color:#999!important;font-size:.5rem}
+        .member-count{font-size:12px!important;font-weight:400}
+        .member-ico:before{content:none}
+        .member-ico{display:inline-block;width:10px;height:10px;margin:1px 4px;margin-left:10px;background-image:url(../image/members_ico.png);background-size:10px 10px;vertical-align:middle}
+        .mui-table-view{padding:0 .5rem;overflow-y:scroll;min-height:100%}
+        .mui-table-view:before{height:0}
+        .mui-table-view:after{height:0}
+        .mui-table-view-cell{padding:10px 10px;padding-right:0}
+        .mui-table-view-cell:after{left:0}
+        .mui-navigate{padding-left:0!important;background-color:#fff!important}
+        .mui-navigate>img{width:40px;height:40px;border-radius:50%;vertical-align:middle;margin-left:8px}
+        .circle-slider{position:absolute;width:100%;min-height:100%;top:0;background-color:rgba(0,0,0,.5);overflow-y:scroll;z-index: 2;}
+        ::-webkit-scrollbar { 
+            display: none; 
+        }
+        .check-ico{float:right;margin-right:.8rem;margin-top:12px;margin-left:0;display:inline-block;width:.8rem!important;height:auto!important}
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <!-- <div id="header">
+            <a class="back-icon" tapmode="" onclick="api.closeWin()"></a>
+            <h1 class=""></h1>
+        </div> -->
+        <div class="fb-wrap">
+            <input class="title none" type="text" placeholder="标题">
+            <div class="mui-content">
+                <!-- <p>问题和意见</p> -->
+                <div class="row mui-input-row">
+                    <textarea id='content' class="mui-input-clear question" placeholder="这一刻的想法..."></textarea>
+                </div>
+                <!--  <p>图片(选填,提供问题截图)</p> -->
+                <div id='image-list' class="row image-list">
+                </div>
+            </div>
+        </div>
+        <span id='submit' type="button" class="">提交</span>
+
+        <div class="circle-slider none" id="circle-silder">
+            <ul class="mui-table-view news-list" id="circle-list">
+            </ul>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src='../script/common.js'></script>
+<script type="text/javascript" src='../script/mui.min.js'></script>
+<script src='../script/util/strophe-custom-2.0.0.js'></script>
+<script src='../script/util/json2.js'></script>
+<script src="../script/util/easemob.im-1.0.5.js"></script>
+<script type="text/javascript" src='../script/publish-topic.js'></script>
+<script>
+    var fid,uid,fname;
+    $(function(){
+        initDev();
+    });
+    function publish(){
+        $('#submit').trigger('click');
+    }
+    apiready = function(){
+       fid = api.pageParam.fid;
+       fname  = api.pageParam.fname;
+       uid = $api.getStorage('uid');
+       getRecommendTopicCircle();
+    }
+    function getRecommendTopicCircle(){
+            api_ajax(2, 
+                    'topic_circle_list.php', 
+                    {
+                        psize:50,
+                        page:1,
+                        t:1
+                    }, 
+                    after_getRecommendTopicCircle,
+                    null,
+                    0
+                );  
+    }
+
+    function after_getRecommendTopicCircle(ret, _, _, _) {
+            if(ret['code']==100){
+                var circlelist = ret.data.info.list;
+                total_page = ret.data.info.pageinfo.totalpage;
+                listTopicCircle(circlelist,'#circle-list',false);
+            }  
+            isFirst = 0;
+    }
+    function listTopicCircle(circleList,holderClass,isMy){
+        var circleListHtml = '';
+        var isContainItFid = false;
+        var icoUrl = '';
+        for(var index in circleList){
+            var circle = circleList[index];
+            // if(isMy == 1){
+            //     followHtml = '<span class="follow-bt" style="border:none;">' + circle.no_read + '</span>';
+            //     isFollowed =true;
+            // }
+            var checkHtml = '';//<img class="check-ico" src="../image/check_ico.png" alt="" />';
+            if(fid == circle.fid){
+                isContainItFid = true;
+                checkHtml = '<img class="check-ico" src="../image/check_ico.png" alt="" />';
+            }
+            if(circle.description.length > 20){
+                circle.description = circle.description.substring(0,19) + '...';
+            }
+            var html = '<li class="mui-table-view-cell circle-item" id="circle-item-'+circle.fid+'" onclick="changeCircle('+circle.fid+',\''+circle.fname+'\');">'+
+                            '<a class="mui-navigate">'+
+                                '<img class="" src="'+circle.icon+'" alt="">'+
+                                '<div class="topic-circle-info">'+
+                                    '<span>'+circle.fname+'</span><i class="member-ico fa fa-users"></i><span class="member-count">'+circle.fav_count+'</span><br>'+
+                                    '<span class="topic-circle-desc">'+circle.description+'</span>'+    
+                                '</div>'+
+                                checkHtml+
+                            '</a>'
+                            +
+                        '</li>';
+
+           circleListHtml += html;
+           icoUrl = circle.icon;
+        }
+        $(holderClass).html(circleListHtml);
+            //console.log($('#circle-item-'+fid).remove().clone());
+            $(holderClass).prepend($('#circle-item-'+fid).remove().clone());
+            // $('#circle-item-'+fid).remove();
+            // console.log($(holderClass));
+        
+        // if(!isContainItFid){
+        //     var html = '<li class="mui-table-view-cell circle-item" id="circle-item-'+fid+'" onclick="changeCircle('+fid+',\''+fname+'\');">'+
+        //                     '<a class="mui-navigate">'+
+        //                         '<img class="" src="'+icoUrl+'" alt="">'+
+        //                         '<div class="topic-circle-info">'+
+        //                             '<span>'+circle.fname+'</span><i class="member-ico fa fa-users"></i><span class="member-count">'+circle.fav_count+'</span><br>'+
+        //                             '<span class="topic-circle-desc">'+circle.description+'</span>'+    
+        //                         '</div>'+
+        //                         '<img class="check-ico" src="../image/check_ico.png" alt="" />'+
+        //                     '</a>'
+        //                     +
+        //                 '</li>';
+        //     $(holderClass).prepend($(html));
+        //     $(holderClass+'>li:last-child').remove();
+
+        // }
+        //showCircle();
+        //hideCircle();
+    }
+    var isShowCircle = false;
+    $(document).click(function(){
+        hideCircle();
+    });
+    function showCircle(){
+        isShowCircle= true;
+        $('#circle-silder').slideDown('fast');
+    }
+    function hideCircle(){
+        isShowCircle =false;
+        $('#circle-silder').slideUp('fast');
+    }
+    function toggleCircle(){
+        if(isShowCircle){
+            hideCircle();
+        }else{
+            showCircle();
+        }
+    }
+    function changeCircle(id,fname){
+        toggleCircle();
+        fid = id;
+        $('.check-ico').remove();
+        $('#circle-item-'+id+'>a').append('<img class="check-ico" src="../image/check_ico.png" alt="" />');
+        $('#circle-list').prepend($('#circle-item-'+id).remove().clone());
+        /*alert('child:'+fname);*/
+        api.execScript({
+            name:'publish-topic',
+            script:'changeCircleName(\''+fname+'\')'
+        });
+    }
+</script>
+</html>

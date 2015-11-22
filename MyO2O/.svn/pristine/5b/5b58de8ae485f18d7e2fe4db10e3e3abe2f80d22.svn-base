@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <title>反馈</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <style>
+        body{background-color:#fff!important}
+        #header{position:fixed;top:0;width:100%}
+        .mui-content{background-color:#fff;padding:.8rem}
+        p{background-color:#fff;line-height:.8rem;font-size:.53rem}
+        .title{margin-top:.8rem}
+        .fb-wrap{margin-top:53px}
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <a class="back-icon" tapmode="" onclick="api.closeWin()"></a>
+            <h1 class="">用户协议</h1>
+        </div>
+        <div class="fb-wrap">
+            <div class="mui-content">
+                <p>用户在使用气泡服务时，必须遵守中华人民共和国相关法律法规的规定，用户应同意将不会利用本服务进行任何违法或不正当的活动，包括但不限于下列行为∶</p>
+
+                <p class="title">1、上载、展示、张贴、传播或以其它方式传送含有下列内容之一的信息：</p>
+                <p>1） 反对宪法所确定的基本原则的；</p>
+                <p>2） 危害国家安全，泄露国家秘密，颠覆国家政权，破坏国家统一的；</p>
+                <p>3） 损害国家荣誉和利益的；</p>
+                <p>4） 煽动民族仇恨、民族歧视、破坏民族团结的；</p>
+                <p>5） 破坏国家宗教政策，宣扬邪教和封建迷信的；</p>
+                <p>6） 散布谣言，扰乱社会秩序，破坏社会稳定的；</p>
+                <p>7） 散布淫秽、色情、赌博、暴力、凶杀、恐怖或者教唆犯罪的；</p>
+                <p>8） 侮辱或者诽谤他人，侵害他人合法权利的；</p>
+                <p>9） 含有虚假、有害、胁迫、侵害他人隐私、骚扰、侵害、中伤、粗俗、猥亵、或其它道德上令人反感的内容；</p>
+
+                <p class="title">2、不得为任何非法目的而使用网络服务系统；</p>
+
+                <p class="title">3、不利用气泡服务从事以下活动：</p>
+                <p>1) 未经允许，进入计算机信息网络或者使用计算机信息网络资源的；</p>
+                <p>2) 未经允许，对计算机信息网络功能进行删除、修改或者增加的；</p>
+                <p>3) 未经允许，对进入计算机信息网络中存储、处理或者传输的数据和应用程序进行删除、修改或者增加的；</p>
+                <p>4) 故意制作、传播计算机病毒等破坏性程序的；</p>
+                <p>5) 其他危害计算机信息网络安全的行为。</p>
+            </div>
+        </div>
+        
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src='../script/common.js'></script>
+<script>
+    $(function(){
+        
+    });
+    apiready = function(){
+       var header = $api.byId('header');
+       $api.fixIos7Bar(header);
+    }
+</script>
+</html>

@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=0, width=device-width"/>
+    <title>api</title>
+    <link rel="stylesheet" type="text/css" href="./css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="./css/common.css" />
+    <link rel="stylesheet" type="text/css" href="./css/index.css" />
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <div class="main header active">
+                <h1></h1>
+            </div>
+            <div class="topic header">
+                <h1></h1>
+            </div>
+            <div class="gouda header">
+                <h1></h1>
+            </div>
+ 
+            <div class="my header">
+                <h1 id="headerText">我的</h1>
+            </div>
+        </div>
+        <div id="main">
+                
+        </div>
+
+        <div id="nav">
+            <ul>
+                <li class="active"><a class="main" tapmode="active" onclick="openTab('main','71bbe')">推荐</a></li>
+                <li><a class="topic" tapmode="active" onclick="openTab('topic','21c8cf')">话题</a></li>         
+                <li><a class="gouda" tapmode="active" onclick="openTab('gouda','1c8d0')">
+                	<div id="gd_new"></div>勾搭</a></li>
+                <li><a class="my" tapmode="active" onclick="openTab('my','1c8d1')">我的</a></li>        
+            </ul>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="./script/api.js"></script>
+<script type="text/javascript" src="./script/common.js"></script>
+<script type="text/javascript" src="./script/zepto.js"></script>
+<script type="text/javascript" src="./script/index.js"></script>
+</html>

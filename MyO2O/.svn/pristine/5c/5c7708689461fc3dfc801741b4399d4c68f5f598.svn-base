@@ -1,0 +1,115 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>我的</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../css/user.css" />
+    <link rel="stylesheet" type="text/css" href="../css/topic-list.css" />
+    <link rel="stylesheet" type="text/css" href="../css/user-list.css" />
+    <style>
+        #header{background-color:transparent}
+        .nav-active>span{color:#ffc72a!important}
+        .hongren-wrap{position:absolute;display:block;top:3rem;right:1.8rem;width:3rem;text-align:center;z-index:5}
+        .hongren-wrap>.hongren-ico{display:inline-block;width:1rem;height:1rem;margin-top: 1rem;}
+        .hongren-wrap>.hongren-txt{font-size:.55rem;color:#eee}
+        .none-expression{width:5rem}
+        .user-name{font-size:.7rem}
+        .setting-ico{display:inline-block;z-index:6;width:40px;height:40px;bottom:0px;right:0;}
+        .setting-ico>img{display:inline-block;position:absolute;top:7px;left:5px;width:20px;height:20px;}
+        .setting-ico:before{content:none}
+        #user-info-edit{z-index:6;bottom:.6rem;left:.6rem}
+        .user-stamp{color:#ffc72a!important;margin-top:.1rem;font-size:.5rem}
+        .fa-pencil-square-o{width:20px;height:20px;background-image:url(../image/edit_ico.png);background-size:90% auto;background-repeat:no-repeat;background-position:bottom}
+        .fa-pencil-square-o:before{content:none}
+        #my-header{
+            position: relative;
+            height: 50px;
+            width: 100%;
+        }
+        .content{
+            margin-top:11rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="main">
+            <div id="cover">
+                <div id="my-header">
+                    <i class="edit fa fa-pencil-square-o" id="user-info-edit" onclick="openWin('my-info-edit');"></i>
+                    <i class="setting-ico fa fa-cog" id="setting-ico" onclick="openWin('my-setting')"><img src="../image/setting_ico.png" alt=""></i>
+                </div>
+                <img class="cover" />
+                <div id="avatar" onclick="openWin('my-info-edit');">
+                    <img id="headImg" src=""/>
+                </div>
+                <div class="hongren-wrap">
+                    <img class="hongren-ico" src="../image/hongren_ico.png" alt=""><br>
+                    <span class="hongren-txt"></span>
+                </div>
+                <label class="my-user-name"></label><br>
+                <label class="user-stamp" id="user-title"></label>
+                <div class="nav">
+                    <li class="nav-item nav-active" data-id="t-section">
+                        <span id="t_count">0</span><br>
+                        <span>话题</span>
+                    </li>
+                    <li class="nav-item" data-id="f-section">
+                        <span id="f_count">0</span><br>
+                        <span>关注</span>
+                    </li>
+                    <li class="nav-item" data-id="bf-section">
+                        <span id="bf_count">0</span><br>
+                        <span>粉丝</span>
+                    </li>
+                    <li id="nav-collect">
+                        <span id="c_count">0</span><br>
+                        <span>收藏</span>
+                    </li>
+                </div>
+                <div id="user_info"></div>
+            </div>
+            <div class="content">
+                <!-- 话题 -->
+                <div class="section t-section">
+                    <div class="nopost-topic-wrap" id="t_none" style="display:none;">
+                        <img class="none-expression" src="../image/none_ico.png" alt=""><br>
+                        <span>Hi，发点内容让别人认识你！</span><br>
+                        <a class="btn" href="javascript:;">去话题圈</a>    
+                    </div>
+                    <div class="topic-list" id="t_list" style="display:none;">
+                      </div>
+                </div>
+                <!-- 关注 -->
+                <div class="section f-section none">
+                    <div class="nopost-topic-wrap" id="f_none" style="display:none;">
+                        <img class="none-expression" src="../image/none_follow_ico.png" alt=""><br>
+                        <span>独乐了不如众乐乐，加点朋友一起玩</span><br>
+                        <a class="btn" href="javascript:;">去寻找小伙伴</a>    
+                    </div>
+                    <div class="user-list" id="f_list" style="display:none;">
+                     </div>
+                </div>
+                <!-- 粉丝 -->
+                <div class="section bf-section none">
+                    <div class="nopost-topic-wrap" id="bf_none" style="display:none;">
+                        <img class="none-expression" src="../image/none_follower_ico.png" alt=""><br>
+                        <span>暂无粉丝关注您~</span><br>
+                        <a class="btn" href="javascript:;">提高自己的逼格</a>    
+                    </div>
+                    <div class="user-list" id="bf_list" style="display:none;">
+                      </div>
+                </div>
+            </div>
+ 
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/mui.min.js"></script>
+<script type="text/javascript" src="../script/my.js"></script>
+</html>

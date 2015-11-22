@@ -1,0 +1,59 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <title>api</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <style>
+       #topicDetail-footer{position:absolute;bottom:0;width:100%}
+       .footer-nav{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:horizontal;-webkit-flex-direction:row;flex-direction:row;height:53px;line-height:52px;background-color:rgba(0,0,0,.8)}
+       .footer-nav>li{position:relative;-webkit-box-flex:1;-webkit-flex:1;flex:1;text-align:center}
+       .footer-nav>li>a>i,.footer-nav>li>a>span{vertical-align:middle;color:#fff}
+       .footer-nav>li>a>span{margin-left:5px;font-size:.5rem}
+       .detail-footer-ico{display:inline-block;width:24px;height:24px;background-size:24px 24px}
+       .collect-ico{height:26px;background-image:url(../image/collect_white_ico.png);background-repeat:no-repeat}
+       .collect-active-ico{background-image:url(../image/collect_selected_ico.png)}
+       .recommend-ico{background-image:url(../image/recommend_white_ico.png)}
+       .recommend-active-ico{background-image:url(../image/dianzan_selected_ico.png)}
+       .comment-ico{background-image:url(../image/commend_white_ico.png)}
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header" style="position:relative">
+            <a class="back-icon" tapmode="" onclick="api.closeWin()"></a>
+            <h1></h1>
+                <!-- <a id="louzhu" onclick="louzhuClick();">楼主</a><a id="more-bt" onclick="popShareBox();">...</a> -->
+                <a class="share-bt" href="javascript:;" style="display:none !important;"></a>
+        </div>
+        <div id="main"></div>
+        <div class="none" id="topicDetail-footer">
+            <ul class="footer-nav">
+                <li>
+                    <a class="collect">
+                       <i class="detail-footer-ico collect-ico"></i>
+                       <span>收藏</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="recommend">
+                        <i class="detail-footer-ico recommend-ico"></i>
+                        <span class="count" id="topic-dianzan-count">0</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="comment">
+                        <i class="detail-footer-ico comment-ico"></i>   
+                        <span class="count" id="topic-comment-count">0</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/util/share.js"></script>
+<script type="text/javascript" src="../script/topicDetail.js"></script>
+</html>

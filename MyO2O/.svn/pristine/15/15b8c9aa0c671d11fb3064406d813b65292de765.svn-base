@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+		<title>推荐</title>
+		<link rel="stylesheet" type="text/css" href="../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="../css/main.css" />
+        <style>
+            body{background-color: #fff;}
+            #scroll-top-bt{
+                position: fixed;
+                width: 2rem;
+                bottom:2rem;
+                right: 0.5rem;
+                z-index: 100;
+            }
+        </style>
+</head>
+<body>
+	<div id="wrap">
+		<div id="main">
+		    <img id="scroll-top-bt" style="display:none;" src="../image/scroll_top_ico.png" alt="">
+			<div id='slide' class='swipe'>
+				<div class='swipe-wrap' id="banner-content">
+  
+				</div>
+				<ul id="pointer">
+					<!-- <li><a class="active" id="cur1"><span>1</span></a></li>
+					<li><a id="cur2"><span>2</span></a></li>
+					<li><a id="cur3"><span>3</span></a></li> -->
+                    <div class="pointer-bg"></div>
+                    <div class="pointer-content"><span class="color-333" id="current-slide">1</span>/<span class="color-333" id="total-slides">3</span></div>                    
+				</ul>
+			</div>
+ 
+            <div id="activity">
+                <div id="topic-content"></div>
+            </div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src='../script/swipe.js'></script>
+<script type="text/javascript" src='../script/util/jquery.inview.js'></script>
+<script type="text/javascript" src="../script/main.js"></script>
+</html>

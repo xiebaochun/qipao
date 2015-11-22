@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <title>收藏</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <style>
+        body{
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <a class="back-icon" tapmode="" onclick="api.closeWin()"></a>
+            <h1 class="">我的收藏</h1>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src='../script/common.js'></script>
+<script>
+    apiready = function(){
+        var header = $api.byId('header');
+        $api.fixIos7Bar(header);
+        var width = api.winWidth;
+        var height = api.winHeight;
+        var header = $api.byId('header');
+        var headerPos = $api.offset(header);
+        var y = headerPos.h;
+        api.openFrame({
+            name:'my-collectCon',
+            url:'my-collectCon.html',
+            pageParam:{},
+            rect:{
+                x:0,
+                y:y,
+                width:width,
+                height:height
+            }
+        });
+    }
+</script>
+</html>

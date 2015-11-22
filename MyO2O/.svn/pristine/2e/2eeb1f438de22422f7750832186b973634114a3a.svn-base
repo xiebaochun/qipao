@@ -1,0 +1,17 @@
+﻿.news-list li img,.user-list li span{vertical-align:middle;margin-left:8px}
+.news-list li a{font-size:14px;font-weight:700;font-family:"微软雅黑"}
+.news-list li a img{width:50px;height:50px;border-radius:25px;vertical-align:middle}
+.topic-circle-info{display:inline-block;vertical-align:middle;height:1.6rem;margin-left:.5rem;color:#999;font-size:.7rem}
+.topic-circle-info>span{text-overflow:ellipsis;color:#999;font-weight:500;color:#333;font-size:.6rem}
+.topic-circle-info .member-count{color:#999}
+.topic-circle-info>.topic-circle-desc{max-width:9rem;overflow:hidden!important;white-space: nowrap;color:#999!important;font-size:.5rem}
+.member-count{font-size:12px!important;font-weight:400}
+.member-ico:before{content:none}
+.member-ico{display:inline-block;width:10px;height:10px;margin:1px 4px;margin-left:10px;background-image:url(../image/members_ico.png);background-size:10px 10px;vertical-align:middle}
+.mui-table-view-cell{padding-right:0}
+.mui-navigate{padding-left:0!important;background-color:#fff!important}
+#my-circle-list:after{background-color:transparent!important}
+.mui-table-view{position:relative;margin-top:0;margin-bottom:0;padding-left:0;list-style:none;background-color:#fff}
+.mui-table-view-cell{position:relative;overflow:hidden;padding:11px 15px;background-color:inherit;-webkit-touch-callout:none}
+.mui-table-view-cell:after{position:absolute;right:0;bottom:0;left:15px;height:1px;content:'';-webkit-transform:scaleY(.5);transform:scaleY(.5);background-color:#c8c7cc}
+.follow-bt{position:absolute;right:0;top:50%;font-size:0.5rem;margin-top:-14px;border:1px solid #faa;padding:0.1rem 0.3rem;border-radius:4px;color:#ff6263}

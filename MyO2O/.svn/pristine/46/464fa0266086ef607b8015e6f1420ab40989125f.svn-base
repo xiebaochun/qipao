@@ -1,0 +1,69 @@
+<!doctype html>
+<html class="feedback">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>反馈</title>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../css/feedback-page.css" />
+    <style>
+        body{background-color:#fff!important}
+        .fb-wrap{padding:0 .5rem}
+        p{background-color:#fff}
+        .mui-content{background-color:#fff}
+        #question{border:1px solid #eee!important;border-radius:.2rem}
+        #contact{border:1px solid #eee!important;border-radius:.2rem}
+        .mui-content>p{padding-left:0;font-size:.6rem;color:#333}
+        .label_logout{display:block!important;width:auto!important;margin:.5rem .3rem 0 .3rem;padding:.5rem 0;font-size:.6rem;color:#FFF;display:block;text-align:center;background-color:#f46f59;border:0;border-radius:0}
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <a class="back-icon" tapmode="" onclick="api.closeWin()"></a>
+            <h1 class=""></h1>
+        </div>
+        <div class="fb-wrap">
+            <div class="mui-content">
+                <p>问题和意见</p>
+                <div class="row mui-input-row">
+                    <textarea id='content' class="mui-input-clear question" placeholder="请详细描述你的问题和意见..."></textarea>
+                </div>
+                <p>问题截图</p>
+                <div id='image-list' class="row image-list">
+                </div>
+                <!-- <p>QQ/邮箱</p>
+                <div class="mui-input-row">
+                    <input id='contact' type="text" class="mui-input-clear  contact" placeholder="(选填,方便我们联系你 )" />
+                </div> -->
+                
+            </div>
+        </div>
+        <span id='submit' type="button" class="label_logout">提交</span><br>
+        <span style="display:block;margin-left:0.3rem;text-align:left;color:#999;font-size:0.6rem;">调戏产品MM: 3183317032(QQ)</span>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src='../script/common.js'></script>
+<script type="text/javascript" src='../script/mui.min.js'></script>
+<script src='../script/util/strophe-custom-2.0.0.js'></script>
+<script src='../script/util/json2.js'></script>
+<script src="../script/util/easemob.im-1.0.5.js"></script>
+<script type="text/javascript" src='../script/feedback.js'></script>
+<script>
+    var fid,uid;
+    $(function(){
+        
+    });
+    function publish(){
+        $('#submit').trigger('click');
+    }
+    apiready = function(){
+        var header = $api.byId('header');
+        $api.fixIos7Bar(header);
+       uid = $api.getStorage('uid');
+    }
+</script>
+</html>

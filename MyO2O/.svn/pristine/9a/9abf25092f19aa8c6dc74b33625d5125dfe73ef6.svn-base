@@ -1,0 +1,182 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width"/>
+    <title>话题详情</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../css/topicDetail.css" />
+    <style>
+       #main{display:none}
+       .dianzan-bt{background-image:none!important}
+       .dianzan-bt>i{display:inline-block;width:30px;height:30px;font-size:1.3rem;color:#999;background-size:30px 30px}
+       .dianzan-bt>i:before{content:none}
+       .dianzan-bt>.fa-heart-o{background-image:url(../image/dianzan_ico.png)}
+       .dianzan-bt>.fa-heart{background-image:url(../image/dianzan_selected_ico.png)}
+       #commend-bt{text-align:center}
+       #commend-bt>i:before{content:none}
+       #commend-bt>i{display:inline-block;width:20px;height:20px;margin-top:7.5px;background-image:url(../image/reply_white_ico.png);background-size:20px 20px;background-repeat:none;background-position:center}
+       #share-bt{text-align:center}
+       #share-bt>i:before{content:none}
+       #share-bt>i{display:inline-block;width:18px;height:18px;margin-top:8px;background-image:url(../image/share_white_ico.png);background-size:18px 18px;background-repeat:none;background-position:center}
+       #check-allcomments-bt{padding:0.5rem 0;color:#999;font-size:0.6rem}
+       #check-allcomments-bt span{color:#999}
+       .more-recommend-header{margin:0.5rem 0.5rem;margin-top:0.5rem;font-size:0.7rem;height:1.4rem;border-bottom:1px solid #eee}
+       .more-recommend-header span{margin-top:0.2rem;padding:0 0.3rem;background-color:#fff}
+       .fa-commenting-o{height:30px;width:30px;background-image:url(../image/comment_ico.png);background-size:30px 30px}
+       .fa-commenting-o:before{content:none}
+       .fa-heart-o:before{content:none}
+       .fa-heart-o{display:inline-block;height:18px;width:18px;background-size:18px 18px;background-image:url(../image/dianzan_ico.png)}
+       .fa-heart:before{content:none}
+       .fa-heart{display:inline-block;height:18px;width:18px;background-size:18px 18px;background-image:url(../image/dianzan_selected_ico.png)}
+       .recommend-to-user{display:inline-block;margin-right:0!important}
+       .reply-to-user{margin-right:0!important}
+       .none-comment{text-align:center}
+       .none-comment>img{margin-top:1rem;width:40%!important}
+    </style>
+</head>
+<body>
+    <!-- <div class="topic-info">
+        <div id="author">
+            <img id="author-pic" src="" alt="楼主头像">
+            <span id="author-name"></span><span id="author-tag">楼主</span>
+            <span id="create-time"></span>
+        </div>          
+    </div> -->
+    <div id="wrap">
+        <div id="main">
+        	<div id="content_head">
+                <!-- <div class="author-info-box">
+                    <span>hth</span>&nbsp<span id="author-tag">楼主</span><br>
+                    <span style="font-size:12px;color:#ccc;">rtyrt</span>
+                </div> -->   
+            </div>
+        	<div id="content-body">
+                    <h1 class="topic-title detail-topic-title"></h1>
+                    <div class="topic-top-info">
+                        <div class="author-avator" data-uid="">
+                            <img id="author-avator-img" src="../image/bookmark_ico.png" width="30px"/>  
+                        </div>
+                        <div class="author-info-box">
+                            
+                            <span class="author-nickname detail-author-nickname" data-uid="">小贱</span>&nbsp<span id="author-tag">测评专家</span><br>
+                        
+                            <span id="create-time" style="color:#ccc;">1分钟前</span>
+
+                        </div>
+                        <div class="view-count-wrap"><span>阅读&nbsp;</span><span id="view-count">448</span></div>
+                    </div>
+                    <div id="topic-context">
+                        
+                    </div>
+                    <!--
+                    <a id="fav" class="btn" tapmode="active" news-id="{{=it.id}}" >收藏</a>
+                    //-->   
+            </div>
+            <div class="wrap" id="copyright">
+                <div class="copyright-statement">
+                    <span class="copyright-title">© 版权声明</span>
+                    <br>                
+                    <span class="copyright-content">
+                        本文内容由&nbsp;<span class="author-nickname color-front" style="font-weight:700;"></span>&nbsp; 授权，经气泡整理发出，如有任何建议或合作意向请直接与气泡联系
+                    </span>
+                </div>
+            </div>
+            <div class="dianzan-bt-wrap">
+                <div class="dianzan-bt" onclick="clickZan();"><i class="topic-dianzan-ico fa fa-heart-o topic-content-dianzan-ico" id="content-dianzan-bt"></i></div><br>
+                <span class="color-999">TA们赞</span>
+            </div>
+            <div class="dianzan-user-list-wrap">
+                <ul class="dianzan-user-list">
+                    <!-- <li class="recommender" data-uid=""><img src="../image/user-icon.png" alt=""></li>
+                    <li class="recommender" data-uid=""><img src="../image/user-icon.png" alt=""></li>
+                    <li class="recommender" data-uid=""><img src="../image/user-icon.png" alt=""></li>
+                    <li class="recommender" data-uid=""><img src="../image/user-icon.png" alt=""></li>
+                    <li class="recommender" data-uid=""><img src="../image/user-icon.png" alt=""></li>
+                    <li class="recommender" data-uid=""><img src="../image/user-icon.png" alt=""></li> -->
+                </ul>
+                <div class="topic-dianzan-member topic-dianzan-count none">0</div>
+            </div>
+        	<div id="content_comment">
+                <div class="comment-bt-wrap" onclick="openAllComments();">
+
+                    <div class="comment-bt"><i class="fa fa-commenting-o"></i></div><br>
+                    <span class="color-999" style="background-color:#fff;padding:0 5px;">TA们说</span>
+                </div>
+                <div class="none-comment none" onclick="openAllComments();">
+                    <img src="../image/none_comment_express.png" alt="">
+                </div>
+                <div class="comment-body">
+                     <ul class="comment-list">
+                        <div class='no-comment-wrap' onclick="openAllComments();">
+                            <img src="" alt="">
+                        </div>
+                         <!-- <li class="comment-item">
+                             <div class="comment-item-header">
+                                 <div style="display:inline-block;width:30px;height:30px;border-radius:50%;overflow:hidden;vertical-align:middle;">
+                                     <img src="../image/ico_cmt.png" width="30px"/>  
+                                 </div>
+                                 <div class="author-info-box">
+                                     <span class="nick-name">昵称</span><br>
+                                     <span style="font-size:12px;color:#ccc;">2天前</span>
+                                 </div>
+                                 <div class="reply-bt"><img class="reply-img" style="width:25px;margin-bottom:0px;vertical-align:middle;" src="../image/dianzan_ico.png"><span class="dianzan-count color-999 ml5">100</span><img class="reply-img ml10" style="width:25px;margin-bottom:0px;vertical-align:middle;" src="../image/ico_cmt.png">
+                                 </div>
+                             </div>
+                             <div class="comment-item-body">
+                                 rthrthrthytr
+                             </div>
+                         </li> -->
+                     </ul>
+                </div>   
+            </div>
+            <div class="tc"><span id="check-allcomments-bt" class="none" onclick="openAllComments();">查看所有<span class="comment-count">0</span>条回复 ></span></div>
+
+            <div class="more-recommend-header tc none" style="padding-top:0px;"><span style="font-weight:700;">RELATED ITEMS</span><br><span style="font-size:0.5rem;">更多有趣内容</span></div>
+            <div id="activity" class="ad-list none" style="margin-top:0.5rem;">
+                
+                <!-- <div class="item topic-item">
+                    <a tapmode="" onclick="">
+                        <div class="pic" style="background-image:url(../image/topic_img.jpg)">
+                            <img class="topic-view-play-ico" src="../image/video_play_ico.png" alt="">
+                        </div>
+                        <div class="topic-tag" style="background-image:url(../image/tag_bg.png);position:absolute;left:0;top:20px;">            
+                            <font color="#fff">玩具</font>                              
+                         </div>
+                         
+                    </a>
+                </div>
+                <div class="item activity-item">
+                    <a tapmode="" onclick="">
+                        <div class="pic" style="background-image:url(../image/topic_img.jpg)">
+                        </div>
+                        <div class="activity-content ad-content">
+                            
+                            <a class="activity-title" href="javascript:;">已产生<span class="qipao-color-01">500</span>热门评论</a>
+                            <a class="ad-label label-yellow" href="javascript:;">我也要参与</a>
+                            <a class="activity-desc color-fff" href="javascript:;">六月的天，是温馨和谐的，然而刚进入六月，就
+    刮来了一股邪风，吹的人们顿时嚎啕大哭...</a>
+                        </div>
+                    </a>
+                </div> -->
+            </div>
+        </div>
+        <div class="blank-50"></div>  
+        <div id="tool-bt-wrap" style="display:none;">
+            <div class="fixed-bt" id="dianzan-bt" onclick="clickZan();"><i class="topic-dianzan-ico fa fa-heart-o" id="fixed-dianzan-bt"></i><span class="topic-dianzan-count" id="topic-dianzan-count-bottom">0</span></div>
+            <div class="fixed-bt" id="commend-bt"><i class="fa fa-commenting"></i></div>
+            <div class="fixed-bt" id="share-bt" onclick="popShareBox();"><i class="fa fa-share-alt"></i></div>
+             
+        </div>
+        
+    </div>
+</body>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/common.js"></script>
+    <script type="text/javascript" src="../script/topicDetailCon.js"></script>
+    <script>
+       $(function(){
+            initDev();
+       });
+    </script>
+</html>

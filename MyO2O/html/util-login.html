@@ -1,0 +1,337 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="format-detection" content="address=no" />
+    <title>api</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+     <style>
+        body{background-image:url(../image/login_bg.jpg);background-size:cover}
+        #wrap{height:100%}
+        #header{border:none;background-color:transparent!important}
+        #main{height:85%}
+        .loginTip{width:100%;text-align:center;bottom:3%;padding:0 10%;margin-top:0!important;box-sizing:border-box}
+        .loginTip a{width:40%;line-height:40px;text-decoration:none;color:#fff;font-size:1.1em;font-family:'微软雅黑'}
+        .hidden{display:none}
+        .input-wrap{padding:20px 10px 0}
+        .gray_line{height:0;border-bottom:1px solid #ddd}
+        .other-login{position:absolute;left:0;width:100%;margin:0 auto;bottom:5%;padding:0 10%;box-sizing:border-box}
+        .other-login li{padding:0.25rem;line-height:1.3rem;margin-top:8%;text-align:center;border-radius:3px}
+        .other-login li img{width:1rem;vertical-align:middle}
+        .other-login li span{color:#fff;font-size:0.6rem;padding-left:10px;vertical-align:middle}
+        .back-icon{background-image:url(../image/close_white_ico.png)!important;background-size:18px 18px!important}
+        #sina-login{background-color:rgba(191,49,22,.85);width:44%;display:inline-block}
+        #qq-login{float:right;background-color:rgba(9,151,197,.85);width:44%;display:inline-block}
+        #weixin-login{background-color:rgba(44,211,62,.85)}
+        .logo-wrap{position:absolute;top:25%;left:0;width:100%;text-align:center;box-sizing:border-box}
+        .logo-wrap img{width:80px}
+        .logo-wrap span{margin-top:16px;font-size:18px;color:#fff;font-family:'思源黑体 CN Light'}
+    </style>
+</head>
+
+<body>
+    <div id="wrap">
+        <div id="header">
+            <a class="back-icon" tapmode="" onclick="closeToWhere();"></a>
+            <h1></h1>
+        </div>
+        <div id="main">
+            <!-- <div class="input-wrap">
+                <input type="text" placeholder="手机号" onfocus="edit(this)" onblur="cancel(this)" class="txt" id="phone" value="" />
+                <i class="del" tapmode="" onclick="delWord(this)"></i>
+            </div>
+            <div class="input-wrap">
+                <input type="password" placeholder="密码" onfocus="edit(this)" onblur="cancel(this)" class="txt" id="pwd" value="" />
+                <i class="del" tapmode="" onclick="delWord(this)"></i>
+            </div>
+            <a class="btn" style="margin-top:30px;" tapmode="active" onclick="ensure()">登录</a> -->
+            
+            <div class="wraper-10 mt20">
+	            
+	            <!--<a class="btn" style="margin-top:30px;" tapmode="active" onclick="test_api_function()">试验田</a>    --> 
+	            
+            	
+            	<!-- <div class="t-center" style="margin-top:-8px;">
+            		<p style="display:inline-block;background-color:#f2f2f2;">&nbsp你还可以选择以下方式登录&nbsp</p> 
+            	</div>   -->
+                <div class="logo-wrap">
+                    <img class="logo" src="../image/login_logo.png" alt=""><br>
+                    <span>年轻人的情趣分享社群</span>
+                </div>
+            	<ul class="other-login">   
+            		<li id="sina-login">
+            			<img src="../image/webo_icon.png">
+            			<span>微博登录</span>
+            		</li>
+            		<li id="qq-login">
+            			<img src="../image/qq_icon.png">
+            			<span>QQ登录</span>
+            		</li>
+                    <li id="weixin-login">
+                        <img src="../image/wechat_icon.png">
+                        <span>微信登录</span>
+                    </li>
+                    <li class="loginTip">
+                        <a class="fl tl" tapmode="" onclick="gotoLoginByPhone();">登录</a>
+                        <a class="fr tr" tapmode="" onclick="gotoRegister();">注册</a>
+                    </li>
+            	</ul>  
+                <!-- <div id="loginTip" class="tc">
+                    <a class="fl" href="javascript:openNewWin('util-login-by-phone')">登录</a><br>
+                    <div class="gray_line clear"></div>  
+                    <a class="fr" tapmode="" onclick="gotoRegister();">注册</a>
+                </div> -->
+            </div>
+        </div>
+    </div>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script>	
+	function gotoLoginByPhone() {
+		  api.openWin({
+		    name: 'userLoginByPhone',
+		    url: 'util-login-by-phone.html',
+		    opaque: true,
+		    vScrollBarEnabled: false
+		  });
+	}
+	
+	function gotoRegister() {
+		  api.openWin({
+		    name: 'userRegister',
+		    url: 'util-register.html',
+		    opaque: true,
+		    vScrollBarEnabled: false
+		  });
+	}
+		
+	function sdkLogin(info) {
+	  if (typeof(info.userid) == 'undefined') {
+	  	myToast("登录失败，请重试！");
+	  	return ;	
+	  }
+
+	//api.alert({msg:info});	
+	  
+	  api_ajax(0, 
+			'util_SDKlogin.php', 
+			info,
+			after_sdkLogin,
+			info,
+			0
+		); 	
+	}
+	
+	function after_sdkLogin(ret, _, _, info) {
+		api.hideProgress();
+
+		if (ret.code == 100) {
+		    myToast('登录成功！');
+		    //alert($api.jsonToStr(ret));
+		
+		    $api.setStorage('uid', ret.uid);
+		    $api.setStorage('token', ret.token);
+		    $api.setStorage('username', ret.username);
+		    $api.setStorage('userimage', ret.headimg);
+		    $api.setStorage('sex', ret.sex);
+		    $api.setStorage('mobile', ret.mobile);
+		    $api.setStorage('platform', info.platform);
+		    $api.setStorage('platform_userid', info.userid);
+		    $api.setStorage('platform_username', info.username);
+		    $api.setStorage('platform_headimgurl', info.headimgurl);
+	          
+		    api.setPrefs({
+		      key: 'uid',
+		      value: ret.uid
+		    });
+		    api.setPrefs({
+		      key: 'token',
+		      value: ret.token
+		    });
+		    
+			after_login_action();
+	    } else {
+	     	myToast("登录失败，稍后重试！["+ret.code+"]");
+		}		
+	}
+	
+	function closeToWhere() {
+			api.closeWin();	
+			/*
+			api.closeToWin({
+				name: 'root'
+			});
+			*/	
+			return;
+	}
+	
+	apiready = function() {
+	  var header = $api.byId('header');
+	  $api.fixIos7Bar(header);
+	  //var phone = $api.getStorage('phone');
+	  //if (phone) $api.byId('phone').value = phone;
+		
+	  api.addEventListener({
+            name: 'keyback'
+        }, function(ret, err){
+			closeToWhere();
+        });
+        
+      //第三方登录
+	  //新浪登录
+	  $('#sina-login').on('click', function() {
+	  	//alert("开发中,敬请关注...");
+	  	//return false;	  
+	    var sinaWeiBo = api.require('sinaWeiBo');
+	    sinaWeiBo.auth(function(ret, err) {
+	    
+		// api.alert({
+	 //           title: '微博授权',
+	 //           msg: ret
+	 //         });
+	         	    	
+	      if (ret.status) {
+	         // api.alert({
+	         //   title: '微博授权',
+	         //   msg: '授权成功'
+	         // });
+             myToast('授权成功！');
+	        sinaWeiBo.getUserInfo(function(ret, err) {
+	          if (ret.status) {
+	            //api.alert({msg: ret});
+	            sdkLogin({
+	              userid: ret.userInfo.id,
+	              username: ret.userInfo.name,
+	              headimgurl: ret.userInfo.avatar_hd,
+	              platform: 'SinaWeibo'
+	            });
+	
+	          } else {
+	          	myToast("登录失败，稍后重试！");
+	          /*
+	            api.alert({
+	              msg: err.msg
+	            });
+	            */
+	          }
+	        });
+	      } else {
+	      		myToast("登录失败，稍后重试！");
+	      /*
+	        api.alert({
+	          msg: '授权失败' + err.msg
+	        });
+	        */
+	      }
+	    });
+	
+	    // sinaWeiBo.cancelAuth(function(ret,err){
+	    //     if(ret.status){
+	    //         api.alert({msg:'登出成功'});
+	    //     }else{
+	    //         api.alert({msg:err.msg});
+	    //     }
+	    // });
+	
+	  });
+	  
+	  //qq登录
+	  $('#qq-login').on('click', function() {
+	    var obj = api.require('qq');	
+	    obj.login(function(ret, err) {
+	      if (ret.status) {
+	            api.showProgress({
+	                style: 'default',
+	                animationType: 'fade',
+	                title: '登录中...',
+	                text: '请稍后...',
+	                modal: false
+	            });	      
+	        	var id = ret.openId;
+	        	obj.getUserInfo(function(ret,err) {
+		           if (ret.status) {
+		              //api.alert({msg:ret});
+		              //$api.setStorage('nickname', ret.info.nickname);
+		              sdkLogin({
+		                userid:id,
+		                username:ret.info.nickname,
+		                headimgurl:ret.info.figureurl_qq_2,
+		                platform:'QQ'
+		              });
+		           }else{
+		              //api.alert({msg:err.msg});
+		              api.hideProgress();
+		              myToast("登录失败，稍后重试！");
+		           }
+	        });
+	      }
+	    });
+	  });
+	  
+	  //微信登录
+	  $('#weixin-login').on('click', function() {
+		var wx = api.require('wx');
+	    wx.auth({
+	        apiKey: ''	//在此输入你的微信apikey
+	    }, function(ret, err){
+	        if(ret.status){
+	            api.showProgress({
+	                style: 'default',
+	                animationType: 'fade',
+	                title: '登录中...',
+	                text: '请稍后...',
+	                modal: false
+	            });
+	            wx.getToken({
+	                //apiKey: '',
+	                //apiSecret: '',
+	                code: ret.code
+	            },function(ret, err){	                
+	                if(ret.status){
+	                    //获取用户信息
+	                    var accessToken = ret.accessToken;
+	                    var openId = ret.openId;
+	                    wx.getUserInfo({
+	                        accessToken: ret.accessToken,
+	                        openId: ret.openId
+	                    }, function(ret,err){	
+	                        if(ret.status) {
+	                        //api.alert({msg:ret});	
+	                          var info = {
+				                userid:ret.openid,
+				                username:ret.nickname,
+				                headimgurl:ret.headimgurl,
+				                privilege:ret.privilege,//chinaunicom
+				                city:ret.city,
+				                province:ret.province,
+				                country:ret.country,
+				                sex:ret.sex,
+				                platform:'Wechat'
+				              };                    
+				              //api.alert({msg:info});	    
+				              sdkLogin(info);
+	                        } else {
+	                        	api.hideProgress();
+	                        	myToast("登录失败，稍后重试！");
+	                        }
+	                    });
+	                } else {
+	                	api.hideProgress();
+	                	myToast("登录失败，稍后重试！");
+	                }
+	            });	            
+	        }else{
+	        	api.hideProgress();
+	            if(api.systemType=='android' && err.code==3){
+	                alert("请安装微信客户端");
+	            }
+	        }
+	    });
+	  });
+};
+</script>
+</body>
+</html>

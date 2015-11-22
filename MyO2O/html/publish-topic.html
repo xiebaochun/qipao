@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>全部回复</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <style>
+        body{background-color:#fff}
+        #header{position:relative}
+        #wrap{height:100%;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-flow:column;flex-flow:column}
+        #main{-webkit-box-flex:1;-webkit-flex:1;flex:1;background-color:#fff;margin-top:44px}
+        .publish-bt{position:absolute;right:.5rem;top:0;line-height:44px}
+        .cate-arrow{display: inline-block; width:6px;height:10px;margin-left:10px;background-image: url(../image/arr-white-l.png);background-size: 6px 10px;-webkit-transform:rotate(-90deg);transform:rotate(-90deg);}
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <a class="back-icon" tapmode="" onclick="api.closeWin()"></a>
+            <h1 class="circle-toggle"><span class="fname color-fff">发表话题</span><i class="cate-arrow fa fa-angle-down"></i></h1>
+            <a class="publish-bt" href="javascript:publishTopic();">发表</a>
+        </div>
+        <div id="main">
+            
+        </div>
+    </div>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/common.js"></script>
+    <script>
+        apiready = function(){
+            var header = $api.byId('header');
+            $api.fixIos7Bar(header);
+            var fid = api.pageParam.fid;
+            //var tid = api.pageParam.tid;
+            var fname = api.pageParam.fname;
+            var header = $api.byId('header');
+            var headerPos = $api.offset(header);
+            var width = api.winWidth;
+            var height = api.winHeight - headerPos.h+1;
+            api.openFrame({
+                name : 'publish-topiccon',
+                url : 'publish-topiccon.html',
+                bounces : false,
+                vScrollBarEnabled : false,
+                pageParam : {
+                    fid : fid,
+                    fname:fname
+                },
+                rect : {
+                    x : 0,
+                    y : headerPos.h,
+                    w : width,
+                    h : height
+                }
+            });
+            $('.fname').text(fname);
+            $('.circle-toggle').click(function(){
+                api.execScript({
+                    name:'publish-topic',
+                    frameName:'publish-topiccon',
+                    script:'toggleCircle()'
+                });
+                //$('.cate-arrow').toggleClass('fa-angle-down');
+            });
+        }
+        function publishTopic(){
+
+        }
+        function changeCircleName(fname){
+            // alert('parent:'+fname);
+            $('.fname').text(fname);
+        }
+        $(function(){
+            initDev();
+        });
+    </script>
+</body>
+</html>

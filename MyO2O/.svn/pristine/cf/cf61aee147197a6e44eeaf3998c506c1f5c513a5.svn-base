@@ -1,0 +1,50 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <title>话题首页</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <style>
+        #header{background-color:#fff}
+        .header-bt{display:inline-block;height:48px;font-size:0.7rem;color:#fff;padding:0 20px}
+        .top-nav-active{border-bottom:2px solid #ffc72a;color:#ffc72a}
+        .daren-slide{position:relative;height:5rem;background-color:#fff}
+        .daren-item-list{padding:0.5rem 0;text-align:center}
+        .daren-item{width:3.6rem;display:inline-block}
+        .daren-item .daren-avator{display:inline-block;width:2rem;height:2rem;border:2px solid #666;border-radius:50%}
+        .slide-nav{position:absolute;width:100%;left:0;height:1rem;bottom:.1rem;text-align:center}
+        .slide-nav>.slide-nav-item{display:inline-block;width:.5rem;height:.5rem;border:1px solid #666;background-color:#fff;border-radius:50%}
+        .topic-list .topic-item{background-color:#fff;margin:0;margin-top:.5rem}
+        .topic-list .topic-item .topic-item-header{padding:.5rem .5rem}
+        .topic-list .topic-item .topic-item-header .user-avator{display:inline-block;width:1.5rem;height:1.5rem;background-color:#eee;vertical-align:middle;border-radius:50%}
+        .gender-ico{display:inline-block;width:.5rem;height:.5rem;background-color:#55f;border-radius:50%}
+        .from-where{display:inline-block;float:right;color:#ffd600}
+        .topic-item-body>img{display:inline-block;height:7rem;width:100%;background-color:#eee}
+        .topic-list .topic-item .topic-item-footer{height:3rem;color:#999}
+        .topic-item-title{margin:0;padding:0 .5rem}
+        .create-time{padding:.5rem;color:#999}      
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <div class="header active">
+                <h1><a class="header-bt header-explore" href="javascript:;" tabmode="">发现</a><a class="header-bt header-follow" href="javascript:;" tabmode="">关注</a></h1>
+               
+            </div>
+           
+        </div>
+        <div id="main">
+            <!-- <ul class="mui-table-view news-list" id="forum-list">
+                <li class="mui-table-view-cell">
+                    <a class="mui-navigate-right"><img src="../image/user/my_message.png" alt=""><span>最爱自拍</span></a>
+                </li>
+            </ul> -->
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src='../script/common.js'></script>
+<script type="text/javascript" src="../script/topic.js"></script>
+</html>

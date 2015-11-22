@@ -1,0 +1,218 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <title>私信我的</title>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../css/news.css" />
+    <style>
+       body{background-color:#fff}
+       #main{background-color:#fff}
+       .user-avator{display:inline-block;width:2rem;height:2rem;border-radius:50%;background-color:#eee;vertical-align:middle}
+       .info-item{margin:0 .5rem;padding:.5rem 0;border-bottom:1px solid #ccc}
+       .info-item-middle{margin-left:.3rem;vertical-align:middle}
+       .info-item-middle>.user-name{font-size:.7rem;vertical-align:middle}
+       .info-item-middle>.info-summary{color:#666}
+       .create-time{display:inline-block;position:absolute;right:.5rem;top:.1rem;color:#999}
+       .blacklist-bt{position:absolute;display:inline-block;right:0;bottom:23px;font-size:.6rem;color:#000;height:12px;margin-top:13px;margin-right:20px;color:#ccc}      
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <a class="back-icon" tapmode="" onclick="api.closeWin()"></a>
+            <h1 class="">私信</h1>
+            <a class="blacklist-bt" style="display:none;">黑名单</a>
+        </div>
+        <div id="main">
+            <ul class="info-list" id="main_ul">
+            <div class="no-content-tip none">
+                <img src="../image/none_pm_expression.png" alt=""><br>
+                <span>暂时没有人私信你喔~</span>
+            </div>
+            
+                <!-- <li class="mui-table-view-cell info-tag-'+page+'" data-id="'+dlist[index].sid+'" data-un="'+dlist[index].sname+'">
+                    <div class="mui-slider-right mui-disabled">
+                        <a class="mui-btn mui-btn-red" onclick="deleteNotice('+dlist[index].msgid+');">删除</a> 
+                    </div>
+                    <div class="mui-slider-handle">
+                        <img class="user-avator info-user-'+page+'" data-ui="'+dlist[index].sid+'" src="'+dlist[index].simage+'">
+                        <a class="info-item-middle" href="javascript:;">
+                            <span class="user-name">gdeg</span><i class="gender-ico gender-male-ico"></i><br>
+                            <span class="info-summary">dfgdf</span>
+                            
+                        </a>
+                        <span class="create-time">dfg</span> '
+                    </div>
+                </li> -->
+                
+            </ul>
+            
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src='../script/common.js'></script>
+<script>
+   $(function(){
+    $('.blacklist-bt').click(function(){
+        api.openWin({
+            name:'my-blacklist',
+            url:'my-blacklist.html',
+            pageParam:{}
+        });
+    });
+    });
+    
+    function deletePm(dom,indexid) {
+		api_ajax(2, 
+				'gd_pm_index_del.php', 
+				{	
+					indexid:indexid
+				}, 
+				afterDeletePm,
+				dom,
+				0
+			);    
+    }
+  
+      
+    function afterDeletePm(ret, _, _, dom){
+        if(ret.code == 100){
+             $(dom).parent().parent().remove();
+            myToast('删除成功！');
+        }
+    }
+            
+   function getData() {
+   		canMore = 0;
+		api_ajax(2, 
+				'gd_pm_index_get.php', 
+				{	
+					page: page,
+					psize: psize
+				}, 
+				createHtml,
+				0,
+				1
+			);    
+    }
+    
+    function createHtml(ret, _, _, _){
+        console.log(ret);
+        if (page == 1) {
+        	if (ret.blacklist_len) {
+        		$('.blacklist-bt').show();
+        	} else {
+        		$('.blacklist-bt').hide();
+        	}
+        }
+		if (ret['code'] == 101) {
+            $('.no-content-tip').show();
+            page = -1;
+		} else if (ret['code'] == 100) {
+    		data = ret.data;
+    		var dlist = data.info.list;	
+    		var cHtml = '';
+            for(var index in dlist){
+                var html = '<li class="mui-table-view-cell info-tag-'+page+'" data-id="'+dlist[index].sid+'" data-un="'+dlist[index].sname+'">'+
+                                '<div class="mui-slider-right mui-disabled">'+
+                                    '<a class="mui-btn mui-btn-red delete-pm-'+page+'" data-indexid="'+dlist[index].indexid+'">删除</a> '+
+                                '</div>'+
+                                '<div class="mui-slider-handle">'+
+                                    '<img class="default-avator user-avator info-user-'+page+'" data-ui="'+dlist[index].sid+'" src="'+dlist[index].simage+'">'+
+                                    '<a class="info-item-middle" href="javascript:;">'+
+                                        '<span class="user-name">'+dlist[index].sname+'</span><i class="gender-ico gender-male-ico"></i><br>'+
+                                        '<span class="info-summary">'+dlist[index].message+'</span>'+
+                                        
+                                    '</a>'+
+                                    '<span class="create-time">'+dlist[index].date+'</span> '+ 
+                                '</div>'+
+                            '</li>';
+                cHtml+=html;
+             }
+                
+            var content = $("#main_ul");
+            if (page == 1) content.empty();
+            content.append(cHtml);
+
+            
+            $('.info-tag-'+page).click(function(){
+                $this = $(this);
+                openPM($this.data('id'), $this.data('un'));
+                return false;
+            }); 
+            $('.info-user-'+page).click(function(){
+                $this = $(this);
+                openUserSpace($this.data('ui'));
+                return false;
+            });    
+            $('.delete-pm-'+page).click(function(){
+                var indexid = $(this).data('indexid');
+                deletePm(this,indexid);
+                return false;
+            });                     
+            if (data.info.pageinfo.curpage >= data.info.pageinfo.totalpage)
+                page = -1;                          
+        }
+        else{
+            page = -1;
+        } 
+        canMore = 1;
+		isFirst = 0;
+    }
+
+	var page = 1;	
+	var psize = 10;
+	var canMore = 1;
+	var isFirst = 1; 
+    apiready = function(){  
+        var header = $api.byId('header');
+        $api.fixIos7Bar(header);
+		
+	   api.setRefreshHeaderInfo({
+	        visible: true,
+	        // loadingImgae: 'wgt://image/refresh-white.png',
+	        bgColor: '#f2f2f2',
+	        textColor: '#4d4d4d',
+	        textDown: '下拉刷新...',
+	        textUp: '松开刷新...',
+	        showTime: true
+	    }, function (ret, err) {
+			api.hideProgress();
+			if (canMore)
+			{
+		    	page = 1;
+		        getData();
+			}
+			api.refreshHeaderLoadDone();
+	    });
+	
+	    api.addEventListener({
+	        name: 'scrolltobottom',
+	        extra:{
+	        	threshold:200
+	    	}
+	    }, function (ret, err) {
+	       if (page > 0 & canMore)
+	        {
+		        page = page + 1;
+		        getData();
+	        }
+	    });    
+
+	    //getData();	    
+		api.addEventListener({
+	         name:'viewappear'
+	      },function(ret,err){
+			//if (isFirst == 0)
+			{
+	      	  page = 1;
+	          getData();
+			  }
+	    }); 	    
+    }
+</script>
+</html>
