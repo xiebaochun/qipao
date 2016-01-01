@@ -1,0 +1,145 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>个人空间</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+ <!--    <link rel="stylesheet" type="text/css" href="../css/awesome-font/font-awesome.min.css" /> -->
+    <link rel="stylesheet" type="text/css" href="../css/user.css" />
+    <link rel="stylesheet" type="text/css" href="../css/topic-list.css" />
+    <link rel="stylesheet" type="text/css" href="../css/user-list.css" />
+    <style>
+        html{background-color: #eee;}
+         #header{background-color:none;position:fixed;top:-2px;left:0;z-index:40;}
+         #main{background-color: #eee;}
+         /*.nav-active>span{color:#ffc72a!important}*/
+         .nav-item{width:32%!important}
+         .nav-item>*{color:#999;}
+         .nav{position: relative;background-color: #fff;}
+
+         .nav-active{color:#333;}
+         .nav-active>*{color:#333;}
+
+         .hongren-wrap{position:absolute;display:block;top:3rem;right:1.8rem;width:3rem;text-align:center;z-index:5}
+         .hongren-wrap>.hongren-ico{display:inline-block;margin-top:.6rem;width:1rem;height:1rem;}
+         .hongren-wrap>.hongren-txt{font-size:.6rem;color:#eee}
+         .none-expression{width:5rem}
+         .user-name{font-size:.7rem}
+         #cover{height:8.5rem;background-image: url(../image/user_zone_bg.png);background-size: 100% 100%;background-repeat: no-repeat;}
+         .setting-ico{display:inline-block;z-index:6}
+         #user-info-edit{z-index:6}
+         .cover-bt{display:inline-block;width:6rem;padding:.25rem 0;border-radius:.8rem;margin:0 .5rem}
+         .cover-bt>div{font-size: 0.55rem;}
+         #login_register{margin:.5rem 0}
+         #private-mail-wraper{}
+         #follow-wraper{background-color:#fed600}
+         .report-user{display:none;z-index:50;position:fixed}
+         .pop-wrap{position:fixed;z-index:100}
+         .dialog-box{position:absolute;left:50%;top:50%;margin-left:-6rem!important;width:12rem;margin:0 auto;margin-top:-6rem;border-radius:.5rem;background-color:#fff;text-align:center;padding:0!important}
+         .dialog-body>.item{position:relative;border-bottom:1px solid #eee;padding-bottom:.7rem}
+         .dialog-box input{border:none}
+         .dialog-box .dialog-close-bt{position:absolute;width:1.2rem;height:1.2rem;right:.5rem;top:-1.5rem;text-align:center}
+         .dialog-box .dialog-close-bt>i{display:inline-block;position:absolute;width:1.2rem;height:1.2rem;background-size:100% 100%;background-image:url(../image/close_x_ico.png)}
+         .dialog-box .dialog-close-bt>i:before{content:none}
+         .dialog-title{text-align:center;margin-top:.2rem;padding:.3rem 0;border-bottom:1px solid #eee}
+         .dialog-title .title1{font-size:.8rem}
+         .dialog-title .title2{font-size:.5rem;color:#999}
+         .valid-input-wrap{margin:0 auto;width:8rem;margin-top:.5rem;border:1px solid #999;border-radius:2rem;font-weight:.7rem;padding-left:.5rem;font-size:.5rem}
+         .dialog-body{padding:.5rem 0!important;line-height:.8rem}
+         .dialog-body span{line-height:1rem;margin-right:1rem;font-size:.7rem}
+         .dialog-body .label{margin-right:4.5rem}
+         .dialog-body .bt{position:absolute;display:inline-block;width:2.5rem;top:0;right:.2rem;background-color:#ffc72a;margin-left:.5rem;border-radius:.2rem;padding:.1rem .5rem;font-size:.6rem}
+         #send-pm{display:none}
+         
+         .choose-item-list{position:absolute;bottom:0;width:100%}
+         .choose-item-list>li{background-color:#FFF;text-align:center;line-height:2rem}
+         .choose-item-list>li>span{display:inline-block;width:95%;border-bottom:1px solid #EEE}
+         .info-wrap{background-color:#fff;text-align:right;margin-top:.5rem}
+         .input-wrap{position:relative;margin:0 .5rem;border-bottom:1px solid #eee;line-height:2rem;font-size:.6rem}
+         .input-wrap>.input{margin-bottom:0;outline:0;width:10.5rem;font-size:.6rem;text-align:left;outline:0;border:none}
+         .input-label{width:4rem;text-align:left}
+         .user-stamp{color:#ffc72a!important;margin-top:.1rem;font-size:.5rem}   
+         .content{margin-top:12rem;}
+         #avatar {
+             margin: 0 auto;
+             top:0;
+             padding: 2.3rem 0 5px 0;
+             border:none;
+         }
+         #headImg{
+
+         }
+         .level-wrap{margin-left:0.2rem;padding:0 0.3rem;background-color: #ffc72a; color:#333;border-radius: 0.8rem;font-size: 0.3rem;}
+         .follow-bt{padding:0.2rem 0.4rem;border-radius:0.2rem; margin-top:0.9rem;margin-right:0.5rem; background-color: #fdd600;}
+         .follow-bt-gray{background-color: #eee;}
+         .user-info-wrap{padding:0.5rem;}
+         .icon-female{padding:0.1rem;background-color: #ff9191;border-radius:50%;color:#fff;font-size:0.4rem !important;}
+         .icon-more{font-size:0.8rem !important;}
+         #usernickname{color:#fff !important;}
+         .follow-bt{width:2.5rem;text-align: center;}
+         /*#cover{-webkit-filter:blur(20px);}*/
+         #cover{position: relative;background-color: rgba(0,0,0,1) !important;}
+         #cover *{position: relative;z-index: 2;}
+         .cover-bg{position:absolute !important;left:0;top:0;width: 100%; height:8.5rem;z-index:0;-webkit-filter:blur(20px);background-size: cover;background-position: center;}
+         .cover-mask{position:absolute !important;left:0;top:0;width: 100%; height:8.5rem;z-index:1;background-color: rgba(0,0,0,0.3);}
+        .nav{background-color: #fff;z-index: 100;}
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <a class="back-icon iconfont icon-arrow-left" tapmode="" onclick="api.closeWin();"></a>
+            <h1>TA的主页</h1>
+            <a class="more-bt header-right-txt" href="javascript:;" style="_display:none;" onclick="showMore();"><i class="iconfont icon-more"></i></a>
+        </div>
+        <div id="main"> 
+            
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script>
+
+$(function(){
+    initDev();
+});
+
+apiready = function () {
+	var header = $api.byId('header');
+	$api.fixIos7Bar(header);
+    sid = api.pageParam.sid;
+    headerPos =  headerPos = $api.offset(header);
+    var height = api.winHeight - headerPos.h;
+    width = $api.winWidth;
+    api.openFrame({
+          name: 'user-zone-con',
+          url: 'user-zone-con.html',
+          reload: false,
+          bounces : false,
+          //opaque: true,
+          vScrollBarEnabled : false,
+          pageParam : {
+              sid:sid
+              // tid : tid
+          },
+          rect : {
+              x : 0,
+              y : headerPos.h-2,
+              w : width,
+              h : height+2
+          }
+      });  
+        
+};
+function showMore(){
+    api.execScript({
+        frameName:'user-zone-con',
+        script:'showMore()'
+    });
+}
+</script>
+
+</html>

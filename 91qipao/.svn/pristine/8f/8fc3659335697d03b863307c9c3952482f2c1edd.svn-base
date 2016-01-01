@@ -1,0 +1,8 @@
+.task-item{padding:0.5rem 0;margin:0 0.5rem;border-bottom:1px solid #eee;}
+.task-item>img{width:1.8rem;height:1.8rem;vertical-align: middle;}
+.task-info{margin-left:0.3rem;vertical-align: middle;}
+.task-info>span:first-child{font-size: 0.7rem;}
+.task-info>span:last-child{font-size: 0.5rem;color:#aaa}
+.start-bt{margin-top:-0.5rem;/*background-color: #fdd600;*/line-height: 3rem;}
+.start-bt>span{display: inline-block;width: 2.6rem; background-color: #fdd600;padding:0.1rem 0.2rem; border-radius:0.2rem;line-height: 1rem;text-align: center;}
+.start-bt>.task-active{background-color:#ccc;color:#666;}

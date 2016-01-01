@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+        <meta name="format-detection"content="telephone=no">
+        <title>我的收藏-提问</title>
+        <link rel="stylesheet" type="text/css" href="../css/common.css" />
+        <style>
+            #main{background-color: #eee;}
+        </style>
+    </head>
+    <body>
+        <div id="wrap">
+            <div id="main">
+                <!-- <div class="v2-qa-item">
+                    <div class="v2-qa-header">
+                        <div class="v2-qa-author-info">
+                            <img class="v2-qa-author-avator" src="../image/version_logo.png" alt="">
+                        </div>
+                        <div class="v2-qa-title item-title">标题标题标题标题标题</div>
+                    </div>
+                    <div class="v2-qa-body">
+                        <div class="v2-qa-like-wrap"></div>
+                        <div class="v2-qa-content">
+                            <span class="color-blue">战神：</span>这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容
+                        </div>
+                    </div>
+                    <div class="v2-qa-footer">
+                        <div class="v2-qa-tags-wrap">
+                            <span class="v2-qa-tag"><i class="iconfont icon-biaoqian"></i><span class="ml2">标签</span></span>
+                        </div>
+                        <div class="v2-qa-like-wrap">
+                            <i class="iconfont icon-xin"></i><span class="ml2 like-count">32</span>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+        <script type="text/javascript" src="../script/api.js"></script>
+        <script src="../script/common.js"></script>
+        <script>
+            $(function(){
+                initDev();
+            });
+            apiready = function(){
+                // var html = $('#main').html();
+                // for(var i=0;i<50;i++){
+                //     $('#main').append($(html));
+                // }
+                //listQA(null,'#main');
+                require('list_common',function(){
+                    app_content = new QIPAO.list({
+                        api_file:'my_favorite_topic_list.php',
+                        postData:{ 
+                            psize: 10,
+                            fup: 104
+                        },
+                        holder:'#main',
+                        listF:listQA,
+                        none:{
+                            txt:'暂无收藏内容',
+                            btTxt:'去看看',
+                            to:'expert-qa'
+                        }
+                    });
+                });
+            } 
+        </script>
+    </body>
+</html>

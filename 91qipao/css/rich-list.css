@@ -1,0 +1,6 @@
+.user-item{padding:0.5rem;padding-left:0;background-color:#fff;}
+.item-user-info{position: relative; margin-left:0rem;}
+.item-name{margin-left:0.5rem;}
+.wealth{line-height: 1.8rem;}
+.rank{display:inline-block;width:1.5rem;text-align:center;font-size: 0.6rem;}
+.huangguan{position: absolute;display: inline-block;top:-0.4rem;left:0.4rem;width:1rem;}

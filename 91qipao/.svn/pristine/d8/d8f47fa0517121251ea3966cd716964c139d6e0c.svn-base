@@ -1,0 +1,530 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="format-detection" content="address=no" />
+    <title>登录</title>
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1450166792_2344513.css">
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+     <style>
+        body{}
+        #wrap{height:100%;background-color: #fff;}
+        #header{border:none;background-color:#ffd600;}
+        .back-icon{background-image: none !important;font-size: 20px;line-height: 52px;}
+        #main{height:85%}
+        .loginTip{width:100%;text-align:center;bottom:3%;padding:0 10%;margin-top:0!important;box-sizing:border-box}
+        .loginTip a{width:40%;line-height:40px;text-decoration:none;color:#fff;font-size:1.1em;font-family:'微软雅黑'}
+        .hidden{display:none}
+        .input-wrap{position: relative; height:1.8rem;margin:1.8rem 0.8rem;padding-left:1rem;border-radius:1rem;border:1px solid #eee;overflow:hidden;box-sizing:border-box;}
+        .input-wrap>input{width:80%;padding:0.4rem 0.3rem;line-height: 1rem;font-size: 0.55rem;}
+        .gray_line{height:0;border-bottom:1px solid #ddd}
+        .other-login{margin:0 0.5rem;margin-top:1rem;display:flex;display:-webkit-flex;}
+        .other-login li{flex:1;-webkit-flex:1;text-align: center;}
+        .other-login li i{width:1rem;padding:0.6rem;font-size:2.5rem;vertical-align:middle}
+        .other-login li span{color:#666;margin-top:0.1rem;font-size:0.5rem;vertical-align:middle}
+        #sina-login{width:29%;display:inline-block}
+        #qq-login{width:29%;display:inline-block}
+        #weixin-login{width:29%;display:inline-block;}
+        #sina-login>i{color: #ff7246;font-size: 2.46rem;}
+        #qq-login>i{color: #2bc1ff;}
+        #weixin-login>i{color: #77bf2f;}
+        /*.simple-login-bt{display:block;margin-bottom:1rem;background-color: rgba(44,211,62,0.8);border-radius:2px;text-align: center;}
+        .simple-login-bt:last-child{background-color: rgba(9,151,197,0.8);margin-bottom:3rem;}*/
+        #get-authcode-bt{position: absolute;top:0;right:0;padding:0 0.6rem 0 0.6rem;line-height: 1.8rem;background-color: #EEEEEE;font-size: 0.5rem;}
+        a.login-bt{margin:0 0.5rem;padding:0;background-color: #ccc !important;line-height:1.8rem;color:#fff;border-radius: 50px;}
+        .get-validcode-bt{background-color:#eee;}
+        .get-validcode-bt-active{background-color:#fdd600 !important}
+        a.login-bt-active{background-color:#fd4f58 !important}
+        .icon-phone,.icon-id-code{line-height:1.8rem;font-size:0.55rem !important;color:#999;}
+    </style>
+</head>
+
+<body>
+    <div id="wrap">
+        <div id="header">
+            <a class="back-icon iconfont icon-arrow-left" tapmode="" onclick="closeToWhere();"></a>
+            <h1>登录</h1>
+        </div>
+        <div id="main">
+            <div class="input-wrap">
+                <i class="iconfont icon-phone"></i>
+                <input type="text" placeholder="手机号码" id="phone" value="" oninput="return input_change(this);"/>
+                <div class="get-validcode-bt" id="get-authcode-bt">获取验证码</div>
+            </div>
+            <div class="input-wrap">
+                <i class="iconfont icon-id-code"></i>
+                <input type="password" placeholder="请输入4位数字验证码" id="authcode" value="" oninput="return input_validate_change(this);"/>
+            </div>
+            <a class="btn login-bt" id="login-bt" style="margin:1.5rem 0.8rem 0.5rem 0.8rem;" tapmode="active" onclick="login();">登录</a>
+            <div class="tc user-protocals"><span class="check-box-wrap color-999 vm">*</span><span class="vm color-999"><span class="check-toggle color-999">登录即表示您同意</span><span class="color-333" onclick="openWin('my-setting-pt');">《气泡用户协议》</span></span></div>
+            
+            <div class="wraper-10" style="margin-top:1.5rem;">
+	           <div style="position:relative;border-bottom:1px solid #eee;text-align:center;">
+                    <p style="position:absolute;display:inline-block;top:-10px;left:50%;margin-left:-40px;width:80px;font-size:14px;background-color:#fff;color:#999;">快速登录</p>
+               </div>
+	            <!--<a class="btn" style="margin-top:30px;" tapmode="active" onclick="test_api_function()">试验田</a>    --> 
+	            
+            	
+            	<!-- <div class="t-center" style="margin-top:-8px;">
+            		<p style="display:inline-block;background-color:#f2f2f2;">&nbsp你还可以选择以下方式登录&nbsp</p> 
+            	</div>   -->
+
+            	<ul class="other-login">   
+                    <li id="weixin-login" style="display:none;">
+                        <i class="iconfont icon-weixin"></i><br>
+                        <span>微信登录</span>
+                    </li>
+            		<li id="sina-login" style="display:none;">
+            			<i class="iconfont icon-xinlang"></i><br>
+            			<span>微博登录</span>
+            		</li>
+            		<li id="qq-login" style="display:none;">
+            			<i class="iconfont icon-qq"></i><br>
+            			<span>QQ登录</span>
+            		</li>
+<!--                     <li class="loginTip">
+                        <a class="fl tl" id="login-bt" tapmode="" onclick="gotoLoginByPhone();">登录</a>
+                        <a class="fr tr" id="register-bt" tapmode="" onclick="gotoRegister();">注册</a>
+                    </li> -->
+            	</ul>  
+                <!-- <div id="loginTip" class="tc">
+                    <a class="fl" href="javascript:openNewWin('util-login-by-phone')">登录</a><br>
+                    <div class="gray_line clear"></div>  
+                    <a class="fr" tapmode="" onclick="gotoRegister();">注册</a>
+                </div> -->
+            </div>
+        </div>
+    </div>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script>	
+    var isInstall_qq = true,isInstall_wx = true;
+    var canSendAuthCode = true;
+    $(function(){
+        $('#get-authcode-bt').click(function(){
+            if (canSendAuthCode) {
+                var phone = $api.byId('phone').value;
+                sendAuthcode(phone);
+                $('#authcode').focus();
+            } else {
+            }
+            return false;
+         });  
+    });
+    function setAuthCodeTime(seconds) {
+        if (seconds > 0 ) {
+            canSendAuthCode = false;
+            $('#get-authcode-bt').removeClass('get-validcode-bt-active');
+            $('#phone').attr("readonly","readonly");
+            var str = ""+seconds+"秒";
+            $('#get-authcode-bt').html(str);
+            seconds = seconds-1;
+            setTimeout(function () {
+                    setAuthCodeTime(seconds);
+            }, 1000);
+        } else {
+            $('#phone').removeAttr("readonly");
+            var str = "验证码";
+            $('#get-authcode-bt').html(str);
+            $('#get-authcode-bt').addClass('get-validcode-bt-active');
+            canSendAuthCode = true;
+        }
+    }
+    var isphone = 0;
+    function input_change(obj){
+        var phone = $api.byId('phone').value;
+        var $phone = $('#phone');
+        var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/; 
+
+        $phone.val(phone.replace(/[^0-9]/g,""));
+        phone = $phone.val();
+        //$('#phone').val('gfsd');
+        if(phone.length>=11){
+            $phone.val(phone.substring(0,11));
+            phone = $phone.val();
+            isphone = 1;
+        }else{
+            isphone = 0;
+        }
+        if(myreg.test(phone)){ 
+            $('#get-authcode-bt').addClass('get-validcode-bt-active');
+            //$('#authcode').attr('placeholder','验证码');
+            isphone = 1;
+        }
+        else {
+            $('#get-authcode-bt').removeClass('get-validcode-bt-active');
+            //$('#authcode').attr('placeholder','密码');
+            isphone = 0;
+        }
+
+        if (phone == '') {
+            //$('#authcode').attr('placeholder','验证码/密码');
+            isphone = 0;
+        }
+        checkCondition();
+    }
+    
+   var isValidCode = 0;
+   function input_validate_change(){
+       
+        var $validateCode = $('#authcode');
+        var code = $validateCode.val();
+        $validateCode.val(code.replace(/[\u4e00-\u9fa5]/g,"")); 
+        if(code.length >= 4){
+            $validateCode.val(code.substring(0,4));
+            isValidCode = 1;
+        }else{
+            isValidCode = 0;
+        }
+        checkCondition();
+   }
+   function checkCondition(){
+        if(isValidCode&&isphone){
+            $('#login-bt').addClass('login-bt-active');
+        }else{
+            $('#login-bt').removeClass('login-bt-active');
+        }
+   }
+   function login() {
+     var phone = $api.byId('phone').value;
+     var authcode = $api.byId('authcode').value;  
+     var info = {
+            phone:phone,
+            authcode:authcode,
+            isphone:isphone 
+                };
+   
+  api_ajax(0, 
+        'util_login.php', 
+        info,
+        after_login,
+        info,
+        3
+    );         
+   }
+   
+   function after_login(ret, _, _, info) {
+    if (ret.code == 988) {
+        return;
+    }
+    console.log(ret);
+    if (ret.code == 100) {
+       $api.setStorage('phone', info.phone);
+       $api.setStorage('authcode',info.authcode);
+       $api.setStorage('isphone', info.isphone);    
+       $api.setStorage('uid', ret.uid); 
+       $api.setStorage('sex', ret.sex); 
+       $api.setStorage('token', ret.token);
+       $api.setStorage('userimage',ret.userimage);
+       $api.setStorage('username',ret.username);
+       $api.setStorage('platform', 'qp_phone'); 
+       $api.setStorage('is_ours', ret.is_ours);                
+
+       openFillInfo();
+       return;
+       after_login_action();
+      } else if (ret.code == 102) {
+         myToast(ret.msg, 2000);
+      } else {
+         myToast("很抱歉，此号码未注册，请先注册后再登录！"+ret.code, 2000);
+      }
+   }
+
+   function openFillInfo(){
+        api.openWin({
+            name: 'userLoginFillInfo',
+            url: 'util-login-fill-info.html',
+            pageParam:{},
+            reload:false,
+            opaque:true,
+            cScrollBarEnabled:false,
+            softInputMode:'resize'
+        });
+   }
+	// function gotoLoginByPhone() {
+	// 	  api.openWin({
+	// 	    name: 'userLoginByPhone',
+	// 	    url: 'util-login-by-phone.html',
+	// 	    opaque: true,
+	// 	    vScrollBarEnabled: false
+	// 	  });
+	// }
+	
+	// function gotoRegister() {
+	// 	  api.openWin({
+	// 	    name: 'userRegister',
+	// 	    url: 'util-register.html',
+	// 	    opaque: true,
+	// 	    vScrollBarEnabled: false
+	// 	  });
+	// }
+		
+	function sdkLogin(info) {
+	  if (typeof(info.userid) == 'undefined') {
+	  	myToast("登录失败，请重试！");
+	  	return ;	
+	  }
+
+	//api.alert({msg:info});	
+	  info['sysinfo'] = getSysInfo();
+	  api_ajax(0, 
+			'util_SDKlogin.php', 
+			info,
+			after_sdkLogin,
+			info,
+			0
+		); 	
+	}
+	
+	function after_sdkLogin(ret, _, _, info) {
+		api.hideProgress();
+		if (ret.code == 988) {
+			return;
+		}
+		if (ret.code == 100) {
+		    myToast('登录成功！');
+		    //alert($api.jsonToStr(ret));
+		
+		    $api.setStorage('uid', ret.uid);
+		    $api.setStorage('token', ret.token);
+		    $api.setStorage('username', ret.username);
+		    $api.setStorage('userimage', ret.headimg);
+		    $api.setStorage('sex', ret.sex);
+		    $api.setStorage('mobile', ret.mobile);
+		    $api.setStorage('platform', info.platform);
+		    $api.setStorage('platform_userid', info.userid);
+		    $api.setStorage('platform_username', info.username);
+		    $api.setStorage('platform_headimgurl', info.headimgurl);
+		    $api.setStorage('is_ours', ret.is_ours);
+		    
+			after_login_action();
+	    } else {
+	     	myToast("登录失败，稍后重试！["+ret.code+"]");
+		}		
+	}
+	
+	function closeToWhere() {
+			api.closeWin();	
+			/*
+			api.closeToWin({
+				name: 'root'
+			});
+			*/	
+			return;
+	}
+	function ajustLoginMode(){
+        if(!isInstall_qq && !isInstall_wx){
+            //$('#login-bt').addClass('simple-login-bt');
+        }
+    }
+	apiready = function() {
+	  var header = $api.byId('header');
+	  $api.fixIos7Bar(header);
+      var qq_obj = api.require('qq');  
+      var wx_obj = api.require('wx'); 
+	  //var phone = $api.getStorage('phone');
+	  //if (phone) $api.byId('phone').value = phone;
+		
+	  api.addEventListener({
+            name: 'keyback'
+        }, function(ret, err){
+			closeToWhere();
+        });
+       //api.appVersion == '0.0.0' && 
+
+        if(api.systemType == 'ios'){
+            qq_obj.installed(function(ret,err){
+                if(ret.status){
+                    //api.alert({msg: "安装"});
+                    $('#qq-login').css({'float':'none','width':'auto','display':'block'});
+                    $('#qq-login').show();
+                    isInstall_qq = true;
+                }else{
+                    //api.alert({msg: "没有安装"});
+                    isInstall_qq = false;
+                    ajustLoginMode();
+                } 
+            });
+            wx_obj.isInstalled(function(ret, err){
+                if(ret.installed){
+                    //alert("当前设备已安装微信客户端");
+                    $('#weixin-login').show();
+                    isInstall_wx = true;
+                }else{
+                    //alert('当前设备未安装微信客户端');
+                    isInstall_wx = false;
+                    ajustLoginMode();
+                }
+            });
+            //$('#login-bt,#register-bt').addClass('simple-login-bt');
+        }else{
+            $('#sina-login').show();
+            $('#qq-login').show();
+            $('#weixin-login').show();
+            //$('#sina-login').css({'float':'none','width':'auto','display':'block'});
+        }
+      //第三方登录
+	  //新浪登录
+	  $('#sina-login').on('click', function() {
+        api.showProgress({
+            style: 'default',
+            animationType: 'fade',
+            title: '登录中...',
+            text: '请稍候...',
+            modal: false
+        });
+	    var sinaWeiBo = api.require('sinaWeiBo');
+	    sinaWeiBo.auth(function(ret, err) {
+	    
+		// api.alert({
+	 //           title: '微博授权',
+	 //           msg: ret
+	 //         });
+	         	    	
+	      if (ret.status) {
+	         // api.alert({
+	         //   title: '微博授权',
+	         //   msg: '授权成功'
+	         // });
+             myToast('授权成功！');
+	        sinaWeiBo.getUserInfo(function(ret, err) {
+	          if (ret.status) {
+	            //api.alert({msg: ret});
+	            sdkLogin({
+	              userid: ret.userInfo.id,
+	              username: ret.userInfo.name,
+	              headimgurl: ret.userInfo.avatar_hd,
+	              platform: 'SinaWeibo'
+	            });
+	
+	          } else {
+	          	myToast("登录失败，稍后重试！");
+	          /*
+	            api.alert({
+	              msg: err.msg
+	            });
+	            */
+	          }
+	        });
+	      } else {
+	      		myToast("登录失败，稍后重试！");
+	      /*
+	        api.alert({
+	          msg: '授权失败' + err.msg
+	        });
+	        */
+	      }
+	    });
+	
+	    // sinaWeiBo.cancelAuth(function(ret,err){
+	    //     if(ret.status){
+	    //         api.alert({msg:'登出成功'});
+	    //     }else{
+	    //         api.alert({msg:err.msg});
+	    //     }
+	    // });
+	
+	  });
+	  
+	  //qq登录
+	  $('#qq-login').on('click', function() {
+        api.showProgress({
+            style: 'default',
+            animationType: 'fade',
+            title: '登录中...',
+            text: '请稍候...',
+            modal: false
+        });
+	    qq_obj.login(function(ret, err) {
+      if (ret.status) {
+	        	var id = ret.openId;
+	        	qq_obj.getUserInfo(function(ret,err) {
+		           if (ret.status) {
+		              //api.alert({msg:ret});
+		              //$api.setStorage('nickname', ret.info.nickname);
+		              sdkLogin({
+		                userid:id,
+		                username:ret.info.nickname,
+		                headimgurl:ret.info.figureurl_qq_2,
+		                platform:'QQ'
+		              });
+		           }else{
+		              //api.alert({msg:err.msg});
+		              api.hideProgress();
+		              myToast("登录失败，稍后重试！");
+		           }
+	        });
+	      }
+	    });
+	  });
+	  
+	  //微信登录
+	  $('#weixin-login').on('click', function() {
+	        api.showProgress({
+	            style: 'default',
+	            animationType: 'fade',
+	            title: '登录中...',
+	            text: '请稍候...',
+	            modal: false
+	        });	  
+        //alert('weixin');
+	    wx_obj.auth({
+	        apiKey: 'wxe590f1be9768fc56'	//在此输入你的微信apikey
+	    }, function(ret, err){
+	        if(ret.status){
+	            wx_obj.getToken({
+	                //apiKey: '',
+	                //apiSecret: '',
+	                code: ret.code
+	            },function(ret, err){	                
+	                if(ret.status){
+	                    //获取用户信息
+	                    var accessToken = ret.accessToken;
+	                    var openId = ret.openId;
+	                    wx_obj.getUserInfo({
+	                        accessToken: ret.accessToken,
+	                        openId: ret.openId
+	                    }, function(ret,err){	
+	                        if(ret.status) {
+	                        //api.alert({msg:ret});	
+	                          var info = {
+				                userid:ret.openid,
+				                username:ret.nickname,
+				                headimgurl:ret.headimgurl,
+				                privilege:ret.privilege,//chinaunicom
+				                city:ret.city,
+				                province:ret.province,
+				                country:ret.country,
+				                sex:ret.sex,
+				                platform:'Wechat'
+				              };                    
+				              //api.alert({msg:info});	    
+				              sdkLogin(info);
+	                        } else {
+	                        	api.hideProgress();
+	                        	myToast("登录失败，稍后重试！");
+	                        }
+	                    });
+	                } else {
+	                	api.hideProgress();
+	                	myToast("登录失败，稍后重试！");
+	                }
+	            });	            
+	        }else{
+	        	api.hideProgress();
+	            if(api.systemType=='android' && err.code==3){
+	                api.alert({msg:"请安装微信客户端"});
+	            }
+	        }
+	    });
+	  });
+    };
+    $(function(){
+        initDev();
+    });
+</script>
+</body>
+</html>

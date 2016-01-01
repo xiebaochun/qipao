@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+        <meta name="format-detection"content="telephone=no">
+        <title></title>
+        <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+        <link rel="stylesheet" type="text/css" href="../../css/ui.css" />
+        <style>
+            html,body{background-color:rgba(0,0,0,0);}
+           /* #wrap{
+                height: 100%;
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -webkit-flex-flow: column;
+                       flex-flow: column;
+            }
+            #main{
+                -webkit-box-flex: 1; 
+                -webkit-flex: 1;
+                flex: 1;
+            }*/
+        </style>
+    </head>
+    <body>
+        <div id="wrap">
+            <div id="main">
+
+            </div>
+        </div>
+        <script type="text/javascript" src="../../script/api.js"></script>
+        <script type="text/javascript" src="../../script/common.js"></script>
+        <script>
+            var module;
+            $(function(){
+                initDev();
+            });
+            apiready = function(){
+                setModuleRoot('../../script/');
+                //setUp('util/ui.hongrenInfo');
+            }   
+            function setUp(moduleName){
+                $('body').empty();
+                var options = {};
+                // if(typeof $api.getStorage('pop-frame-option') != 'undefined'){
+                    
+                // }
+                options = $api.getStorage('pop-frame-option');
+                //alert(options);
+                require(moduleName,function(){
+                    module = new Module[moduleName](options);
+                });
+            }
+            function openLogin(){
+                api.openWin({
+                    name: 'userLogin',
+                    url: '../util-login.html',
+                    opaque: true,
+                    vScrollBarEnabled:false
+                }); 
+            }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+        <meta name="format-detection"content="telephone=no">
+        <title>专家答疑</title>
+        <link rel="stylesheet" type="text/css" href="../css/common.css" />
+        <style>
+            html,body{background-color: #fff;}
+            .nav{display:flex;display:-webkit-flex;background-color: #fff;box-sizing:border-box;}
+            .nav-item{flex:1;-webkit-flex:1;display: inline-block;line-height: 39px;text-align: center; font-size:0.6rem;color:#999;border-bottom: 1px solid #eee;}
+            .nav-active{border-bottom:1px solid #666;color:#333;}
+            .footer{position: absolute;bottom:0;width:100%;border-top:1px solid #eee; height: 50px;line-height: 50px; text-align: center;font-size: 0.6rem;color:#fd6600;background-color: #fff;}
+        </style>
+    </head>
+    <body>
+        <div id="wrap">
+            <div id="header">
+                <a class="back-icon iconfont icon-arrow-left" tapmode onclick="api.closeWin();"></a>
+                <h1>专家答疑</h1>
+                <a class="header-right-txt" onclick="openWin_checklogin('my-q');" style="padding-right:0.3rem;">我的提问</a>
+            </div>
+            <div id="main">
+                <div class="nav">
+                    <div class="nav-item nav-0 nav-active" tapmode onclick="switchFrame(0, this)">推荐</div>
+                    <div class="nav-item nav-1" tapmode onclick="switchFrame(1, this)">最新</div>
+                </div>
+            </div>
+            <div class="footer" onclick="openWin_checklogin('edit-q');">
+                <a class="btn" href="javascript:;"><i class="iconfont icon-edit"></i><span class="ml2">我要提问</span></a>
+            </div>
+        </div>
+        <script type="text/javascript" src="../script/api.js"></script>
+        <script src="../script/common.js"></script>
+        <script>
+            $(function(){
+                initDev();
+            });
+            apiready = function(){
+                var header = $api.byId('header');
+                $api.fixIos7Bar(header);
+                headerPos =  headerPos = $api.offset(header);
+                var height = api.winHeight - headerPos.h;
+
+                api.openFrameGroup({
+                    name:'expert-qa-frame-group',
+                    rect:{
+                        x: 0,
+                        y: headerPos.h + 40,
+                        w: api.winWidth,
+                        h: api.winHeight - headerPos.h -89,    
+                    },
+                    frames:[{
+                        name:'expert-qa-con1',
+                        url:'expert-qa-con1.html'
+                    },{
+                       name:'expert-qa-con2',
+                       url:'expert-qa-con2.html' 
+                    }]
+                },function(ret,err){
+                    //$('.nav-'+ret.index).trigger('click');
+                    $('.nav-'+ret.index).addClass('nav-active').siblings('.nav-item').removeClass('nav-active');
+                });
+            }
+            function switchFrame(index, self){
+                $(self).addClass('nav-active').siblings('.nav-item').removeClass('nav-active');
+                api.setFrameGroupIndex({
+                    name:'expert-qa-frame-group',
+                    index:index,
+                    scroll:true
+                });
+            }
+            function openWin_checklogin(name){
+                if($api.getStorage('uid')){
+                    openWin(name);
+                }else{
+                    openWin('util-login');
+                }
+            }
+        </script>
+    </body>
+</html>

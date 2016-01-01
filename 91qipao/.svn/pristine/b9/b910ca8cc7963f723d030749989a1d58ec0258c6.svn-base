@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+        <meta name="format-detection"content="telephone=no">
+        <title>提问</title>
+        <link rel="stylesheet" type="text/css" href="../css/common.css" />
+        <style>
+            #wrap{
+                height: 100%;
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -webkit-flex-flow: column;
+                       flex-flow: column;
+            }
+            #main{
+                -webkit-box-flex: 1; 
+                -webkit-flex: 1;
+                flex: 1;
+                background-color: #eee;
+            }
+            .cate-wrap{padding:0.5rem;}
+            .cate-wrap .title{line-height: 0.8rem;}
+            .cate-options{line-height: 0.8rem;}
+            .edit-wrap{padding:0.5rem;background-color: #fff;}
+            #question-content{width:100%;height: 6rem;line-height: .8rem;font-size: 0.6rem;outline: none;resize:none;}
+            .image-wrap{padding:0.5rem;}
+            .image-file-wrap{position:relative; display: inline-block;background-color: #fff;border:1px solid #666;}
+            .plus{position: absolute;display: inline-block;top:0;width:100%;line-height:4rem;left:0;font-size: 1rem;text-align: center;}
+            .image-file{display: inline-block;height:4rem;width:4rem;opacity:0;}
+            .submit-bt{
+                margin:0.5rem;
+                height: 1.8rem;
+                background-color: #fdd600;
+                border-radius: 0.2rem;
+                text-align: center;
+                line-height: 1.8rem;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="wrap">
+            <div id="header">
+                <a class="back-icon iconfont icon-arrow-left" tapmode onclick="api.closeWin();"></a>
+                <h1>提问</h1>
+                <a class="header-right-txt"></a>
+            </div>
+            <div id="main">
+                <div class="cate-wrap">
+                    <div class="title">类别</div>
+                    <div class="cate-options">
+                        <span>情感</span>
+                        <span>情感</span>
+                        <span>情感</span>
+                    </div>
+                </div>
+                <div class="edit-wrap">
+                    <textarea name="question" id="question-content" cols="30" rows="10" palceholder="请描述你的问题"></textarea>
+                </div>
+                <div class="image-wrap">
+                    <div class="image-file-wrap">
+                        <span class="plus">+</span>
+                        <input class="image-file"  type="file">    
+                    </div>
+                    
+                </div>
+                <div style="margin:0 0.5rem;"><span>匿名</span></div>
+                <div class="submit-bt">提交</div>
+            </div>
+        </div>
+        <script type="text/javascript" src="../script/api.js"></script>
+        <script type="text/javascript" src="../script/common.js"></script>
+        <script>
+            $(function(){
+                initDev();
+            });
+            apiready = function(){
+                
+            } 
+        </script>
+    </body>
+</html>

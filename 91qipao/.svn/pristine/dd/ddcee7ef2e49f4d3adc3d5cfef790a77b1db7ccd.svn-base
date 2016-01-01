@@ -1,0 +1,230 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="format-detection" content="address=no" />
+    <title>api</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+     <style>
+        body{background-image:url(../image/login_bg.png);background-size:cover}
+        #wrap{position:relative}
+        #header{background-color:transparent!important;position:relative;z-index:2}
+        #loginTip{position:absolute;width:100%;height:70px;line-height:70px;top:0;left:0;text-align:center;background-color:#ffd600}
+        #loginTip span{line-height:40px;text-decoration:none;color:#000;font-size:1.2em;font-family:'微软雅黑'}
+        .hidden{display:none}
+        .input-wrap{padding:20px 10px 0}
+        .gray_line{height:0;border-bottom:1px solid #ddd}
+        .other-login{margin:0 auto;margin-top:50px;padding:0 80px}
+        .other-login li{padding:8px;line-height:20px;margin-top:20px;text-align:center}
+        .other-login li img{width:30px;vertical-align:middle}
+        .other-login li span{color:#fff;font-size:18px;padding-left:10px;vertical-align:middle}
+        .back-icon{background-image:url(../image/arr-white-l.png)!important;background-size:11px 18px}
+        #sina-login{background-color:#ffa200}
+        #qq-login{background-color:#2bc1ff}
+        #weixin-login{background-color:#2ac568}
+        .logo-wrap{position:absolute;bottom:40px;text-align:center;left:50%;margin-left:-20px}
+        .logo-wrap img{width:40px}
+        .logo-wrap span{margin-top:10px;color:#fff}
+        .input-wrap{position:relative;padding:0 20%;color:#fefefe}
+        .input-wrap>input{display:inline-block;outline:0;width:100%;border:none;line-height:1.2rem;border-bottom:1px solid #8e8a85;color:#fefefe}
+        .login-bt{margin:20px 0!important;background-color:rgba(200,200,200,.8)!important;border:none!important;border-radius:0!important;color:#000!important}
+        .login-bt-active{background-color:#ffd600!important}
+        .get-validcode-bt{position:absolute;right:20%;bottom:3px;padding:0.2rem;background-color:#eee;font-size:0.5rem;border-radius:3px}
+        .get-validcode-bt-active{background-color:#ffd600!important}
+        .bg{position:absolute;width:100%;height:100%;z-index:0}
+        #main{position:relative;z-index:2}
+    </style>
+</head>
+
+<body>
+    <div id="wrap">
+        <img class="bg" src="../image/login_bg.png" alt="">
+        <div id="header">
+            <a class="back-icon" tapmode="" onclick="api.closeWin()"></a>
+            <h1></h1>
+        </div>
+        <div id="main">
+            <div class="input-wrap" style="margin-top:150px;">
+                <input type="text" placeholder="手机号" onfocus="edit(this)" onblur="cancel(this)" class="txt" id="phone" value=""  oninput="return input_change(this);" />
+                <!-- <i class="del" tapmode="" onclick="delWord(this)"></i> -->
+                <div class="get-validcode-bt" id="get-authcode-bt">验证码</div>
+            </div>
+            <div class="input-wrap" style="margin-top:0.5rem;">
+                <input type="text" placeholder="验证码" onfocus="edit(this)" onblur="cancel(this)" class="txt" id="authcode" value="" oninput="return input_validate_change(this);"/>
+                <!-- <i class="del" tapmode="" onclick="delWord(this)"></i> -->
+                <a class="btn login-bt " id="login-bt" style="margin-top:30px;" tapmode="active" onclick="login();">登录</a>
+            </div>
+            <div class="wraper-10">
+                
+                <!--<a class="btn" style="margin-top:30px;" tapmode="active" onclick="test_api_function()">试验田</a>    --> 
+                <!-- <div class="blank-100"></div> -->
+                
+                <!-- <div class="t-center" style="margin-top:-8px;">
+                    <p style="display:inline-block;background-color:#f2f2f2;">&nbsp你还可以选择以下方式登录&nbsp</p> 
+                </div>   -->
+                <div class="none" id="loginTip" class="tc">
+                    <!-- <a class="mr10" href="javascript:openNewWin('forget-password')">忘记密码?</a><br> -->
+                    <!-- <div class="gray_line clear"></div>  
+                    <a tapmode="" onclick="register();">没有账号？注册 ></a> -->
+                    <span>验证码错误</span>
+                </div>
+                
+            </div>
+
+        </div>
+        <div class="logo-wrap">
+            <img class="logo" src="../image/login_logo.png" alt=""><br>
+            <!-- <span>有情趣 方愉悦</span> -->
+        </div>
+    </div>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script>
+	var canSendAuthCode = true;
+    $(function(){
+        console.log($(document).height());
+        var deviceHeight = $(document).height();
+        $('#wrap').css({'height':deviceHeight+'px'});
+        
+        $('#get-authcode-bt').click(function(){
+        	if (canSendAuthCode) {
+        		var phone = $api.byId('phone').value;
+				sendAuthcode(phone);
+				$('#authcode').focus();
+			} else {
+			}
+	  		return false;
+         });        
+    });
+    
+	var canSendAuthCode = true;    
+    function setAuthCodeTime(seconds) {
+ 		if (seconds > 0 ) {
+			canSendAuthCode = false;
+			$('#get-authcode-bt').removeClass('get-validcode-bt-active');
+			$('#phone').attr("readonly","readonly");
+			var str = ""+seconds+"秒";
+			$('#get-authcode-bt').html(str);
+			seconds = seconds-1;
+			setTimeout(function () {
+					setAuthCodeTime(seconds);
+		  	}, 1000);
+		} else {
+			$('#phone').removeAttr("readonly");
+			var str = "验证码";
+			$('#get-authcode-bt').html(str);
+			$('#get-authcode-bt').addClass('get-validcode-bt-active');
+			canSendAuthCode = true;
+		}
+    }
+    
+    var isphone = 0;
+    function input_change(obj){
+            var phone = $api.byId('phone').value;
+            var $phone = $('#phone');
+            var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/; 
+
+            $phone.val(phone.replace(/[^0-9]/g,""));
+            phone = $phone.val();
+            //$('#phone').val('gfsd');
+            if(phone.length>=11){
+                $phone.val(phone.substring(0,11));
+                phone = $phone.val();
+                isphone = 1;
+            }else{
+                isphone = 0;
+            }
+            if(myreg.test(phone)){ 
+                $('#get-authcode-bt').addClass('get-validcode-bt-active');
+                //$('#authcode').attr('placeholder','验证码');
+                isphone = 1;
+            }
+            else {
+                $('#get-authcode-bt').removeClass('get-validcode-bt-active');
+                //$('#authcode').attr('placeholder','密码');
+                isphone = 0;
+            }
+
+            if (phone == '') {
+                //$('#authcode').attr('placeholder','验证码/密码');
+                isphone = 0;
+            }
+            checkCondition();
+        }
+        
+       var isValidCode = 0;
+       function input_validate_change(){
+           
+            var $validateCode = $('#authcode');
+            var code = $validateCode.val();
+            $validateCode.val(code.replace(/[\u4e00-\u9fa5]/g,"")); 
+            if(code.length >= 4){
+                $validateCode.val(code.substring(0,4));
+                isValidCode = 1;
+            }else{
+                isValidCode = 0;
+            }
+            checkCondition();
+       }
+       function checkCondition(){
+            if(isValidCode&&isphone){
+                $('#login-bt').addClass('login-bt-active');
+            }else{
+                $('#login-bt').removeClass('login-bt-active');
+            }
+       }
+    function login() {
+      var phone = $api.byId('phone').value;
+      var authcode = $api.byId('authcode').value;  
+      var info = {
+        		phone:phone,
+        		authcode:authcode,
+        		isphone:isphone	
+      			};
+    
+	  api_ajax(0, 
+			'util_login.php', 
+			info,
+			after_login,
+			info,
+			3
+		);         
+    }
+    
+    function after_login(ret, _, _, info) {
+		if (ret.code == 988) {
+			return;
+		}
+		console.log(ret);
+		if (ret.code == 100) {
+		   $api.setStorage('phone', info.phone);
+		   $api.setStorage('authcode',info.authcode);
+		   $api.setStorage('isphone', info.isphone);	
+		   $api.setStorage('uid', ret.uid);	
+		   $api.setStorage('sex', ret.sex);	
+		   $api.setStorage('token', ret.token);
+		   $api.setStorage('userimage',ret.userimage);
+		   $api.setStorage('username',ret.username);
+		   $api.setStorage('platform', 'qp_phone');	
+		   $api.setStorage('is_ours', ret.is_ours);	      	       
+
+		   after_login_action();
+		  } else if (ret.code == 102) {
+			 myToast(ret.msg, 2000);
+		  } else {
+			 myToast("很抱歉，此号码未注册，请先注册后再登录！"+ret.code, 2000);
+		  }
+    }
+    
+ 	apiready = function() {
+	   var header = $api.byId('header');
+       $api.fixIos7Bar(header);
+	}
+    
+</script>
+</body>
+
+</html>

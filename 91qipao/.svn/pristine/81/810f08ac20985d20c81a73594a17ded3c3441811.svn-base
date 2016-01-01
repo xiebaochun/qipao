@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+        <meta name="format-detection"content="telephone=no">
+        <title>我的提问</title>
+        <link rel="stylesheet" type="text/css" href="../css/common.css" />
+        <style>
+            #wrap{
+                height: 100%;
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -webkit-flex-flow: column;
+                       flex-flow: column;
+            }
+            #main{
+                -webkit-box-flex: 1; 
+                -webkit-flex: 1;
+                flex: 1;
+                background-color: #eee;
+            }
+            #header{position: fixed;top:0;width: 100%;}
+        </style>
+    </head>
+    <body>
+        <div id="wrap">
+            <div id="header">
+                <a class="back-icon iconfont icon-arrow-left" tapmode onclick="api.closeWin();"></a>
+                <h1>我的提问</h1>
+                <a class="header-right-txt" style="display:none;" onclick="delTopic(this)">编辑</a>
+            </div>
+            <div style="height:50px;"></div>
+            <div id="main">
+                <!-- <div class="v2-qa-item">
+                    <div class="v2-qa-header">
+                        <div class="v2-qa-author-info">
+                            <img class="v2-qa-author-avator" src="../image/version_logo.png" alt="">
+                        </div>
+                        <div class="v2-qa-title">标题标题标题标题标题</div>
+                    </div>
+                    <div class="v2-qa-body">
+                        <div class="v2-qa-like-wrap"></div>
+                        <div class="v2-qa-content">
+                            这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容
+                        </div>
+                    </div>
+                    <div class="v2-qa-footer">
+                        <div class="v2-qa-tags-wrap">
+                            <span class="v2-qa-tag">标签</span>
+                        </div>
+                    </div>
+                </div> -->
+                
+            </div>
+        </div>
+        <script type="text/javascript" src="../script/api.js"></script>
+        <script type="text/javascript" src="../script/common.js"></script>
+        <script>
+            var isDeling = false;
+            $(function(){
+                initDev();
+            });
+            apiready = function(){
+               openFramecon('my-q-con');
+            }
+            function delTopic(self){
+                if(isDeling){
+                    $(self).text('编辑');
+                    isDeling = false;  
+                    api.execScript({
+                        frameName:'my-q-con',
+                        script:'delQaDone()'
+                    });  
+                    
+                }else{
+                    $(self).text('完成');
+                    isDeling = true;
+                    api.execScript({
+                        frameName:'my-q-con',
+                        script:'delQa()'
+                    });  
+                }
+                
+                
+            } 
+            function lockEdit(){
+                $('.header-right-txt').hide();
+            }
+            function unlockEdit(){
+                ///$('.header-right-txt').show();   
+            }
+        </script>
+    </body>
+</html>

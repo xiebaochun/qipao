@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+        <meta name="format-detection"content="telephone=no">
+        <title>富豪榜</title>
+        <link rel="stylesheet" type="text/css" href="../css/common.css" />
+        <style>
+            #wrap{
+                height: 100%;
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -webkit-flex-flow: column;
+                       flex-flow: column;
+            }
+            #main{
+                -webkit-box-flex: 1; 
+                -webkit-flex: 1;
+                flex: 1;
+                background-color: #eee;
+            }
+            .user-item{padding:0.5rem;}
+        </style>
+    </head>
+    <body>
+        <div id="wrap">
+            <div class="fixed-header" id="header">
+                <a class="back-icon iconfont icon-arrow-left" tapmode onclick="api.closeWin();"></a>
+                <h1>富豪榜</h1>
+                <a class="header-right-txt"></a>
+            </div>
+            <div style="height:50px;"></div>
+            <div id="main">
+                <ul id="rich-list" >
+                    <li class="user-item">
+                        <span>1</span>
+                        <div class="item-user-info">
+                            <img class="item-avator" src="../image/version_logo.png" alt="">
+                            <span class=""></span>
+                        </div>
+                        <span class="pull-right">3000000泡币</span>
+                    </li>
+                    <li class="user-item">
+                        <span>2</span>
+                        <div class="item-user-info">
+                            <img class="item-avator" src="../image/version_logo.png" alt="">
+                            <span class=""></span>
+                        </div>
+                        <span class="pull-right">3000000泡币</span>
+                    </li>
+                    <li class="user-item">
+                        <span>3</span>
+                        <div class="item-user-info">
+                            <img class="item-avator" src="../image/version_logo.png" alt="">
+                            <span class=""></span>
+                        </div>
+                        <span class="pull-right">3000000泡币</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <script type="text/javascript" src="../script/api.js"></script>
+        <script type="text/javascript" src="../script/common.js"></script>
+        <script>
+            $(function(){
+                initDev();
+            });
+            apiready = function(){
+                for(var i=4;i<50;i++){
+                    var html = '<li class="user-item">'+
+                                    '<span>'+i+'</span>'+
+                                    '<div class="item-user-info">'+
+                                        '<img class="item-avator" src="../image/version_logo.png" alt="">'+
+                                        '<span class="item-name">土豪</span>'+
+                                    '</div>'+
+                                    '<span class="pull-right">3000000泡币</span>'+
+                                '</li>';
+                    $('#rich-list').append($(html));
+                }
+            } 
+        </script>
+    </body>
+</html>

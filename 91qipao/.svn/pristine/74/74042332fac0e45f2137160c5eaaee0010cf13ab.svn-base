@@ -1,0 +1,794 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="format-detection" content="address=no" />
+    <title>我的信息修改</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <link href="../css/mui.dtpicker.css" rel="stylesheet" />
+    <link href="../css/mui.listpicker.css" rel="stylesheet" />
+    <link href="../css/mui.poppicker.css" rel="stylesheet" />
+     <style>
+        *{-webkit-box-sizing: border-box;box-sizing: border-box; }
+        body{background-size:cover;background-position:0 -3rem;background-repeat:no-repeat;font-family:"微软雅黑";background-color:#eee}
+        ::-webkit-input-placeholder{color:#999}
+        #header{position: fixed;top:0; background-color:transparent!important;z-index:50;}
+        #header-bg{position: fixed;opacity: 1; top:0;z-index:49;width: 100%;z-index: 49; background-color: rgba(0,0,0,0);}
+        #header-bg>span{display:inline-block;height: 50px;}
+        #wrap{position:relative}
+        #main{position:absolute;top:0;width:100%;padding-top:50px;background-image:url(../image/my_bg.png);background-size:100% auto;background-color:#eee}
+        .back-icon{background-image:url(../image/arr-white-l.png)!important}
+        .info-complete-bt{display:inline-block;position:absolute;right:0;bottom:0;line-height:50px;padding:0 .8rem;color:#fff;font-size:.65rem}
+        .avator-wrap{position:relative;width:3.2rem;height:3.2rem;margin:.3rem auto}
+        .avator-wrap>.img-wrap{position:absolute;display:block;width:3.2rem;height:3.2rem;border:2px solid rgba(200,200,200,.5);border-radius:50%;box-sizing:border-box;overflow:hidden}
+        .avator-wrap>.img-wrap>.headImg{position:absolute;display:block;margin-left:-2px;margin-top:-2px;width:3.2rem;height:3.2rem;border-radius:50%;background-color:#eee;background-size:105% 105%;background-repeat:no-repeat;background-position:-2px -2px;}
+        .avator-wrap>span{display:block;position:absolute;top:50%;left:50%;font-size:16px;margin-top:-10px;margin-left:-16px;color:#999;z-index:0}
+        .camera-icon{display:block;position:absolute;width:23px;height:23px;line-height:23px;right:0;bottom:0;background-color:#eed600;background-image:url(../image/camera_ico.png);background-size:23px 23px;color:#666;border-radius:50%;text-align:center;font-size:16px}
+        .gender-wrap{position:relative;width:48%;height:3rem;margin:0 auto;margin-top:1.2rem}
+        .gender{background-color:rgba(200,200,200,.8);height:2.3rem;width:2.3rem;position:absolute;top:0;border-radius:50%;text-align:center;line-height:2.3rem;font-size:.7rem}
+        .female{right:0}
+        .nickname-wrap{width:80%;margin-bottom:.1rem;padding:.2rem 0}
+        .nickname-wrap>input{display:inline-block;width:80%;outline:0;color:#333;font-size:.8rem;border-bottom:1px solid #eee}
+        .select-pic-box{display:none;background-color:rgba(0,0,0,.3)}
+        .choose-item-list{position:absolute;bottom:0;width:100%}
+        .choose-item-list>li{background-color:#FFF;text-align:center;line-height:2rem}
+        .choose-item-list>li>span{display:inline-block;width:95%;border-bottom:1px solid #EEE}
+        .image-clip-wrap{background-color:rgba(0,0,0,.8)}
+        #cut-canvas{width:100%;height:100%}
+        .clip-box{position:absolute;height:150px;width:150px;top:50%;left:50%;margin-top:-75px;margin-left:-75px;border:1px solid #fe4600}
+        .info-wrap{background-color:#fff;text-align:right;margin-top:.5rem}
+        .input-wrap{-webkit-box-sizing: border-box;box-sizing: border-box; position:relative;padding:0 .5rem;/*border-bottom:1px solid #eee;*/line-height:2rem;font-size:.6rem}
+        .input-wrap:after{
+          position: absolute;
+          right: 0.5rem;
+          bottom: 0;
+          left: 0.5rem;
+          height: 1px;
+          content: '';
+          -webkit-transform: scaleY(.5);
+          transform: scaleY(.5);
+          background-color: #eee;
+        }
+        .input-wrap>.input{margin-bottom:0;outline:0;width:10.5rem;line-height: 21px; padding: 10px 15px;font-size:.6rem;text-align:left;outline:0;border:none}
+        .input-label{width:4rem;text-align:left}
+        .cate-arrow{float:right;margin-right:.5rem;line-height:2rem;font-size:.9rem;color:#999}
+        .check-ok-ico{position:absolute;height:18px;width:18px;top:.7rem;right:.3rem;font-size:.8rem;background-image:url(../image/phone_check_ico.png);background-size:18px 18px;background-repeat:no-repeat}
+        .check-ok-ico:before{content:none}
+        .pop-wrap{position:fixed}
+        .dialog-box{position:absolute;left:50%;top:50%;margin-top:-6rem;margin-left:-6rem!important;width:12rem;margin:0 auto;border-radius:.3rem;background-color:#fff}
+        .dialog-box input{border:none}
+        .dialog-box .dialog-close-bt{position:absolute;width:.8rem;height:.8rem;right:0;top:0}
+        .dialog-box .dialog-close-bt>i{
+          position: absolute;
+          width: 25px;
+          height: 25px;
+          top: 0;
+          right: 0;
+          display: inline-block;
+          font-size: .8rem;
+          background-image: url(../image/close_blank_ico.png);
+          background-size: 100% 100%;
+          display: inline-block;
+        }
+        .dialog-title{text-align:center;margin-top:1rem}
+        .valid-input-wrap{margin:0 auto;width:8rem;margin-top:.5rem;border:1px solid #999;border-radius:2rem;font-weight:.7rem;padding-left:.5rem;font-size:.5rem}
+        .valid-input-wrap input{width:2rem;line-height:1.6rem;margin:0;margin-left:.2rem;padding:0;padding-left:.2rem;display:inline-block;border-left:1px solid #999;font-size:.5rem}
+        .valid-input-wrap .valid-time{float:right;background-color:#ccc;border-radius:2rem;line-height:1.5rem;margin-top:1px;margin-right:1px;padding:0 .5rem;color:#fff}
+        .valid-ensure-bt{display:block;margin:.7rem auto;padding:.3rem 1rem;background-color:#ffd600;width:6rem;text-align:center;color:#333}
+        .get-validcode-bt{position:absolute;line-height:.8rem;right:18%;bottom:.3rem;padding:5px;background-color:#ffd600;font-size:10px;border-radius:3px}
+        #loginTip{position:absolute;width:100%;height:70px;line-height:70px;top:0;left:0;text-align:center;background-color:#ffd600}
+        #loginTip span{line-height:40px;text-decoration:none;color:#000;font-size:1.2em;font-family:'微软雅黑'}
+        .fa-times{background-image: url(../image/close_x_ico.png);}
+        #fixed-bg{position: fixed;display:none;top:0;left: 0;right:0;;bottom:0;background-color: rgba(0,0,0,0.3);z-index: 10;}
+    </style>
+</head>
+
+<body>
+    <div id="wrap">
+        <!-- <div id="header">
+            <a class="back-icon" tapmode="" onclick="api.closeWin()"></a>
+            <h1></h1>
+            <a class="info-complete-bt" href="javascript:;">完成</a>
+        </div> -->
+        <div id="header-bg"><span></span></div>
+        <div id="main">
+
+           <div class="avator-wrap">
+                <!-- <span>头像</span> -->
+                <div class="img-wrap">
+                  <img class="default-avator headImg" id="user-avator" data-baseData=""/>
+                </div>
+                <i class="camera-icon"></i>
+           </div>
+           <div class="gender-wrap">
+               <div class="gender male" data-gender="1" id="sex_sel_1">男</div>
+               <div class="gender female" data-gender="2" id="sex_sel_2">女</div>
+           </div>
+           <div class="info-wrap">
+               <div class="nickname-wrap">
+                    
+               </div>
+               <div class="input-wrap">
+                   <span class="input-label">昵称</span>
+                   <input class="input" id="nick-name" type="text" 
+                   placeholder="昵称" oninput="check_name_len();">
+               </div>
+              
+               <div class="input-wrap">
+                   <span class="input-label color-999" style="font-size:0.5rem;">气泡号</span>
+                   <span class="input color-999" id="uniqueid" style="padding-left:0.5rem;font-size:0.5rem;"></span>
+               </div>
+               <span class="input-label" style="background-color:#eee;width:100%;padding-left:0.8rem;padding-top:0.2rem;line-height:1.5rem;font-size:0.6rem;">个人简介</span>
+               <div class="input-wrap" style="border-top:0rem solid #eee;">
+                   <!-- <span class="input-label">个人简介</span> -->
+                   <textarea class="input" id="resume" rows="3" maxlength="60" type="text" placeholder="随便写写什么" style="width:100%;padding:0.2rem;resize:none;"></textarea>
+               </div>
+               <div class="input-wrap" id="city-item" style="border-top:0.5rem solid #eee;">
+                   <span class="input-label">城市</span>
+                   <span class="input color-999" id="city" style="padding-left:0.5rem;"></span>
+               </div>
+               <div class="input-wrap" id="age-item">
+                   <span class="input-label">生日</span>
+                   <span class="input color-999" id="age" style="padding-left:0.5rem;"></span>
+               </div>
+               <div class="input-wrap" id="sex-trend-item" style="border-top:0.5rem solid #eee;">
+                   <span class="input-label">性取向</span>
+                   <span class="input color-999" id="sex-trend" style="padding-left:0.5rem;"></span>
+               </div>
+               <div class="input-wrap">
+                   <span class="input-label">手机</span>
+                   <input class="input" id="phone" type="text" placeholder="未绑定" value=""
+                   oninput="return input_change(this);" maxlength="11">
+                   <i class="fa fa-check-circle-o check-ok-ico" style="color:green;display:none;"></i>
+                   <div class="get-validcode-bt" id="get-authcode-bt" style="display:none;">验证码</div>
+               </div>
+               <!-- <div style="height:4rem;"></div> -->
+           </div> 
+      
+        </div>
+        <div class="pop-wrap select-pic-box">
+            <ul class="choose-item-list">
+                <li><span class="f12 color-999">更改头像</span></li>
+                <li id="select-by-camera"><span>拍照</span></li>
+                <li id="select-by-photo"><span>从相册中选择</span></li>
+                <li class="mt5 select-cancel-bt"><span class="color-999">取消</span></li>
+            </ul>
+        </div>
+ 
+        <div class="pop-wrap dialog" style="display:none;" id="authcode_frame">
+            <div class="dialog-box" id="authcode-box">
+                <div class="dialog-close-bt"><i class="fa fa-times"></i></div>
+                <div class="dialog-title">
+                    <span>已将验证码发送至</span><br>
+                    <span class="phone" id="send_phone"></span>
+                </div>
+                <div class="valid-input-wrap">
+                    <span>验证码</span><input type="text" placeholder="4个数字" maxlength="4" id="authcode">
+                    <span class="valid-time" style="display:none;">60s</span>
+                </div>
+                <span class="btn valid-ensure-bt">确定</span>
+            </div>
+        </div>
+        <div id="fixed-bg"></div>
+    </div>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/mui.min.js"></script>
+<script type="text/javascript" src="../script/mui.listpicker.js"></script>
+<script type="text/javascript" src="../script/mui.dtpicker.js"></script>
+<script type="text/javascript" src="../script/mui.poppicker.js"></script>
+<script type="text/javascript" src="../script/city.data-3.js"></script>
+
+<script>
+
+$(function(){
+   initDev();
+});
+function check_name_len() {
+	var name = $('#nick-name').val();
+	if (name.gblen() > 16)
+		myToast("昵称最长8个汉字");
+}
+
+    $.fn.setCursorPosition = function(position){  
+        if(this.lengh == 0) return this;  
+        return $(this).setSelection(position, position);  
+    }  
+      
+    $.fn.setSelection = function(selectionStart, selectionEnd) {  
+        if(this.lengh == 0) return this;  
+        input = this[0];  
+      
+        if (input.createTextRange) {  
+            var range = input.createTextRange();  
+            range.collapse(true);  
+            range.moveEnd('character', selectionEnd);  
+            range.moveStart('character', selectionStart);  
+            range.select();  
+        } else if (input.setSelectionRange) {  
+            input.focus();  
+            input.setSelectionRange(selectionStart, selectionEnd);  
+        }  
+      
+        return this;  
+    }  
+      
+    $.fn.focusEnd = function(){  
+        this.setCursorPosition(this.val().length);  
+    }  
+    
+$('#nick-name').focus(function(){
+                $(this).attr("data-oval",$(this).val()); 
+            }).blur(function(){
+                var oldVal=($(this).attr("data-oval")); 
+                var newVal=($(this).val());
+                if (myNickname != newVal)
+                {
+					//checknick();               
+                }
+            });
+
+$('.dialog-close-bt').click(function(){
+				$('#authcode_frame').hide();			
+             });
+
+$('#get-authcode-bt').click(function(){
+	var phone = $api.byId('phone').value;
+    var info = {
+			phone: phone,
+			act: 3
+			};
+	api_ajax(0, 
+		'util_authcode_get.php', 
+		info, 
+		after_send_Authcode,
+		info,
+		0
+		);         	
+	return false;
+});                      
+         
+function after_send_Authcode(ret, _, _, info) {
+	if (ret.code == 988) {
+		return;
+	}
+	if (ret.code == 100) {
+		$('#send_phone').html(info.phone);
+		$('#authcode_frame').show();
+    } else {
+    	myToast(ret.msg);
+    }
+}
+    
+$('.valid-ensure-bt').click(function(){
+	var phone = $api.byId('phone').value;
+	var authcode = $api.byId('authcode').value;
+	if (authcode == "") {myToast('验证码不能为空'); return;}
+	var phone = $api.byId('phone').value;
+    var info = {
+			phone: phone,
+			authcode: authcode
+			};
+	api_ajax(0, 
+		'util_authcode_auth.php', 
+		info, 
+		after_Authcode_auth,
+		info,
+		0
+		);         	
+	return false;
+});
+
+function after_Authcode_auth(ret, _, _, info) {
+	if (ret.code == 988) {
+		return;
+	}
+	if (ret.code == 100){
+		if (authcode == 1)
+			authcode = 0;
+		old_phone = info.phone;
+		$('#authcode_frame').hide();
+		$('#get-authcode-bt').hide();
+		$('.fa-check-circle-o').show();	
+		myToast('手机验证通过');	
+	} else {
+		myToast(ret.msg);
+	}
+}
+
+       
+function checknick() {
+	var name = $('#nick-name').val();
+	if (name.gblen() > 16) {
+		myToast("昵称最长8个汉字");
+		return false;
+	};
+
+	api_ajax(2, 
+			'my_profile_set.php', 
+			{	
+				step:2,
+				nickname: name
+			}, 
+			after_checknick,
+			0,
+			0
+			); 
+}
+            
+function after_checknick(ret, _, _, _) {
+		if (ret.code == 988) {
+			return;
+		}
+		if (ret.code == 100) {
+			submit_profile();
+		} else {
+			myToast(ret.msg);
+			//$('#nick-name').focusEnd();
+		}
+}            
+
+function submit_profile() {
+		var mobile = $('#phone').val().trim(); 
+		if (mobile != '' && authcode > 0) {
+			myToast("手机没有通过验证，请先验证手机。");
+			return;
+		}
+		var userAvatorBase64 = "";
+		if (avtarChange == 1)
+        	userAvatorBase64 = $('#user-avator').data('baseData');
+
+        var userGender = getGender();
+        var nickName = $('#nick-name').val().trim();
+ 		if (nickName.gblen() == 0) {
+			myToast("昵称不能为空");
+			return;
+		}
+		       
+ 		var	bio = $('#resume').val();
+		var city = 	$('#city').html();
+		var birth =	$('#age').html();
+		var	lookingfor = $('#sex-trend').html();
+		     
+		api_ajax(2, 
+			'my_profile_set.php', 
+			{	
+				step: 1,
+				nickname: nickName,
+				sex: userGender,
+				img: userAvatorBase64,
+				bio: bio,
+				city: city,
+				birth: birth,
+				lookingfor: lookingfor,
+				mobile: mobile,
+				platform:$api.getStorage('platform')
+			}, 
+			after_submit_profile,
+			0,
+			2
+			);         
+}
+
+function after_submit_profile(ret, _, values, _) {
+		if (ret.code == 988) {
+			return;
+		}
+		if (ret.code == 100) {
+		   $api.setStorage('set_my_change', 1);
+		   avtarChange = 0;
+		   $('#user-avator').data('baseData',ret.img);
+		   $('#user-avator').css({'background-image':'url('+ret.img+')'});
+		   $api.setStorage('username', ret.nickname);		   
+		   $api.setStorage('userimage', ret.img);
+		   if (values.mobile != "") {
+		    	if (values.platform == 'qp_phone')
+		   			$api.setStorage('phone', values.phone);
+		   		else
+		   			$api.setStorage('mobile', values.phone);
+		   }
+		   
+			$('#nick-name').val(ret.nickname);
+			myNickname = ret.nickname;		   
+		   			
+		    api.execScript({
+		        name: 'root',
+		        frameName: 'my',
+		        script:  'view_appear();'
+		    });
+    		   			
+    		if (ret.msg == '你一个月内只能修改一次昵称')
+				myToast(ret.msg, 2000);
+			else 
+            	api.closeWin();
+		} else {
+			myToast(ret.msg, 2000);
+		}
+}
+
+var authcode = 0;
+function input_change(obj){
+	var phone = $api.byId('phone').value;
+	var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/; 
+	if(myreg.test(phone)){ 
+		$('#get-authcode-bt').show();
+		//$('#authcode').attr('placeholder','验证码');
+		if (phone != old_phone) {
+			 $('.fa-check-circle-o').hide();
+			 $('#get-authcode-bt').show();
+			 authcode = 1;
+		} else {
+			 $('.fa-check-circle-o').show();
+			 $('#get-authcode-bt').hide();
+			 authcode = 0;
+		}
+	}
+	else {
+		$('#get-authcode-bt').hide();
+	}
+}
+</script> 
+
+<script>
+    var isPop = false;
+    $(function(){
+        $('#authcode_frame').click(function(){
+            $('#authcode_frame').hide();
+        });
+        $('#authcode-box').click(function(event){
+            var e = event;
+            if(e.stopPropagation){
+                e.stopPropagation();
+              }else{
+                e.cancelBubble = true;
+             }
+        });
+        console.log($(document).height());
+        var deviceHeight = $(document).height();
+        var deviceWidth = $(document).width();
+        // $('#cut-canvas').attr('width',deviceWidth);
+        // $('#cut-canvas').attr('height',deviceHeight);
+        $('#wrap').css({'height':deviceHeight+'px'});
+
+        $('.gender').click(function(){
+            // alert($(this).data('gender'));
+            // $('.'+)
+            $('.gender').removeClass('bg-color-primary-i');
+            $(this).addClass('bg-color-primary-i');
+        });
+
+        //var userPicker = null;
+        $('#sex-trend-item').click(function(){
+            if(isPop){
+                return;
+            }
+
+            isPop = true;
+            // 性取向选择
+            // if(!userPicker){
+            //   userPicker = new mui.PopPicker({type:1});
+            // }
+            var userPicker = new mui.PopPicker({type:1});
+            userPicker.setData([{
+                value: '1',
+                text: '爱好男'
+            }, {
+                value: '2',
+                text: '爱好女'
+            }, {
+                value: '3',
+                text: '双性恋'
+            }, {
+                value: '4',
+                text: '无性恋'
+            },{
+                value: '5',
+                text: '保密'
+            }]);
+            $('#fixed-bg').show();
+            userPicker.show(function(items) {
+                $('#sex-trend').text(items[0]['text']);
+                //返回 false 可以阻止选择框的关闭
+                //return false;
+            });
+            if(event.stopPropagation){
+              event.stopPropagation();  
+            }else{
+              event.cancelBubble = true;
+            }
+        });
+        // $('.sex-trend-option').click(function(){
+        //     $('#sex-trend').text($(this).text());
+        //     $('.select-sextrend-box').hide();
+        // });
+
+
+        // 时间选择
+        //var picker = null;
+        $('#age-item').click(function(){
+            if(isPop){
+                return;
+            }
+            isPop = true;
+            $('#fixed-bg').show();
+            if(event.stopPropagation){
+              event.stopPropagation();  
+            }else{
+              event.cancelBubble = true;
+            }
+            // if(!picker){
+            //   picker = new mui.DtPicker({"type":"date","beginYear":1915});
+            // }
+            var picker = new mui.DtPicker({"type":"date","beginYear":1915});
+            picker.setSelectedValue($('#age').text()==''?'1990-01-01':$('#age').text());
+            picker.show(function(rs) {
+                /*
+                 * rs.value 拼合后的 value
+                 * rs.text 拼合后的 text
+                 * rs.y 年，可以通过 rs.y.vaue 和 rs.y.text 获取值和文本
+                 * rs.m 月，用法同年
+                 * rs.d 日，用法同年
+                 * rs.h 时，用法同年
+                 * rs.i 分（minutes 的第二个字母），用法同年
+                 */
+                $('#age').text(rs.text);
+                //alert('选择结果: ' + rs.text);
+                
+                /* 
+                 * 返回 false 可以阻止选择框的关闭
+                 * return false;
+                 */
+                
+                /*
+                 * 释放组件资源，释放后将将不能再操作组件
+                 * 通常情况下，不需要示放组件，new DtPicker(options) 后，可以一直使用。
+                 * 当前示例，因为内容较多，如不进行资原释放，在某些设备上会较慢。
+                 * 所以每次用完便立即调用 dispose 进行释放，下次用时再创建新实实。
+                 */
+                picker.dispose(); 
+            });
+        });
+
+        // 城市选择
+        //var cityPicker3 = null;
+        var showCityPickerButton = document.getElementById('city-item');
+        $(showCityPickerButton).click(function(event) {
+
+            if(isPop){
+                return;
+            }
+            // if(!cityPicker3){
+            //   cityPicker3 = new  mui.PopPicker({layer: 2});
+            // }
+            var cityPicker3 = new  mui.PopPicker({layer: 2});
+            cityPicker3.setData(cityData3);
+            
+            var cityResult3 = document.getElementById('city');
+
+            $('#fixed-bg').show();
+            if(event.stopPropagation){
+              event.stopPropagation();  
+            }else{
+              event.cancelBubble = true;
+            }
+            isPop = true;
+            cityPicker3.show(function(items) {
+                cityResult3.innerText = (items[1] || {}).text;// + " " + (items[2] || {}).text;
+                //返回 false 可以阻止选择框的关闭
+                //return false;
+            });
+        });
+        //imageCut.init();
+        
+        $('.avator-wrap').click(function(){
+            $('.select-pic-box').fadeIn(200);
+            $('.select-pic-box').show();
+            //$('.choose-item-list').slideToggle(200);
+        });
+       
+        $('.select-pic-box').click(function(){            
+            setTimeout(function(){
+                $('.select-pic-box').hide();
+            },200);
+            $(this).fadeOut(200);
+            //$('.choose-item-list').slideToggle(200);
+        });
+
+        
+        
+        $('#select-by-camera').click(function(){
+            api.getPicture({
+                sourceType: 'camera',
+                encodingType: 'jpg',
+                mediaValue: 'pic',
+                destinationType: 'base64',
+                allowEdit: true,
+                quality: 100,
+                targetWidth:deviceWidth,
+                // targetHeight:200,
+                saveToPhotoAlbum: false
+            }, function(ret, err){ 
+            
+                if (ret) {
+                    //api.alert({msg:ret.data});
+                    //api.alert({msg:ret.base64Data});
+                    if (ret.base64Data.length > 0) {
+                    	avtarChange = 1;
+                    	$('#user-avator').data('baseData',ret.base64Data);
+                      $('#user-avator').attr('src',ret.base64Data);
+                      //$('#user-avator').css({'background-image':'url('+ret.base64Data+')'});
+                    }
+		            setTimeout(function(){
+		                $('.select-pic-box').hide();
+		            },500);
+		              $(this).parent().parent().fadeOut();
+		            //$('.choose-item-list').slideToggle();
+                    //imageClip(ret.base64Data);
+                } else{
+                    //api.alert({msg:err.msg});
+                }
+            });
+        });
+        
+                        
+        $('#select-by-photo').click(function(){
+            api.getPicture({
+                sourceType: 'album',
+                encodingType: 'jpg',
+                mediaValue: 'pic',
+                destinationType: 'base64',
+                allowEdit: true,
+                quality: 100,
+                targetWidth:deviceWidth,
+                // targetHeight:200,
+                saveToPhotoAlbum: false
+            }, function(ret, err){         
+                if (ret) {
+                    //api.alert({msg:ret.data});
+                    //api.alert({msg:ret.base64Data});
+                    if (ret.base64Data.length > 0) {
+                    	avtarChange = 1;
+                    	$('#user-avator').data('baseData',ret.base64Data);
+                      $('#user-avator').attr('src',ret.base64Data);
+                      //$('#user-avator').css({'background-image':'url('+ret.base64Data+')'});
+                    }
+ 		            
+ 		            setTimeout(function(){
+		                $('.select-pic-box').hide();
+		            },200);
+		            $(this).parent().parent().fadeOut();
+                    //imageClip(ret.base64Data);
+
+                } else{
+                    //api.alert({msg:err.msg});
+                }
+
+            });
+        });
+        
+        // $('.info-complete-bt').click(function(){
+        //   	checknick();
+        //     if(event.stopPropagation){
+        //       event.stopPropagation();  
+        //     }else{
+        //       event.cancelBubble = true;
+        //     }
+        // });
+    });
+
+    function imageClip(imageBase64){
+
+    }
+    
+    function getGender(){
+        if($('.bg-color-primary-i').length>0){
+            return $('.bg-color-primary-i').data('gender');
+        }else{
+            return 0;
+        }
+    }
+    
+	function init() {
+		api_ajax(2, 
+				'my_profile_get.php', 
+				{	
+				}, 
+				after_init,
+				0,
+				0
+				); 
+	}
+	
+	function after_init(ret, _, _, _) {
+		if (ret.code == 988) {
+			return;
+		}
+		if(ret.code == 100){
+			data = ret.data;
+			$('#user-avator').css({'background-image':'url('+data.ui+')'});
+			avtarChange = 0;
+			if (data.sex == 1 || data.sex == 2)
+				$('#sex_sel_'+data.sex).addClass('bg-color-primary-i');
+			$('#nick-name').val(data.un);
+			myNickname = data.un;
+			$('#uniqueid').html(data.uniqueid);
+			$('#resume').val(data.bio);
+			$('#city').html(data.city);
+			$('#age').html(data.birth);
+			$('#sex-trend').html(data.lookingfor);
+			if (data.mobile == "") {
+				if ($api.getStorage('platform') == 'qp_phone') {
+					data.mobile = $api.getStorage('phone');
+				}
+			}
+			old_phone = data.mobile;
+			$('#phone').val(data.mobile);
+			if (data.mobile != "") {
+				$('.fa-check-circle-o').show();
+			} else {
+				$('.fa-check-circle-o').hide();
+			}
+		}else{
+	  		myToast(ret.code+"/"+ret.msg);
+		} 
+	}
+    
+    var myNickname = '';
+    var checkNickname = 0;
+    var avtarChange = 0;
+    var old_phone = "";
+	apiready = function () {
+        var header = $api.byId('header');
+        var header_bg = $api.byId('header-bg');
+        $api.fixIos7Bar(header);
+        $api.fixIos7Bar(header_bg);
+		    init();
+        $(window).scroll(function() {  
+             // if ($(document).scrollTop()<=50){
+             //      $('#header-bg').animate({'opacity':0});
+             //      //alert('out');
+             // }else{
+             //  //console.log('jdjhsd......');
+             //      $('#header-bg').animate({'opacity':1});
+             //      //alert('in');
+             // }
+             // $('#header-bg').show();
+             var opacity = parseFloat($(document).scrollTop())/200;
+             //$('#header-bg').css({'background-color':'rgba(50,50,50,'+opacity+')'});
+             api.execScript({
+                frameName:'my-info-edit-header',
+                script:'setHeaderOpacity('+opacity+')'
+             });
+
+         });
+        // $('input,textarea').focus(function(){
+        //     $('#header-bg').css({'background-color':'rgba(50,50,50,1)'});
+        // });
+        // $('input,textarea').blur(function(){
+        //     $('#header-bg').css({'background-color':'rgba(50,50,50,0'});
+        // });
+        var winWidth = api.winWidth;
+        var headerH = 50;
+        if(api.systemType == 'ios'){
+          headerH = 65;
+        }
+        api.openFrame({
+          name:'my-info-edit-header',
+          url:'my-info-edit-header.html',
+          bounces:false,
+          bgColor:'rgba(0,0,0,0)',
+          rect:{
+            x: 0,
+            y: 0,
+            w: winWidth,
+            h: headerH
+          }
+        });
+	};
+</script>
+</body>
+
+</html>

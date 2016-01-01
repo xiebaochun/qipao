@@ -1,0 +1,508 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>我的</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../css/user.css" />
+    <link rel="stylesheet" type="text/css" href="../css/topic-list.css" />
+    <link rel="stylesheet" type="text/css" href="../css/user-list.css" />
+    <style>
+        #header{background-color:transparent}
+        .nav-active>span{color:#ffc72a!important}
+        .hongren-wrap{position:absolute;display:block;top:3rem;right:1.8rem;width:3rem;text-align:center;z-index:5}
+        .hongren-wrap>.hongren-ico{display:inline-block;width:1rem;height:1rem;margin-top: 1rem;}
+        .hongren-wrap>.hongren-txt{font-size:.55rem;color:#eee}
+        .none-expression{width:5rem}
+        .user-name{font-size:.7rem}
+        .setting-ico{display:inline-block;z-index:6;width:40px;height:40px;bottom:0px;right:0;}
+        .setting-ico>img{display:inline-block;position:absolute;top:0.4rem;left:5px;width:20px;height:20px;}
+        .setting-ico:before{content:none}
+        #user-info-edit{z-index:6;bottom:.6rem;left:.6rem}
+        .user-stamp{color:#ffc72a!important;margin-top:.1rem;font-size:.5rem}
+        .fa-pencil-square-o{width:20px;height:20px;background-image:url(../image/edit_ico.png);background-size:90% auto;background-repeat:no-repeat;background-position:bottom}
+        .fa-pencil-square-o:before{content:none}
+        #my-header{
+            position: relative;
+            height: 50px;
+            width: 100%;
+        }
+        .content{
+            margin-top:11rem;
+        }
+        .my-user-name{margin-top:0.1rem;/*position: absolute;top:4.3rem;*/}
+        .user-stamp{/*position: absolute;top:4.4rem;*/}
+        .my-nav-item{line-height: 1.5rem;border-bottom:1px solid #666;}
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <h1>我</h1>
+        </div>
+        <div id="main">
+            <div id="cover">
+                <div id="my-header">
+                    <i class="edit fa fa-pencil-square-o" id="user-info-edit" onclick="openWinEdit('my-info-edit');"></i>
+                    <i class="setting-ico fa fa-cog" id="setting-ico" onclick="openWin('my-setting')"><img src="../image/setting_ico.png" alt=""></i>
+                </div>
+                <img class="cover" />
+                <div id="avatar" onclick="openWin('my-info-edit');">
+                <div class="headImg" id="headImg"></div><br>
+                    <label class="my-user-name"></label><br>
+                    <label class="user-stamp" id="user-title"></label>
+                </div>
+                <div class="hongren-wrap">
+                    <img class="hongren-ico" src="../image/hongren_ico.png" alt=""><br>
+                    <span class="hongren-txt"></span>
+                </div>
+                <div class="nav">
+                    <li class="nav-item nav-active" data-id="t-section">
+                        <span id="t_count">0</span><br>
+                        <span>泡币</span>
+                    </li>
+                    <li class="nav-item" data-id="f-section">
+                        <span id="f_count">0</span><br>
+                        <span>关注</span>
+                    </li>
+                    <li class="nav-item" data-id="bf-section">
+                        <span id="bf_count">0</span><br>
+                        <span>粉丝</span>
+                    </li>
+                </div>
+                <div id="user_info"></div>
+            </div>
+            <div>
+                <div style="line-height:1.5rem;" onclick="openWin('free-reward');">免费领取福利</div>
+                <div  style="line-height:1.5rem;" onclick="openWin('paobi');">泡币</div>
+                <div class="my-nav-item">我的动态</div>
+                <div class="my-nav-item" id="nav-collect">我的收藏</div>
+                <div class="my-nav-item">任务福利</div>
+            </div>
+            <div class="content none">
+                <!-- 话题 -->
+                <div class="section t-section">
+                    <div class="nopost-topic-wrap" id="t_none" style="display:none;">
+                        <img class="none-expression" src="../image/none_ico.png" alt=""><br>
+                        <span>Hi，发点内容让别人认识你！</span><br>
+                        <a class="btn" href="javascript:;">去话题圈</a>    
+                    </div>
+                    <div class="topic-list" id="t_list" style="display:none;">
+                      </div>
+                </div>
+                <!-- 关注 -->
+                <div class="section f-section none">
+                    <div class="nopost-topic-wrap" id="f_none" style="display:none;">
+                        <img class="none-expression" src="../image/none_follow_ico.png" alt=""><br>
+                        <span>独乐了不如众乐乐，加点朋友一起玩</span><br>
+                        <a class="btn" href="javascript:;">去寻找小伙伴</a>    
+                    </div>
+                    <div class="user-list" id="f_list" style="display:none;">
+                     </div>
+                </div>
+                <!-- 粉丝 -->
+                <div class="section bf-section none">
+                    <div class="nopost-topic-wrap" id="bf_none" style="display:none;">
+                        <img class="none-expression" src="../image/none_follower_ico.png" alt=""><br>
+                        <span>暂无粉丝关注您~</span><br>
+                        <a class="btn" href="javascript:;">提高自己的逼格</a>    
+                    </div>
+                    <div class="user-list" id="bf_list" style="display:none;">
+                      </div>
+                </div>
+            </div>
+ 
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/mui.min.js"></script>
+<script>
+function getData(cur_index) {
+	canMore[cur_index] = 0;
+	api_ajax(2, 
+		url[cur_index], 
+		{	
+			page: page[cur_index],
+			psize: psize[cur_index],
+			t:	'topic'
+		}, 
+		after_getData,
+		cur_index,
+		0
+		);    
+}
+
+function after_getData(ret, _, _, cur_index){
+		if(ret.code == 988){
+			isFirstGetData = true;
+			canMore[cur_index] = 1;
+			return;
+		}
+		if (ret.code == 101) {
+			page[cur_index]  = -1;			
+		} else if (ret.code == 100) {
+    		data = ret.data;
+			createHtml(data.info.list, cur_index);
+			if (cur_index == 1 && page[cur_index] == 1) {
+				$("#f_count").text(data.info.pageinfo.recordcount);
+			}
+    		if (data.info.pageinfo.curpage >= data.info.pageinfo.totalpage)
+    			page[cur_index] = -1;  	  					
+        }
+    	else{
+    		page[cur_index]  = -1;
+    	}
+   		canMore[cur_index] = 1;
+}
+
+function createHtml(dlist, cur_index) {
+    var uid = $api.getStorage('uid');
+	var cHtml = '';
+    if(cur_index == 0){
+		if (page[cur_index] == 1) $('.topic-list').empty();   
+        listTopics(dlist,'.topic-list');
+        return false;
+    }
+	for(var index in dlist){
+		switch(cur_index) {
+			case 1:
+               // console.log(uid);
+                if(dlist[index].userid == uid) break;
+				cHtml +='<div class="user-item" onclick="openUserSpace(\''+dlist[index].userid+'\');">';
+                cHtml += '        <div class="avator-wrap">';
+                cHtml += '            <img class="default-avator avator-img" src="'+dlist[index].ui+'" alt="">';
+                if (dlist[index].tag != '')
+                	cHtml += '            <img class="avator-tag" src="../image/user_tag_ico.png">';
+                cHtml += '        </div>';
+                cHtml += '        <div class="user-info">';
+                cHtml += '            <p>';
+                cHtml += '                <span class="user-name">'+dlist[index].nickname+'</span>';
+                if (dlist[index].sex == 1)
+                	cHtml += '                <i class="gender-ico gender-male-ico fa fa-mars"></i>';
+                else if (dlist[index].sex == 2)
+                	cHtml += '                <i class="gender-ico gender-female-ico fa fa-mars"></i>';                	
+                cHtml += '            </p>';
+                cHtml += '            <span class="user-tag">'+dlist[index].tag+'</span>';
+                cHtml += '        </div>';
+                cHtml += '        <span class="arrow-right"></span>';
+                cHtml += '    </div>';
+				break;
+			case 2:
+                console.log("uid="+uid);
+                if(dlist[index].userid == uid) break;
+				cHtml +='<div class="user-item" ';
+				cHtml +=' onclick="openUserSpace('+dlist[index].userid+');">';
+                cHtml += '        <div class="avator-wrap">';
+                cHtml += '            <img class="default-avator avator-img" src="'+dlist[index].ui+'" alt="">';
+                if (dlist[index].tag != '')
+                	cHtml += '            <img class="avator-tag" src="../image/user_tag_ico.png">';
+                cHtml += '        </div>';
+                cHtml += '        <div class="user-info">';
+                cHtml += '            <p>';
+                cHtml += '                <span class="user-name">'+dlist[index].nickname+'</span>';
+                if (dlist[index].sex == 1)
+                	cHtml += '                <i class="gender-ico gender-male-ico fa fa-mars"></i>';
+                else if (dlist[index].sex == 2)
+                	cHtml += '                <i class="gender-ico gender-female-ico fa fa-mars"></i>';                	
+                cHtml += '            </p>';
+                cHtml += '            <span class="user-tag">'+dlist[index].tag+'</span>';
+                cHtml += '        </div>';
+                if (dlist[index].be_fav == 1)
+                	cHtml += '        <span class="arrow-right"></span>';
+                else if (dlist[index].be_fav == 0) {
+                	cHtml += '        <span id="fav_'+dlist[index].userid+'" ';
+                	cHtml += 'class="follow-bt fav-ta-'+page[cur_index]+'" ';
+                	cHtml += 'data-user="'+dlist[index].userid+'">关注</span>';
+                	}
+                cHtml += '    </div>';			
+				break;
+			default:
+				break;
+			}
+    }
+ 
+	var content = $("#"+item[cur_index]+"_list");
+	if (page[cur_index] == 1) content.empty();
+	content.append(cHtml);
+	
+	if (cur_index == 2 ){
+	    $('.fav-ta-'+page[cur_index]).click(function(){
+	    	$this = $(this);
+	    	favoriteUser($this.data('user'), 'add');
+	    	return false;
+	    });		    
+    }
+    openGuide('my-guide'); 
+}
+
+function afterFavoriteUser(sid, act) {
+	if (act == 'add') {
+		$("#fav_"+sid).empty();
+        $("#fav_"+sid).removeClass('follow-bt');
+        $("#fav_"+sid).addClass('arrow-right');	
+        page[1] = 1;
+        getData(1);	
+	}
+}
+
+function openWinEdit (name) {
+    api.openWin({
+        name:name,
+        url:name+'.html',
+        // softInputMode:'pan'
+    });
+}
+
+function init(index) {
+    var uid = $api.getStorage('uid');
+	if(!uid || typeof(uid) == "undefined"){ //如果非登录状态，则返回推荐页面
+	    var jsfun = "openTab('main', '71bbe');set_gd_new(0);";
+	    api.execScript({
+	        name: 'root',
+	        script: jsfun
+	    });
+	    return true;	
+	} else {
+		if (index >= 0 && canMore[0]+canMore[1]+canMore[2] < 3) return;
+		if (index < 0) {
+			page = new Array(1,1,1);	
+			canMore = new Array(0,0,0);
+		} else {
+			page[index] = 1;
+			canMore[index] = 0;
+		}	
+        var headImgUrl = $api.getStorage('userimage');        
+        if(headImgUrl && typeof(headImgUrl) !== undefined){
+            $('#headImg').css({'background-image': 'url('+headImgUrl+')'});    
+        }
+        	
+		var nickname = $api.getStorage('username');
+		//nickname = nickname + "("+uid+")";
+		$(".my-user-name").text(nickname);        
+
+		api_ajax(2, 
+			'my_info_get.php', 
+			{	
+			}, 
+			after_init,
+			index,
+			0
+			); 
+	}
+}
+
+function after_init(ret, _, _, index) {
+	if(ret.code == 988){
+		isFirstGetData = true;
+		if (index < 0) {
+			page = new Array(1,1,1);
+			canMore = new Array(1,1,1);
+		}
+		return;
+	}
+   //	console.log(ret);
+	if(ret.code == 100){
+		data = ret.data;
+		var hr_str = "";
+  		if (data.tag != "") {
+  			hr_str = "我的文章";	//data.tag;
+            $('.hongren-ico').attr('src','../image/hr_article_ico.png');
+  			myHongren = 1;
+  		} else {
+  			hr_str = "红人认证";
+  			myHongren = 0;
+  		}
+  		$(".hongren-txt").text(hr_str);
+  		
+        if(data.userimage && typeof(data.userimage) !== undefined){
+        	$api.setStorage('userimage', data.userimage);
+            $('#headImg').attr('src', data.userimage);    
+        }
+        //$('#user-title').text(data.tag);
+ 		var d_count = Array(data.my_post, data.my_fav_user, data.fav_me_user, data.my_fav_topic);
+ 		for (var i=0; i<4; i++)
+ 			$("#"+item[i]+"_count").text(d_count[i]);
+
+   		if (index < 0) {
+   			var for_f = 0; 
+   			var for_t = 3;
+   		} else {
+   			var for_f = index; 
+   			var for_t = index;
+   		}
+   		for (var i=for_f; i<for_t; i++)	{
+	  		if (d_count[i] <= 0) {
+	  			$("#"+item[i]+"_none").show();
+	  			$("#"+item[i]+"_list").hide();
+	  		} else {
+	  			$("#"+item[i]+"_none").hide();
+	  			$("#"+item[i]+"_list").show();
+	  			canMore[i] = 1;
+	  			getData(i);
+	  		}    		
+   		}	
+	}
+	isFirstGetData = false;
+}
+
+$(function(){
+    $('.nav-item').click(function(){
+        $this = $(this);
+        $this.siblings().removeClass('nav-active');
+        $this.addClass('nav-active');
+        $('.section').hide();
+        switch($this.data('id')){
+            case 't-section':
+            	cur_index = 0;
+            	break;
+            case 'f-section':
+            	cur_index = 1;
+            	break;
+            case 'bf-section':
+				cur_index = 2;
+            	break;
+            default:
+            	break;
+        }        
+        $('.'+$this.data('id')).show();
+    });
+    
+    $('#t_none').click(function(){		
+   	    api.execScript({
+            name: 'root',
+            frameName: 'topic',
+            script: "showFollow();"
+            });
+        gotoIndexTab('topic','21c8cf');
+        //openWin('topic');
+
+    });
+        
+    $('#f_none').click(function(){
+        api.openWin({
+            name:'my-follow',
+            url:'my-follow.html',
+            pageParam:{}
+        });
+    });
+    
+    $('#bf_none').click(function(){
+        api.execScript({
+            name: 'root',
+            frameName: 'topic',
+            script: "showFollow();"
+            });
+		gotoIndexTab('topic','21c8cf');
+    });       
+           
+    $('.hongren-wrap').click(function(){
+            // openWin('user-hr-apply');
+        var uid = $api.getStorage('uid');
+        if (myHongren == 0)
+        	hUrl = 'my-hr-apply.html';
+        else
+        	hUrl = 'my-hr-sc.html';
+         api.openWin({
+            name:'my-hr',
+            url: hUrl,
+            pageParam:{
+            	userid:uid,
+            	page_title:'我的专栏',
+            	api_file:'my_topic_list.php',
+            	t: 'article'
+            }
+        });
+    });
+    
+    $('#nav-collect').click(function(){
+        //openWin('my-collect');
+        api.openWin({ 
+            name: 'my-collect',
+            url: 'my-collect.html',
+            opaque: true,
+            vScrollBarEnabled: false,
+            slidBackEnabled:false
+        });
+    });        
+});
+
+var myHongren = 0;
+var item = new Array('t','f','bf','c');
+var url = new Array('my_topic_list.php','my_favorite_user_list.php','my_favorite_me_list.php');	
+var page = new Array(1,1,1);	
+var psize = new Array(5,10,10);
+var canMore = new Array(1,1,1);		
+var cur_index = 0;
+var isFirstGetData = true; 
+
+apiready = function () {
+        var header = $api.byId('my-header');
+        $api.fixIos7Bar(header);
+        isDev= false;
+
+	    init(-1);
+	    
+	    api.addEventListener({
+	      name:'viewappear'
+	    },function(ret,err){	 		
+	        api.execScript({
+    	        name: 'root',
+        	    script: 'checkCurPid("root","my")'
+        	});	        	
+	    });
+	    
+	    api.setRefreshHeaderInfo({
+	        visible: true,
+	        // loadingImgae: 'wgt://image/refresh-white.png',
+	        bgColor: '#f2f2f2',
+	        textColor: '#4d4d4d',
+	        textDown: '下拉刷新...',
+	        textUp: '松开刷新...',
+	        showTime: false
+	    }, function (ret, err) {
+	    	api.hideProgress();
+	    	if (isFirstGetData) {
+	    		init(-1);
+	    	} else if (canMore[cur_index]) {
+				init(cur_index);
+		    }
+	        api.refreshHeaderLoadDone();
+	    });
+	  
+	    api.addEventListener({
+	        name: 'scrolltobottom',
+	        extra:{
+	        	threshold:200
+	    	}
+	    }, function (ret, err) {	    	
+	   	   if (page[cur_index] > 0 && canMore[cur_index])
+		        {
+			        page[cur_index] = page[cur_index] + 1;
+			        getData(cur_index);
+		        } 	
+ 	    }); 
+ 	    // var mask = mui.createMask(callback);//callback为用户点击蒙版时自动执行的回调；
+      //   mask.show();//显示遮罩
+      //   mask.close();//关闭遮罩
+      
+ 	  closeWinAboutLogin();  
+};
+
+function  view_appear() {
+    init(-1);
+    if($api.getStorage('userimage') !== undefined){
+           $('#headImg').attr('src', $api.getStorage('userimage'));    
+      }	
+	console.log("view_appear(my)");
+}  
+        
+$(function(){
+    initDev();
+});
+
+</script>
+</html>

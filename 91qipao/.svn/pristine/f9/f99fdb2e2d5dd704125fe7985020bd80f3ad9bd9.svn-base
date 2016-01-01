@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>私信我的</title>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../css/news.css" />
+    <style>
+       body{background-color:#fff}
+       #main{background-color:#fff}
+       .user-avator{display:inline-block;width:2rem;height:2rem;border-radius:50%;background-color:#eee;vertical-align:middle}
+       .info-item{margin:0 .5rem;padding:.5rem 0;border-bottom:1px solid #ccc}
+       .info-item-middle{margin-left:.3rem;vertical-align:middle}
+       .info-item-middle>.user-name{font-size:.7rem;vertical-align:middle}
+       .info-item-middle>.info-summary{color:#666}
+       .create-time{display:inline-block;position:absolute;right:.5rem;top:.1rem;color:#999}
+       .blacklist-bt{position:absolute;display:inline-block;right:0;bottom:23px;font-size:.6rem;color:#000;height:12px;margin-top:13px;margin-right:20px;color:#666}      
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <a class="back-icon iconfont icon-arrow-left" tapmode="" onclick="api.closeWin();"></a>
+            <h1 class="">私信</h1>
+            <a class="blacklist-bt" style="display:none;">黑名单</a>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src='../script/common.js'></script>
+<script> 
+    apiready = function(){  
+        var header = $api.byId('header');
+        $api.fixIos7Bar(header);
+		var width,header,headerPos,height,nav,navPos;
+            width = api.winWidth;
+            header = $api.byId('header');
+            headerPos = $api.offset(header);
+            height = api.winHeight - headerPos.h -51;
+        api.openFrame({
+                    name: 'gouda-pm-indexcon',
+                    url: 'gouda-pm-indexcon.html',
+                    reload: false,
+                    bounces : false,
+                    opaque: true,
+                    vScrollBarEnabled : false,
+                    pageParam : {
+                        headerHeight : headerPos.h,
+                        // tid : tid
+                    },
+                    rect : {
+                        x : 0,
+                        y : headerPos.h,
+                        w : width,
+                        h : height
+                    }
+                });   
+        $('.blacklist-bt').click(function(){
+            api.openWin({
+                name:'my-blacklist',
+                url:'my-blacklist.html',
+                pageParam:{}
+            });
+        });
+  
+    }
+    function showBackListBt(){
+        $('.blacklist-bt').show();
+    }
+    function hideBlackListBt(){
+        $('.blacklist-bt').hide();
+    }
+</script>
+</html>

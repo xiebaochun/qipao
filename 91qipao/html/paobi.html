@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+        <meta name="format-detection"content="telephone=no">
+        <title>泡币</title>
+        <link rel="stylesheet" type="text/css" href="../css/common.css" />
+        <link rel="stylesheet" type="text/css" href="../css/task-item.css" />
+        <style>
+            #wrap{
+                height: 100%;
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -webkit-flex-flow: column;
+                       flex-flow: column;
+            }
+            #main{
+                -webkit-box-flex: 1; 
+                -webkit-flex: 1;
+                flex: 1;
+                background-color: #eee;
+            }
+            .item-avator{width: 2.5rem;height:2.5rem;}
+            .banner{padding:1rem 0.5rem; background-image: url(../image/paobi_detail_banner_bg.png);background-size: cover;}
+            .nav{background-color: #fff;/*border-bottom:1px solid #666;*/}
+            .item-header-right{line-height:2.5rem;font-size: 0.6rem;}
+
+        </style>
+    </head>
+    <body>
+        <div id="wrap">
+            <div class="fixed-header" id="header">
+                <a class="back-icon iconfont icon-arrow-left" tapmode onclick="api.closeWin();"></a>
+                <h1>泡币</h1>
+                <a class="header-right-txt" onclick="openWin('paobi-detail');">明细</a>
+            </div>
+            <div style="height:50px;"></div>
+            <div id="main">
+                <div class="banner">
+                    <img class="item-avator" id='user-avator' src="" alt="">
+                    <span class="item-name" id="user-name"></span>
+                    <div class="item-header-right" onclick="openWin('paobi-detail');" id='my_money'>泡币</div>
+                </div>
+                <div class="nav">
+                    <div class="nav-item" style="border-right:1px solid #eee;"><i class="iconfont icon-shangcheng"></i><span class="item-name">泡币商城<span style="color:#ccc;font-size:0.4rem;">&nbsp;(暂未上线)</span></span></div>
+                    <div class="nav-item" onclick="open_rich_list();"><i class="iconfont icon-jinbiline"></i><span class="item-name">富豪榜</span></div>
+                </div>
+                <div class="item" style="display:none;margin-top:0.5rem" id='newer_task'>
+                    <div class="item-header" style="border-bottom:1px solid #eee;"><i class="iconfont icon-liwu vm"></i><span class="item-name">新人任务</span></div>
+                    <div class="task-item">
+                        <img src="../image/paobi/hongren_ico.png" alt="">
+                        <div class="task-info inline-block">
+                            <span>关注5个红人</span><br>
+                            <span>奖励5个泡币</span>
+                        </div>
+                        <div class="start-bt pull-right" id="t110"></div>
+                    </div>
+                    <div class="task-item">
+                        <img src="../image/paobi/phone_ico.png" alt="">
+                        <div class="task-info inline-block">
+                            <span>绑定手机号</span><br>
+                            <span>奖励10个泡币</span>
+                        </div>
+                        <div class="start-bt pull-right" id="t120"></div>
+                    </div>
+                </div>
+                <div class="item" style="margin-top:0.5rem">
+                    <div class="item-header" style="border-bottom:1px solid #eee;"><i class="iconfont icon-task vm"></i><span class="item-name">日常任务</span></div>
+                    <div class="task-item">
+                        <img src="../image/paobi/qiandao_ico.png" alt="">
+                        <div class="task-info inline-block">
+                            <span>每日签到</span><br>
+                            <span>奖励1个泡币</span>
+                        </div>
+                        <div class="start-bt pull-right" id="t210"></div>
+                    </div>
+                    <div class="task-item">
+                        <img src="../image/paobi/publish_ico.png" alt="">
+                        <div class="task-info inline-block">
+                            <span>给动态回复</span><br>
+                            <span>奖励1个泡币,每天最多可获10个泡币</span>
+                        </div>
+                        <div class="start-bt pull-right" id="t230"></div>
+                    </div>
+                    <div class="task-item">
+                        <img src="../image/paobi/publish_status_ico.png" alt="">
+                        <div class="task-info inline-block">
+                            <span>发个动态</span><br>
+                            <span>奖励5个泡币,每天最多可获50个泡币</span>
+                        </div>
+                        <div class="start-bt pull-right" id="t220"></div>
+                    </div>
+                    <div class="task-item">
+                        <img src="../image/paobi/heart_ico.png" alt="">
+                        <div class="task-info inline-block">
+                            <span>给动态点赞</span><br>
+                            <span>奖励1个泡币,每天最多可获10个泡币</span>
+                        </div>
+                        <div class="start-bt pull-right" id="t240"></div>
+                    </div>
+                    <div class="task-item">
+                        <img src="../image/paobi/share_ico.png" alt="">
+                        <div class="task-info inline-block">
+                            <span>分享气泡</span><br>
+                            <span>奖励30个泡币,每天最多可获90个泡币</span>
+                        </div>
+                        <div class="start-bt pull-right" id="t250"></div>
+                    </div>
+                    <div style="position:relative; text-align:right;height:1.5rem;background-color:#eee;font-size:0.45rem;">
+                        <div style="position:absolute;right:0.5rem;bottom:0;line-height:1.5rem;">
+                            <span class="color-999">点击这里了解</span><span style="color:#fd4f58" onclick="openWin('paobi-rule');">《泡币规则》</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="item" style="margin-top:0.5rem">
+                    <div class="item-header" style="border-bottom:1px solid #666;">连续奖励</div>
+                    <div class="task-item">
+                        <span>连续签到（已经连续签到7天）</span><br>
+                        <span>连续签到7天+10泡币，以7的倍数递增+10泡币，不封顶</span>
+                        <div class="start-bt pull-right"><span>开始任务</span></div>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/my_task_start.js"></script>
+<script>
+$(function(){
+    initDev();
+});
+   
+function open_rich_list() {
+    api.openWin({ 
+        name:   'page-shell',
+        url:    'page-shell.html',
+        pageParam: {
+        	page_title:'富豪榜',
+        	page_name: 'rich-list',
+        	page_url: 'rich-list.html',
+        	page_param:{}
+        },
+        reload: false,
+        opaque: true,
+        bounces:false,
+        vScrollBarEnabled: false,
+        softInputMode: 'resize'
+    });	
+}
+
+function init() {
+    $('#user-avator').attr('src',$api.getStorage('userimage'));
+	$('#user-name').html($api.getStorage('username')); 
+	
+	api_ajax(2, 
+		'my_task_status.php', 
+		{	
+		items:'110,120,210,220,230,240,250'
+		}, 
+		after_init,
+		0,
+		0
+		); 
+}
+
+function after_init(ret, _, _, _) {
+	if(ret.code == 988){
+		return;
+	}
+   //	console.log(ret);
+	if(ret.code == 100){
+		data = ret.data;
+		money = ret.money;		
+		$api.setStorage('my_money', money);
+		
+		$('#my_money').html(money.money+'泡币');
+	
+		var item = new Array('110','120','210','220','230','240','250');
+		if (data['t110'] && data['t120']) {
+			if (data['t110'].finished && data['t120'].finished) {
+				$('#newer_task').hide();
+			} else {
+				$('#newer_task').show();
+			}
+		}
+		for (var i=0; i<item.length; i++) {
+			if (data['t'+item[i]]){
+				if (data['t'+item[i]].finished == 1)
+					$('#t'+item[i]).html('<span class="task-active">已完成</span>');
+				else { 
+					if (data['t'+item[i]].task_count >= 1)
+						$('#t'+item[i]).html('<span>已完成：'+data['t'+item[i]].task_count+'</span>');
+					else
+						$('#t'+item[i]).html('<span>开始任务</span>');
+					}
+			} else {
+				$('#t'+item[i]).html('<span>开始任务</span>');
+			}
+			
+		}
+	}
+}
+       
+apiready = function(){
+    var header = $api.byId('header');
+    $api.fixIos7Bar(header);
+           
+    init();
+}
+     
+</script>
+    </body>
+</html>

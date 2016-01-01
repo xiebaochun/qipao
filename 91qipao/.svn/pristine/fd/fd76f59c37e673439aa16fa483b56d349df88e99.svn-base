@@ -1,0 +1,260 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="format-detection" content="address=no" />
+    <title>手机号码验证</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+     <style>
+        body{}
+        #wrap{height:100%;background-color: #fff;}
+        #header{border:none;background-color:#ffd600;}
+        .back-icon{background-image: none !important;font-size: 20px;line-height: 52px;}
+        #main{height:85%}
+        .loginTip{width:100%;text-align:center;bottom:3%;padding:0 10%;margin-top:0!important;box-sizing:border-box}
+        .loginTip a{width:40%;line-height:40px;text-decoration:none;color:#fff;font-size:1.1em;font-family:'微软雅黑'}
+        .hidden{display:none}
+        .input-wrap{position: relative; height:1.8rem;margin:1.8rem 0.8rem;padding-left:1rem;border-radius:1rem;border:1px solid #eee;overflow:hidden;box-sizing:border-box;}
+        .input-wrap>input{width:80%;padding:0.4rem 0.3rem;line-height: 1rem;font-size: 0.55rem;}
+        .gray_line{height:0;border-bottom:1px solid #ddd}
+        .other-login{margin:0 0.5rem;margin-top:1rem;display:flex;display:-webkit-flex;}
+        .other-login li{flex:1;-webkit-flex:1;text-align: center;}
+        .other-login li i{width:1rem;padding:0.6rem;font-size:2.5rem;vertical-align:middle}
+        .other-login li span{color:#666;margin-top:0.1rem;font-size:0.5rem;vertical-align:middle}
+        #sina-login{width:29%;display:inline-block}
+        #qq-login{width:29%;display:inline-block}
+        #weixin-login{width:29%;display:inline-block;}
+        #sina-login>i{color: #ff7246;font-size: 2.46rem;}
+        #qq-login>i{color: #2bc1ff;}
+        #weixin-login>i{color: #77bf2f;}
+        /*.simple-login-bt{display:block;margin-bottom:1rem;background-color: rgba(44,211,62,0.8);border-radius:2px;text-align: center;}
+        .simple-login-bt:last-child{background-color: rgba(9,151,197,0.8);margin-bottom:3rem;}*/
+        #get-authcode-bt{position: absolute;top:0;right:0;padding:0 0.6rem 0 0.6rem;line-height: 1.8rem;background-color: #EEEEEE;font-size: 0.5rem;}
+        a.login-bt{margin:0 0.5rem;padding:0;background-color: #ccc !important;line-height:1.8rem;color:#fff;border-radius: 50px;}
+        .get-validcode-bt{background-color:#eee;}
+        .get-validcode-bt-active{background-color:#fdd600 !important}
+        a.login-bt-active{background-color:#fd4f58 !important}
+        .icon-phone,.icon-id-code{line-height:1.8rem;font-size:0.55rem !important;color:#999;}
+    </style>
+</head>
+
+<body>
+    <div id="wrap">
+        <div id="header">
+            <a class="back-icon iconfont icon-arrow-left" tapmode="" onclick="closeToWhere();"></a>
+            <h1>验证手机号码</h1>
+            <a class="header-right-txt" tapmode onclick="skip();">跳过</a>
+        </div>
+        <div id="main">
+            <div class="tips" style="line-height:2rem;background-color:#eee;color:#999;font-size:0.5rem;text-align:center;">
+                为了您以后使用顺畅，请输入手机号验证，验证成功有惊喜喔~
+            </div>
+            <div class="input-wrap">
+                <i class="iconfont icon-phone"></i>
+                <input type="text" placeholder="手机号码" id="phone" value="" oninput="return input_change(this);"/>
+                <div class="get-validcode-bt" id="get-authcode-bt">获取验证码</div>
+            </div>
+            <div class="input-wrap">
+                <i class="iconfont icon-id-code"></i>
+                <input type="password" placeholder="请输入4位数字验证码" id="authcode" value="" oninput="return input_validate_change(this);"/>
+            </div>
+            <a class="btn login-bt" id="login-bt" style="margin:1.5rem 0.8rem 0.5rem 0.8rem;" tapmode="active" onclick="login();">登录</a>
+            <div class="tc user-protocals"><span class="check-box-wrap color-999 vm">*</span><span class="vm color-999"><span class="check-toggle color-999">登录即表示您同意</span><span class="color-333" onclick="openWin('my-setting-pt');">《气泡用户协议》</span></span></div>
+        </div>
+    </div>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script>	
+    var isInstall_qq = true,isInstall_wx = true;
+    var canSendAuthCode = true;
+    $(function(){
+        $('#get-authcode-bt').click(function(){
+            if (canSendAuthCode) {
+                var phone = $api.byId('phone').value;
+                sendAuthcode(phone);
+                $('#authcode').focus();
+            } else {
+            }
+            return false;
+         });  
+    });
+    function setAuthCodeTime(seconds) {
+        if (seconds > 0 ) {
+            canSendAuthCode = false;
+            $('#get-authcode-bt').removeClass('get-validcode-bt-active');
+            $('#phone').attr("readonly","readonly");
+            var str = ""+seconds+"秒";
+            $('#get-authcode-bt').html(str);
+            seconds = seconds-1;
+            setTimeout(function () {
+                    setAuthCodeTime(seconds);
+            }, 1000);
+        } else {
+            $('#phone').removeAttr("readonly");
+            var str = "验证码";
+            $('#get-authcode-bt').html(str);
+            $('#get-authcode-bt').addClass('get-validcode-bt-active');
+            canSendAuthCode = true;
+        }
+    }
+    var isphone = 0;
+    function input_change(obj){
+        var phone = $api.byId('phone').value;
+        var $phone = $('#phone');
+        var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/; 
+
+        $phone.val(phone.replace(/[^0-9]/g,""));
+        phone = $phone.val();
+        //$('#phone').val('gfsd');
+        if(phone.length>=11){
+            $phone.val(phone.substring(0,11));
+            phone = $phone.val();
+            isphone = 1;
+        }else{
+            isphone = 0;
+        }
+        if(myreg.test(phone)){ 
+            $('#get-authcode-bt').addClass('get-validcode-bt-active');
+            //$('#authcode').attr('placeholder','验证码');
+            isphone = 1;
+        }
+        else {
+            $('#get-authcode-bt').removeClass('get-validcode-bt-active');
+            //$('#authcode').attr('placeholder','密码');
+            isphone = 0;
+        }
+
+        if (phone == '') {
+            //$('#authcode').attr('placeholder','验证码/密码');
+            isphone = 0;
+        }
+        checkCondition();
+    }
+    
+   var isValidCode = 0;
+   function input_validate_change(){
+       
+        var $validateCode = $('#authcode');
+        var code = $validateCode.val();
+        $validateCode.val(code.replace(/[\u4e00-\u9fa5]/g,"")); 
+        if(code.length >= 4){
+            $validateCode.val(code.substring(0,4));
+            isValidCode = 1;
+        }else{
+            isValidCode = 0;
+        }
+        checkCondition();
+   }
+   function checkCondition(){
+        if(isValidCode&&isphone){
+            $('#login-bt').addClass('login-bt-active');
+        }else{
+            $('#login-bt').removeClass('login-bt-active');
+        }
+   }
+   function login() {
+     var phone = $api.byId('phone').value;
+     var authcode = $api.byId('authcode').value;  
+     var info = {
+            phone:phone,
+            authcode:authcode,
+            isphone:isphone 
+                };
+   
+  api_ajax(0, 
+        'util_login.php', 
+        info,
+        after_login,
+        info,
+        3
+    );         
+   }
+   
+   function after_login(ret, _, _, info) {
+    if (ret.code == 988) {
+        return;
+    }
+    console.log(ret);
+    if (ret.code == 100) {
+       $api.setStorage('phone', info.phone);
+       $api.setStorage('authcode',info.authcode);
+       $api.setStorage('isphone', info.isphone);    
+       $api.setStorage('uid', ret.uid); 
+       $api.setStorage('sex', ret.sex); 
+       $api.setStorage('token', ret.token);
+       $api.setStorage('userimage',ret.userimage);
+       $api.setStorage('username',ret.username);
+       $api.setStorage('platform', 'qp_phone'); 
+       $api.setStorage('is_ours', ret.is_ours);                
+
+       openFillInfo();
+       return;
+       after_login_action();
+      } else if (ret.code == 102) {
+         myToast(ret.msg, 2000);
+      } else {
+         myToast("很抱歉，此号码未注册，请先注册后再登录！"+ret.code, 2000);
+      }
+   }
+
+   function openFillInfo(){
+        api.openWin({
+            name: 'userLoginFillInfo',
+            url: 'util-login-fill-info.html',
+            pageParam:{},
+            reload:false,
+            opaque:true,
+            cScrollBarEnabled:false,
+            softInputMode:'resize'
+        });
+   }
+	// function gotoLoginByPhone() {
+	// 	  api.openWin({
+	// 	    name: 'userLoginByPhone',
+	// 	    url: 'util-login-by-phone.html',
+	// 	    opaque: true,
+	// 	    vScrollBarEnabled: false
+	// 	  });
+	// }
+	
+	// function gotoRegister() {
+	// 	  api.openWin({
+	// 	    name: 'userRegister',
+	// 	    url: 'util-register.html',
+	// 	    opaque: true,
+	// 	    vScrollBarEnabled: false
+	// 	  });
+	// }
+		
+	
+	
+	function closeToWhere() {
+			api.closeWin();	
+			/*
+			api.closeToWin({
+				name: 'root'
+			});
+			*/	
+			return;
+	}
+	
+	apiready = function() {
+	  var header = $api.byId('header');
+	  $api.fixIos7Bar(header);
+      
+		
+	  api.addEventListener({
+            name: 'keyback'
+        }, function(ret, err){
+			closeToWhere();
+        });
+    };
+    $(function(){
+        initDev();
+    });
+</script>
+</body>
+</html>

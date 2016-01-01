@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+        <meta name="format-detection"content="telephone=no">
+        <title>专家答疑-推荐</title>
+        <link rel="stylesheet" type="text/css" href="../css/common.css" />
+        <style>
+            #main{background-color: #eee;}
+        </style>
+    </head>
+    <body>
+        <div id="wrap">
+            <div id="main">
+                <div class="v2-qa-item">
+                    <div class="v2-qa-header">
+                        <div class="v2-qa-author-info">
+                            <img class="v2-qa-author-avator" src="../image/version_logo.png" alt="">
+                        </div>
+                        <div class="v2-qa-title">标题标题标题标题标题</div>
+                    </div>
+                    <div class="v2-qa-body">
+                        <div class="v2-qa-like-wrap"></div>
+                        <div class="v2-qa-content">
+                            这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容
+                        </div>
+                    </div>
+                    <div class="v2-qa-footer">
+                        <div class="v2-qa-tags-wrap">
+                            <span class="v2-qa-tag">标签</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="../script/api.js"></script>
+        <script src="../script/common.js"></script>
+        <script>
+            $(function(){
+                initDev();
+            });
+            apiready = function(){
+                var html = $('#main').html();
+                for(var i=0;i<50;i++){
+                    $('#main').append($(html));
+                }
+            } 
+        </script>
+    </body>
+</html>

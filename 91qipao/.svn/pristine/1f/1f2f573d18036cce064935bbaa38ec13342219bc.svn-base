@@ -1,0 +1,258 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>收藏</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../css/topic-list.css" />
+    <style>
+        body{background-color:#fff}
+        .none-expression{width:5rem;}
+        .nav{position:fixed;top:0;width:100%;height:37px;border-bottom:1px solid #eee;background-color:#fff;z-index:5}
+        .nav>a{display:inline-block;width:49%;line-height:37px;text-align:center;font-size:14px;color:#999}
+        .section{position:relative;margin-top:40px;z-index:0}
+        .nav-active{border-bottom:1px solid #333;color:#333 !important;}
+        .nopost-topic-wrap{padding:3rem 0;background-color:#fff;text-align:center}
+        .nopost-topic-wrap>span{margin-top:1rem;font-size:0.7rem;color:#333}
+        .nopost-topic-wrap>.btn{display:inline-block;margin-top:1rem;font-size:0.6rem;padding:0.3rem 1.5rem;background-color:#ffd600}
+        #a_list .item {
+            background-color: #000;
+            background: -webkit-linear-gradient(top,#666 0,#000 100%);
+            background: -o-linear-gradient(top,#666 0,#000 100%);
+            background: -ms-linear-gradient(top,#666 0,#000 100%);
+            background: linear-gradient(top,#666 0,#000 100%);
+        }
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div class="main">
+            <div class="nav">
+                <a class="nav-active" id="a-section" href="javascript:;" data-id="a-section">文章</a>
+                <a id="t-section" href="javascript:;" data-id="t-section" style="float:right;">话题</a>
+            </div>
+            <div class="section a-section">
+                <div class="nopost-topic-wrap" id="a_none" style="display:none;">
+                    <img class="none-expression" src="../image/none_collect_ico.png" alt=""><br>
+                    <span>你暂无收藏内容喔~</span><br>
+                    <a class="btn" href="javascript:;">去收藏吧</a>    
+                </div>
+                <div class="a-list" id="a_list" style="display:none;">  
+                </div>    
+            </div>
+            <div class="section t-section none">
+                <div class="nopost-topic-wrap" id="t_none" style="display:none;">
+                    <img class="none-expression" src="../image/none_collect_ico.png" alt=""><br>
+                    <span>你暂无收藏内容喔~</span><br>
+                    <a class="btn" href="javascript:;">去收藏吧</a>    
+                </div>
+                <div class="topic-list" id="t_list" style="display:none;">
+  
+                </div>    
+            </div>            
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script>
+function init() {
+	if (isFirst == 1) {
+		page = new Array(1,1);	
+		psize = new Array(5,5);	
+		canMore = new Array(1,1);
+		getData(0);
+		getData(1);
+	} else {
+		var set_my_change_topic = $api.getStorage('set_my_change_topic');
+		$api.rmStorage('set_my_change_topic');
+		if (set_my_change_topic) {
+			page[cur_index] = 1;
+			canMore[cur_index] = 1;
+			getData(cur_index);
+		}
+	}
+	isFirst = 0;  
+}
+
+function getData(cur_index) {
+ 	var t = 'article';
+ 	if (cur_index == 1)
+ 			t = 'topic';
+ 	canMore[cur_index] = 0;		
+	api_ajax(2, 
+		url[cur_index], 
+		{	
+			page: page[cur_index],
+			psize: psize[cur_index],
+			t: t
+		}, 
+		after_getData,
+		cur_index,
+		1
+		);    
+}
+
+function after_getData(ret, _, _, cur_index){
+		if (ret['code'] == 988) {
+			isFirst = 1;
+			canMore[cur_index] = 1;	
+			return;
+		}
+		if (ret['code'] == 101) {
+			if (page[cur_index] == 1) {
+				$("#"+item[cur_index]+"_none").show();
+	  			$("#"+item[cur_index]+"_list").hide();
+	  			$("#"+item[cur_index]+"_list").empty();
+			}
+			page[cur_index]  = -1;
+		} else if (ret['code'] == 100) {
+			if (page[cur_index] == 1) {
+			
+				$("#"+item[cur_index]+"_none").hide();
+	  			$("#"+item[cur_index]+"_list").show();
+	  			$("#"+item[cur_index]+"_list").empty();
+			}        		
+    		data = ret.data;
+            console.log(ret.data);
+			createHtml(data.info.list, cur_index);
+    		if (data.info.pageinfo.curpage >= data.info.pageinfo.totalpage)
+    			page[cur_index] = -1;  	  					
+        }
+    	else{
+    		page[cur_index]  = -1;
+    	}
+    	canMore[cur_index] = 1;	
+}
+
+
+function createHtml(dlist, cur_index) {
+	switch(cur_index) {
+		case 0:
+              listArticle(dlist,"#"+item[cur_index]+"_list");
+			break;
+		case 1:
+              listTopics(dlist,"#"+item[cur_index]+"_list");  			               	
+			break;
+		default:
+			break;
+		}
+}
+
+$(function(){
+    $('.nav>a').click(function(){
+        $this = $(this);
+       
+        //$('.section').hide();
+        switch($this.data('id')){
+            case 'a-section':
+            	cur_index = 0;
+            	break;
+            case 't-section':
+            	cur_index = 1;
+            	break;
+			default:
+            	break;
+        }           
+        //$('.'+$this.data('id')).show();
+        switchTab($this.data('id'));
+    });
+    
+    $('#a_none').click(function(){
+		gotoIndexTab('main','21c8cf');
+		api.closeWin();
+    });    
+
+    $('#t_none').click(function(){
+        api.execScript({
+            name: 'root',
+            frameName: 'topic',
+            script: "showFollow();"
+            });
+        gotoIndexTab('topic','21c8cf');
+		api.closeWin();
+    }); 
+        
+});
+function switchTab(tabName){
+    $('#'+tabName).siblings().removeClass('nav-active');
+    $('#'+tabName).addClass('nav-active');
+    if(tabName == 'a-section'){
+        $('.a-section').css('z-index','2').show();
+        $('.t-section').css('z-index','1').hide();
+    }else if(tabName == 't-section'){
+        $('.a-section').css('z-index','1').hide();
+        $('.t-section').css('z-index','2').show();
+    }
+}
+
+var item = new Array('a','t');
+var url = new Array('my_favorite_topic_list.php','my_favorite_topic_list.php');
+var page = new Array(1,1);	
+var psize = new Array(5,5);	
+var canMore = new Array(1,1);
+var cur_index = 0;
+var lastTime = 0; 
+var isFirst = 1;  
+ 
+apiready = function () {
+        isDev = false;
+        lastTime = (new Date()).valueOf();
+        
+	    api.setRefreshHeaderInfo({
+	        visible: true,
+	        // loadingImgae: 'wgt://image/refresh-white.png',
+	        bgColor: '#f2f2f2',
+	        textColor: '#4d4d4d',
+	        textDown: '下拉刷新...',
+	        textUp: '松开刷新...',
+	        showTime: false
+	    }, function (ret, err) {
+	    	api.hideProgress();
+	        var nowTime = (new Date()).valueOf();
+	        if (nowTime-lastTime > 300000 || isFirst) {		//5*60*1000 = 300000
+	        	lastTime = nowTime;  	    	
+				if (canMore[cur_index]) {
+					page[cur_index] = 1;
+					getData(cur_index);
+				} 
+			}	       
+	        api.refreshHeaderLoadDone();
+	    });
+	    
+	    api.addEventListener({
+	      name:'viewappear'
+	    },function(ret,err){
+	    	//$("#login_register").hide();
+	    	//$(".more-bt").hide();
+		  	init();
+	    });
+	    	    
+	    api.addEventListener({
+	        name: 'scrolltobottom',
+	        extra:{
+	        	threshold:200
+	    	}
+	    }, function (ret, err) {	    	
+	   	   if (page[cur_index] > 0 && canMore[cur_index])
+	        {
+		      page[cur_index] = page[cur_index] + 1;
+		      getData(cur_index);
+	        } 	
+ 	    });  
+ 	     
+        api.addEventListener({
+            name:'swiperight'
+        },function(ret,err){
+            switchTab('a-section');
+        });
+        api.addEventListener({
+            name:'swipeleft'
+        },function(ret,err){
+            switchTab('t-section');
+        });
+};
+</script>
+</html>

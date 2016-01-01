@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>赞我的</title>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../css/news.css" />
+    <style>
+        body{background-color:#fff}
+        #main{background-color:#fff}
+        .user-avator{display:inline-block;width:1.5rem;height:1.5rem;border-radius:50%;border:1px solid #eee;background-color:#eee}
+        .info-item{margin:0 .5rem;padding:.5rem 0;border-bottom:1px solid #ccc}
+        .info-item-middle{margin-left:.3rem}
+        .info-item-middle>.user-name{font-size:.7rem}
+        .gender-ico{display:inline-block;width:.6rem;height:.6rem;font-size:.3rem;line-height:.6rem;text-align:center;color:#fff;border-radius:50%;background-color:#ff6263}
+        .summary{margin-top:.5rem;background-color:#eee}
+        .summary>img{display:inline-block;width:3rem;height:3rem;vertical-align:middle}
+        .summary>span{margin-left:.5rem;vertical-align:middle}
+        .from{display:inline-block;position:absolute;right:.5rem;color:#ccc}
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <a class="back-icon" tapmode="" onclick="api.closeWin()"></a>
+            <h1 class="">赞我的</h1>
+        </div>
+       <!--  <div id="main">
+            <ul class="info-list" id="main_ul">
+            <div class="no-content-tip none">
+                <img src="../image/none_recommend_expression.png" alt=""><br>
+                <span>暂时没有人赞你喔~</span>
+            </div> -->
+<!--            
+                <li class="info-item">
+                    <img class="user-avator" src="">
+                    <a class="info-item-middle" href="javascript:;">
+                        <span class="user-name">泡泡</span><i class="gender-ico "><i class="fa fa-venus"></i></i><span class="color-999">赞了我</span><br>
+                        <span class="create-time">3分钟前</span>  
+                        <span class="from">#吐槽区#</span>  
+                    </a>
+                    <div class="summary">
+                        <img  src="" alt="">
+                        <span>情趣用品怎么用？</span>
+                    </div> 
+                </li>
+ 
+ //-->               
+         <!--    </ul>
+            
+        </div> -->
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src='../script/common.js'></script>
+<script type="text/javascript" src="../script/mui.min.js"></script>
+<script> 
+    
+    apiready = function(){   
+        var header = $api.byId('header');
+        $api.fixIos7Bar(header); 
+        
+        var width,header,headerPos,height,nav,navPos;
+            width = api.winWidth;
+            header = $api.byId('header');
+            headerPos = $api.offset(header);
+            height = api.winHeight - headerPos.h -51;
+        api.openFrame({
+                    name: 'gouda-likemecon',
+                    url: 'gouda-likemecon.html',
+                    reload: false,
+                    bounces : false,
+                    //opaque: true,
+                    vScrollBarEnabled : false,
+                    pageParam : {
+                        headerHeight : headerPos.h,
+                        // tid : tid
+                    },
+                    rect : {
+                        x : 0,
+                        y : headerPos.h,
+                        w : width,
+                        h : height
+                    }
+                });  
+    }
+</script>
+</html>

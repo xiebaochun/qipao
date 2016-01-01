@@ -1,0 +1,435 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>api</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../css/news.css" />
+    <style>
+        body{background-color: #eee;}
+        #main{width:100%;overflow:hidden;background-color: #eee;}
+        .my-follow{padding:.5rem 0rem;padding-bottom:.1rem;background-color:#fff}
+        .no-follow{text-align:center;padding:1rem 0;color:#999}
+        .no-follow>i{display:inline-block;width:1rem;height:1rem;vertical-align:middle;background-image: url(../image/my_no_follow_ico.png);background-size: 100% 100%;}
+        .no-follow>p{display:inline-block;vertical-align:middle;margin:0;padding-left:.1rem;text-align:left;color:#999}
+        .no-follow>p>span{color:#999}
+        .possible-like-topic{margin-top:.5rem;padding:.5rem 0rem;padding-bottom:.1rem;background-color:#fff}
+        .title{padding:0 .2rem;margin:0 0.5rem;border-left:2px solid #ffd600;line-height:14px}
+        .checkmore{margin:0.5rem;line-height:1.5rem;text-align:center;color:#333;background-color: #ffd600;font-size: 0.6rem;}
+        .weiguan-bt{border:none;color:#fff;background-color:#ff6362;right:0.5rem;border-radius:.8rem;font-size:.5rem;line-height:.7rem;padding:4px 10px}
+        .mui-table-view-cell:after {left: 0.5rem;right: 0.5rem; margin: 0 0rem;}
+        .mui-table-view-cell:last-child:after{height: 0;}
+        .animated{-webkit-animation-duration:1s;animation-duration:1s;-webkit-animation-fill-mode:both;animation-fill-mode:both}
+        @-webkit-keyframes fadeInLeft{from{opacity:0;-webkit-transform:translate3d(-100%,0,0);transform:translate3d(-100%,0,0)}
+        to{opacity:1;-webkit-transform:none;transform:none}
+        }
+        @keyframes fadeInLeft{from{opacity:0;-webkit-transform:translate3d(-100%,0,0);transform:translate3d(-100%,0,0)}
+        to{opacity:1;-webkit-transform:none;transform:none}
+        }
+        .fadeInLeft{-webkit-animation-name:fadeInLeft;animation-name:fadeInLeft}
+        @-webkit-keyframes fadeOutLeft{from{opacity:1}
+        to{opacity:0;-webkit-transform:translate3d(-100%,0,0);transform:translate3d(-100%,0,0)}
+        }
+        @keyframes fadeOutLeft{from{opacity:1}
+        to{opacity:0;-webkit-transform:translate3d(-100%,0,0);transform:translate3d(-100%,0,0)}
+        }
+        .fadeOutLeft{-webkit-animation-name:fadeOutLeft;animation-name:fadeOutLeft}
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="main">
+            <div class="my-follow">
+                <p class="title">我的关注</p>
+                <div class="follow-body">
+                    <div class="no-follow none">
+                        <i class="fa fa-plus-circle"></i>
+                        <p class="text"><span>暂无关注的任何话题圈...</span><br>
+                            <span>点击快速添加</span>
+                        </p>
+                    </div>
+                    <ul class="mui-table-view news-list" id="my-circle-list">
+                        
+                    </ul>
+                    <div class="checkmore checkmore-myfollowed" style="display:none;"><span class="checkmore-text color-999">查看更多</span>&nbsp;<i class="fa fa-angle-down"></i></div>
+                </div>
+            </div>
+            <div class="possible-like-topic">
+                <p class="title">推荐关注</p>
+                <ul class="mui-table-view news-list" id="circle-list">
+                      
+                </ul>
+            </div>
+            <div class="checkmore checkmore-recommend" onclick="openWin('topicAllCircle');" style="display:none;">所有话题圈</div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src='../script/common.js'></script>
+<script>
+    $(function(){
+        $('.no-follow').click(function(){
+            api.openWin({        
+                name:   'topicAllCircle',
+                url:    'topicAllCircle.html',
+                pageParam: {},
+                reload: false,
+                opaque: true,
+                vScrollBarEnabled: false,
+                softInputMode: 'resize'
+            });
+        });
+        initDev();
+    });
+
+    function addMyFollowedCircle(){
+    	api_ajax(2,
+    			'my_favorite_circle_list.php',
+    			{
+					fid: 0,
+					page:myFollowedCurrentPage
+				},
+				after_addMyFollowedCircle,
+				0,
+				0
+			);  
+	}
+	
+	function after_addMyFollowedCircle(ret, _, _, _) {	
+		if (ret.code == 988)
+		{
+			return;
+		}	
+        if(ret['code']==101){
+            $('.no-follow').show();
+        }else if(ret['code']==100){
+            appendTopicCircle(ret.data.info.list,'#my-circle-list',true);
+        }
+    }
+
+    function getMyFollowedCircle(){ 
+    	var ret = api_ajax(1,
+    			'my_favorite_circle_list.php',
+    			{
+                    page:1,
+                    psize:50
+                },
+				after_getMyFollowedCircle,
+				0,
+				0
+			);
+		if (!ret) {
+			$('#my-circle-list').empty();
+			$('.no-follow').show();
+			getRecommendTopicCircle();
+		}	
+	}
+	
+	function after_getMyFollowedCircle(ret, _, _, _) {	
+			if(ret.code == 988){
+				isFirst = 1;
+				return;
+			}		        
+            if(ret['code'] == 101){
+                $('#my-circle-list').empty();
+                $('.no-follow').show();
+                $('.checkmore-myfollowed').hide();
+            }else if(ret['code']==100){
+            	$('#my-circle-list').empty();
+                $('.no-follow').hide();
+                myFollowedCurrentPage = 1;
+                console.log(ret);
+                myFollowedTotoalPage = ret.data.info.pageinfo.totalpage;
+                myFollowedTotalCount = ret.data.info.pageinfo.recordcount;
+                // if(myFollowedTotalCount>=10){
+                //     $('.possible-like-topic').hide();
+                // }else{
+                //     $('.possible-like-topic').show();
+                // }
+                if(myFollowedTotoalPage<=1){
+                    //$('.checkmore-myfollowed').hide();
+                    $('.checkmore-myfollowed').hide();
+                }else{
+                    $('.checkmore-myfollowed').show();
+                }
+                listTopicCircle(ret.data.info.list,'#my-circle-list',true);
+            }
+			getRecommendTopicCircle();
+    }
+
+    function getRecommendTopicCircle(){
+    	api_ajax(0,
+    			'topic_circle_list.php',
+    			{
+                    psize:3,
+                    page:1,
+                    t:2
+                },
+				after_getRecommendTopicCircle,
+				0,
+				0
+			);
+	}
+	
+	function after_getRecommendTopicCircle(ret, _, _, _) {	
+			if(ret.code == 988){
+				isFirst = 1;
+				return;
+			}			    
+            console.log(ret);
+            if(ret['code']==100){
+                $('.possible-like-topic').show();
+                $('.checkmore-recommend').show();
+                var circlelist = ret.data.info.list;
+                listTopicCircle(circlelist,'#circle-list',false);
+            }else{
+                $('.possible-like-topic').hide();
+                $('.checkmore-recommend').hide();
+            }
+			isFirst = 0;
+    }
+
+    function listTopicCircle(circleList,holderClass,isMy){
+        var circleListHtml = '';
+        for(var index in circleList){
+            var circle = circleList[index];
+            var followHtml = '<span class="follow-bt" id="circle-btn-'+circle.fid+'" data-fid="'+circle.fid+'" onclick="favoriteCircle('+circle.fid+',\'add\',event,this);">关注</span>';
+            var isFollowed = false;
+            if(isMy == 1){
+                if(circle.is_new){
+                    followHtml = '<span class="follow-bt weiguan-bt" id="circle-btn-'+circle.fid+'" data-fid="'+circle.fid+'" style="border:none;">NEW</span>';
+                    
+                }else{
+                    followHtml = '<span class="follow-bt my-follow-bt" id="circle-btn-'+circle.fid+'" data-fid="'+circle.fid+'" style="border:none;">' + circle.no_read + '</span>';
+                }
+                
+                isFollowed =true;
+            }
+            var html = '<li class="mui-table-view-cell" id="circle-item-'+circle.fid+'" onclick="openCircle('+circle.fid+',\''+circle.fname+'\',event,this)">'+
+                            '<a class="mui-navigate">'+
+                                '<img class="" src="'+circle.icon+'" alt="">'+
+                                '<div class="topic-circle-info">'+
+                                    '<span>'+circle.fname+'</span><i class="member-ico fa fa-users"></i><span class="member-count">'+circle.fav_count+'</span><br>'+
+                                    '<span class="topic-circle-desc">'+circle.description+'</span>'+    
+                                '</div>'+
+                            '</a>'+followHtml
+                            +
+                        '</li>';
+           circleListHtml += html;
+        }
+        $(holderClass).empty();
+        $(holderClass).append($(circleListHtml));
+    }
+    
+    function appendTopicCircle(circleList,holderClass,isMy){
+        var circleListHtml = '';
+        for(var index in circleList){
+            var circle = circleList[index];
+            var followHtml = '<span class="follow-bt" id="circle-btn-'+circle.fid+'" data-fid="'+circle.fid+'" onclick="favoriteCircle('+circle.fid+',\'add\',event,this);">关注</span>';
+            var isFollowed = false;
+            if(isMy == 1){
+                if(circle.is_new){
+                    followHtml = '<span class="follow-bt weiguan-bt" id="circle-btn-'+circle.fid+'" data-fid="'+circle.fid+'" style="border:none;">NEW</span>';
+                    
+                }else{
+                    followHtml = '<span class="follow-bt my-follow-bt" id="circle-btn-'+circle.fid+'" data-fid="'+circle.fid+'" style="border:none;">' + circle.no_read + '</span>';
+                }
+                isFollowed =true;
+            }
+            // if(circle.fname.indexOf('不显示')>-1){
+            //     circle.fname = '';
+            // }
+            var html = '<li class="mui-table-view-cell" id="circle-item-'+circle.fid+'" onclick="openCircle('+circle.fid+',\''+circle.fname+'\',event,this)">'+
+                            '<a class="mui-navigate">'+
+                                '<img class="" src="'+circle.icon+'" alt="">'+
+                                '<div class="topic-circle-info">'+
+                                    '<span>'+circle.fname+'</span><i class="member-ico fa fa-users"></i><span class="member-count">'+circle.fav_count+'</span><br>'+
+                                    '<span class="topic-circle-desc">'+circle.description+'</span>'+    
+                                '</div>'+
+                            '</a>'+followHtml
+                            +
+                        '</li>';
+            circleListHtml += html;
+        }
+        $(holderClass).append($(circleListHtml));
+    }
+ 
+    function openCircle(fid,fname,e,self){       
+        // if($(self).children('.weiguan-bt').hasClass('weiguan-bt')){
+        //     // alert('fs');
+        //     $(self).children('.weiguan-bt').hide();
+        // }
+        $(self).children('.weiguan-bt').hide();
+        $(self).children('.my-follow-bt').text('');
+        openTopicCircle(fid,fname,e);
+    }
+    
+    function afterFavoriteCircle(act,dom){
+        console.log(act);
+		var _timeout = 500;
+		if (api.systemType == 'ios')
+		{
+			_timeout = 50;
+		}
+        if(act == 'add'){
+            //getTopicCircle();
+            console.log($(dom).html());
+            $('#my-circle-list').prepend($(dom).text('NEW').addClass('weiguan-bt').attr('onclick','javascript:;').parent().addClass('weiguan animated fadeInLeft').clone().fadeIn());
+
+            $('.no-follow').hide();
+            //$(dom).parent().slideUp(); 
+            setTimeout(function(){
+                $(dom).parent().remove();  
+                if($('#circle-list>li').length<1){
+                    //$('.possible-like-topic').fadeOut();
+                    getRecommendTopicCircle();
+                }
+                
+            }, _timeout);
+
+            //$(dom).html('已关注').css({'border-color':'#aaa','color':'#999'});
+        } else if(act == 'cancel') {
+            //$('#circle-list').prepend($(dom).text('关注').show().removeClass('weiguan-bt').css({'border':'1px solid #faa'}).attr('onclick','favoriteCircle('+$(dom).data('fid')+',\'add\',event,this);').parent().addClass('weiguan animated fadeInLeft').clone().fadeIn());
+            // $('.possible-like-topic').show();
+            // $('.checkmore-recommend').show();
+            setTimeout(function(){
+                $(dom).parent().remove();
+                
+                if($('#my-circle-list').length<1){
+                   $('.no-follow').show();
+                }
+                getRecommendTopicCircle();
+            }, _timeout);
+        }  
+         $(dom).parent().addClass('animated fadeOutLeft');
+
+    }
+ 
+    function removeCircle(fid){
+        $('#circle-item-'+fid).remove();
+        //alert('#circle-item-'+fid);
+    }
+    
+    var uid = 0;
+    var myFollowedCurrentPage = 1;
+    var myFollowedTotoalPage = 0;
+    var myFollowedTotalCount = 0;
+    var isFirst = 1;
+    var lastTime = 0;
+    
+    apiready = function(){
+        //var header = $api.byId('header');
+        //$api.fixIos7Bar(header);
+        
+        isDev = false;
+        uid = $api.getStorage('uid');
+        //alert(uid);
+        lastTime = (new Date()).valueOf();
+        api.setRefreshHeaderInfo({
+            visible: true,
+            // loadingImgae: 'wgt://image/refresh-white.png',
+            bgColor: '#f2f2f2',
+            textColor: '#4d4d4d',
+            textDown: '下拉刷新...',
+            textUp: '松开刷新...',
+            showTime: false
+        }, function (ret, err) {
+            api.hideProgress();
+            /*
+            var uid = $api.getStorage('uid');	
+	 		if(!uid || typeof(uid) == "undefined") {
+	 			lastTime = 0;
+	 		} else 
+	 		*/
+	 		{
+		        var nowTime = (new Date()).valueOf();
+		        if (nowTime-lastTime > 10000 || isFirst) {		//10*1000 = 10000
+		        	lastTime = nowTime;       
+	            	getMyFollowedCircle();
+	            }	    
+      		}      
+            api.refreshHeaderLoadDone();
+        });
+
+        getMyFollowedCircle();
+ 	
+	    api.addEventListener({
+	      name:'viewappear'
+	    },function(ret,err){
+			//if (isFirst == 0)	
+			{
+			 	var fav_fid = $api.getStorage('fav_fid');	
+			 	$api.rmStorage('fav_fid');
+				if (fav_fid) {
+					//myToast("change: "+ fav_fid); 
+					if (fav_fid > 0) {
+						var dom = $('#circle-btn-'+fav_fid);
+						afterFavoriteCircle('add', dom);
+					} else {
+						fav_fid = -1 * fav_fid;
+						var dom = $('#circle-btn-'+fav_fid);
+						afterFavoriteCircle('cancel', dom);					
+					}
+				}
+				var fid_no_new = $api.getStorage('fid_no_new');
+				$api.rmStorage('fid_no_new');
+				if (fid_no_new) {
+					var dom = $('#circle-btn-'+fid_no_new);
+					if (dom.html() == 'NEW')
+						dom.html('').removeClass('weiguan-bt');
+				}
+			}
+	        api.execScript({
+	            name: 'root',
+	            script: 'checkCurPid("topic", "topicFollow")'
+	        });				
+       	});
+       	
+        api.addEventListener({
+             name: 'scrolltobottom',
+             extra:{
+                 threshold:200    //设置距离底部多少距离时触发，默认值为0，数字类型
+            }
+         }, function (ret, err) {
+            api.execScript({
+                frameName:'topic',
+                script:'hideExplore();'
+            });
+         });
+
+        $('.checkmore-myfollowed').click(function(){
+            if(myFollowedCurrentPage < myFollowedTotoalPage){
+                myFollowedCurrentPage++;
+                addMyFollowedCircle();
+                if(myFollowedCurrentPage == myFollowedTotoalPage-1){
+                    $(this).hide();    
+                }
+            }
+            else{
+                $(this).hide();
+            }
+        });
+
+        api.addEventListener({
+            name:'swiperight'
+        },function(ret,err){
+            //operation
+            api.execScript({
+                frameName:'topic',
+                script:'showExplore();'
+            });
+        });
+    }
+  
+function  view_appear() {
+	console.log("view_appear(topicFollow)");
+}
+
+function  page_refresh() {
+	getMyFollowedCircle();
+}
+    
+</script>
+</html>

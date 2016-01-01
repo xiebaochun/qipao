@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>全部回复</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../css/topicDetail.css" />
+    <style>
+        body{background-color:#fff}
+        #wrap{height:100%;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-flow:column;flex-flow:column}
+        #main{-webkit-box-flex:1;-webkit-flex:1;flex:1;background-color:#fff}
+        #header{position:fixed;top:0}
+        .comment-item li{list-style-type:none;font-size: 0.65rem;color:#999 !important;}
+        .input-wrap{margin-left:10px}
+        .dianzan-wrap{position:absolute;right:2rem;display:inline-block}
+        .user-avator{display:inline-block;width:1.6rem!important;height:1.6rem!important;border:1px solid #eee;border-radius:50%;vertical-align:middle;margin-bottom:0!important}
+        .author-info-box{vertical-align:middle;height:1.3rem;line-height:.5rem;margin-left:.3rem}
+        .author-info-box>.nick-name{font-size:.7rem}
+        .author-info-box>.create-time{position:relative;left:0;font-size:.5rem;color:#999;vertical-align:middle}
+        .author-info-box .floor-index{color:#999}
+        .dianzan-wrap{right:1.8rem;line-height:1.8rem;font-size:.8rem;color:#999}
+        .dianzan-wrap i{vertical-align:middle}
+        .fa-commenting-o:before{content:none}
+        .fa-commenting-o{display:inline-block;width:19px;height:19px;background-image:url(../image/ico_cmt.png);background-size:19px 19px}
+        .dianzan-count{margin-left:.3rem;font-size:.6rem;vertical-align:middle;text-align:center;color:#999}
+        .commend-wrap{right:.5rem}
+        .commend-wrap i{margin-top:-.2rem}
+
+        .none-comment{text-align:center}
+        .none-comment>img{margin-top:8rem;width:40%!important}
+       
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <!-- <div id="header">
+            <a class="back-icon" tapmode="" onclick="api.closeWin()"></a>
+            <h1>全部回复(<span class="reply-count">4</span>)</h1>
+        </div> -->
+        <div id="main">
+            <div class="none-comment none">
+                <img src="../image/none_comment_express.png" alt="">
+            </div>
+            <div class="comment-list">
+            </div>
+            <div style="height:50px;"></div>
+            <!-- <div id="comment" style="display:none;">
+                <ul>
+                    <li style="width:85%;">
+                        <img class="default-avator user-reply-avator" src="" alt="" style="display:none;">
+                        <div class="user-reply-input-wrap input-wrap">
+                            <input type="text" placeholder="" onfocus="edit(this)" onblur="cancel(this)" id="comment-content" class="txt" value="我也说一句~" />
+                        </div>
+                    </li>
+                    <li id="comment-bt">
+                        <a tapmode="">发表</a>
+                    </li>
+                </ul>
+            </div> -->
+        </div>
+    </div>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/util/emoData.js"></script>
+    <script type="text/javascript" src="../script/common.js"></script>
+    <script type="text/javascript" src="../script/comment.js"></script>
+    <script>
+        var fid = '';
+        var tid = '';
+        var uid = '';
+        var current_page = 1,total_page = 1;
+        var isTopicLoaded = false;
+        var record_count = 0;
+        var COMMENT_MAX_LENGTH = 100;
+        var FRAME_NAME = 'replyCon';
+        apiready = function(){
+            isDev =false;
+            fid = api.pageParam.fid;
+            tid = api.pageParam.tid;
+            console.log(fid);
+            uid = $api.getStorage('uid');
+            var userImageUrl = $api.getStorage('userimage');
+            
+            //var toUserInfo = api.pageParam.toUserInfo;
+            var comment_item = $('.comment-item');
+
+            //comment_item.html(toUserInfo);
+
+            loadComments(1);
+
+            api.addEventListener({
+                     name: 'scrolltobottom',
+                     extra:{
+                         threshold:200    //设置距离底部多少距离时触发，默认值为0，数字类型
+                     }
+                 }, function (ret, err) {
+                     
+                     //console.log(current_page+':'+total_page);
+                     if(current_page<total_page && isTopicLoaded){
+                         isTopicLoaded = false;
+                         //console.log(current_page);
+                         current_page++;
+                         loadComments(current_page);
+                         
+                     }
+                     
+                 });
+
+            $('.user-reply-avator').attr('src',userImageUrl).click(function(){
+                openUserSpace(uid);
+            });
+            $('.reply-bt').remove();    
+            api.setRefreshHeaderInfo({
+                visible: true,
+                // loadingImgae: 'wgt://image/refresh-white.png',
+                bgColor: '#f2f2f2',
+                textColor: '#4d4d4d',
+                textDown: '下拉刷新...',
+                textUp: '松开刷新...',
+                showTime: false
+            }, function (ret, err) {
+
+                loadComments(1);
+                api.hideProgress();
+                api.refreshHeaderLoadDone();
+            });
+            openInputField(inputCallback);
+        }
+        function inputCallback(ret) {
+            //点击发送按钮文字
+            if (ret.eventType == 'send') {
+                postReply(ret.msg);
+            }
+        }
+        function postReply(msg){
+            if(msg == ''){
+                myToast('说点什么吧');
+                return false;
+            }
+            var reply_text;// = $('#comment-content').val();
+            var postData = {    
+                        fid: fid,
+                        tid: tid,
+                        uid: uid,
+                        //parentCommentId:$('.user-id').html(),
+                        content:msg
+                         };
+                
+           api_ajax(2,
+                'topic_comment_add.php',
+                 postData,
+                 function(ret,_,postData,_){
+					if (ret.code == 988) {
+						return;
+					}
+                     if (ret.code == 104) {
+							myToast(ret.msg);
+					} else if (ret.code == 100) {
+                        console.log(ret);
+                        $('.none-comment').hide();
+                        var uid = postData.uid;
+                        var fid = postData.fid;
+                        var tid = postData.tid;
+                        var reply_text = transEmo(postData.content);
+                        var sexHtml = '<br>';
+                        if  ($api.getStorage('sex') == 1)
+                            sexHtml = '<i class="gender-ico gender-male-ico fa fa-mars"></i><br>';
+                        else if ($api.getStorage('sex') == 2)
+                            sexHtml = '<i class="gender-ico gender-female-ico fa fa-mars"></i><br>';
+
+                        html ='<div class="comment-item" data-pid="16789">'+
+                                    '<div class="comment-item-header">'+
+                                        '<img class="default-avator user-avator" src="'+ret.comments.userImageUrl+'" width="30px" onclick="openUserSpace('+uid+',event);">'+                    
+                                        '<div class="author-info-box">'+
+                                            '<span class="nick-name" onclick="openUserSpace('+uid+',event);">'+$api.getStorage('username')+'</span>'+ 
+                                            sexHtml+                          
+                                            '<span class="create-time">'+
+                                                '<span class="floor-index">'+(record_count+1)+'F</span>'+
+                                                '&nbsp;刚刚'+
+                                            '</span>'+
+                                            '<div id="comment_uid" style="display:none;">'+uid+'</div>'+
+                                            '<div id="comment_nick" style="display:none;">'+$api.getStorage('username')+'</div>'+
+                                        '</div>'+
+                                        '<div class="reply-bt"> <i class="reply-img fa fa-heart-o" style="margin-bottom:0px;vertical-align:middle;font-size: 0.8rem;color:#ff6263;" onclick="dianzanToUser(this,event);"></i>'+
+                                            '<span class="dianzan-count color-999" onclick="dianzanToUser(this,event);">0</span>'+
+                                            '<img class="reply-img reply-to-user ml10" style="width:18px;height:18px;margin-bottom:0px;vertical-align:middle;" src="../image/comment_ico.png" onclick="openMy(event);"></div>'+
+                                    '</div>'+
+                                    '<div class="comment-item-body">'+
+                                        '<ul id="reply-content-list">'+
+                                            '<li class="reply-content-item">'+reply_text+'</li>'+
+                                        '</ul>'+
+                                    '</div>'+
+                                '</div>';
+                              
+                        $('.comment-list').append($(html));
+                        myToast('评论成功！');
+                        //sent reply sucesss event
+                        api.sendEvent({
+                            name: 'reply',
+                            extra: {}
+                        });
+                    }
+            },
+            0,
+            0); 
+        }
+        function openMy(e){
+            if(e)e.cancelBubble = true;
+        }
+        
+        
+        function loadComments(page){
+            //alert(tid);
+            var _page;
+            if(page){
+                _page = page;
+            }else{
+                _page = 1;
+            }
+            api_ajax(0,
+                'topic_comment_list.php', 
+                {
+                    page:_page,
+                    tid:tid,
+                    psize:20
+                },   
+                function(ret, _, _, _){
+					if (ret.code == 988) {
+						return;
+					}
+                    if (ret.code == 100) {
+                        isTopicLoaded = true;
+                        console.log(ret);
+                        var commentHtml = '';
+                        //alert(ret.commentlist);
+                        total_page = ret.pageinfo.totalpage;
+                        console.log('回复页数：'+total_page);
+                        record_count = ret.pageinfo.recordcount;
+                        if(ret.commentlist){
+                            api.execScript({
+                                name:'reply-'+tid,
+                                script:'setReplyCount('+ret.pageinfo.recordcount+')'
+                            });
+                        }
+                        
+                        commentHtml = getCommentHtml(ret);
+
+                        if(page>1){
+                            $('.comment-list').append($(commentHtml));
+                        }else{
+                            $('.comment-list').html(commentHtml);
+                        }
+                        if(current_page>total_page){
+                            if($('.no-more').length < 1){
+                                $('.comment-list').append('<div class="no-more color-999" style="line-height:2rem;font-size:0.5rem;text-align:center;">没有更多了</div>');
+                            }  
+                        }
+                        $('.reply-to-user').on('click',function(){
+                            var authorid = $(this).data('authorid');
+                            //if($api.getStorage('uid') == authorid) return false;
+                            var comment_item = $(this).parent().parent().parent();
+                            var toUserInfo = $("<p>").append(comment_item.clone()).html();
+                            var pid = comment_item.data('pid');
+                            var position = $(this).data('position');
+                            api.openWin({
+                                name:   'replyUser',
+                                url:    'replyUser.html',
+                                pageParam: {toUserInfo: toUserInfo,
+                                            pid:pid,
+                                            position:position
+                                        },
+                                reload: false,
+                                bounces: false,
+                                opaque: true,
+                                vScrollBarEnabled: true,
+                                softInputMode: 'resize'
+                            });
+                            return false;
+                        });
+
+                } else {
+                    $('.none-comment').show();      
+                }
+                $('#main').show();
+            },
+            0,
+            0);
+        }
+        function dianzanToUserV(count_dom,e){
+            if(e){e.cancelBubble = true;}
+            $(count_dom).prev('.reply-img').trigger('click');
+            return false;
+        }
+        function openReplyUser(self,pid){
+            $(self).find('.reply-to-user').trigger('click');
+        }
+        $(function(){
+            initDev();
+        });
+    </script>
+</body>
+</html>

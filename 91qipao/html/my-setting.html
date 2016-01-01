@@ -1,0 +1,270 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>设置</title>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../css/setting-list.css" />
+    <style>
+        body{background-color:#eee}
+        
+        .label_logout{/*padding:.5rem .5rem;*/line-height:1.6rem;font-size:0.6rem;color:#FFF;display:block;text-align:center;margin:0 0.3rem;margin-top:0.5rem;background-color:#fd4f58;border-radius: 0.2rem;}
+        #cache_size{float:right;margin-right:1.5rem;line-height:2rem;color:#999;font-size:0.5rem}
+
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <a class="back-icon iconfont icon-arrow-left" tapmode="" onclick="api.closeWin();"></a>
+            <h1 class="">设置</h1>
+        </div>
+        <div class="setting-wrap" id="account-security" style="display:none;">
+            <ul class="mui-table-view" style="margin-top:0.5rem;">
+                <li class="mui-table-view-cell" onclick="openWin('my-account-security');">
+                    <a class="mui-navigate-right">
+                      <span class="label">账号与安全</span>
+                      <span class="item-right label color-red" id="security_status">未保护</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="setting-wrap">
+            <ul class="mui-table-view" style="margin-top:0.5rem;">
+                <li class="mui-table-view-cell" style="display:none;margin-top:0.5rem;">
+                    <span class="label" style="padding-left:0.2rem;">隐私设置</span>
+                    <div class="mui-switch mui-switch-mini" id="">
+                        <div class="mui-switch-handle"></div>
+                    </div>
+                </li>
+                <li class="mui-table-view-cell">
+                    <span class="label" style="padding-left:0.2rem;">省流量模式</span>
+                    <div class="mui-switch mui-switch-mini" id="is-limit-data">
+                        <div class="mui-switch-handle"></div>
+                    </div>
+                </li>
+                <li class="mui-table-view-cell" onclick="clearData();">
+                    <a class="mui-navigate-right">
+                      <span class="label">清除缓存</span>
+                      <span class="label" id="cache_size">12.4M</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="setting-wrap">
+            <ul class="mui-table-view" style="margin-top:0.5rem;">
+                <li class="mui-table-view-cell" onclick="openFeedback();">
+                    <a class="mui-navigate-right">
+                     <span class="label">我要反馈</span>
+                    </a>
+                </li>
+                <li class="mui-table-view-cell" onclick="versionUpdate();" style="display:none;">
+                    <a class="mui-navigate-right">
+                     <span class="label">版本更新</span>
+                    </a>
+                </li>
+                <li class="mui-table-view-cell" style="border:none;" onclick="openAboutUs('my-setting-aboutus');">
+                    <a class="mui-navigate-right">
+                     <span class="label">关于我们</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <span class="label_logout" onclick="logout();" style="display:none;">退出账号</span>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src='../script/common.js'></script>
+<script type="text/javascript" src='../script/mui.min.js'></script>
+<script type="text/javascript" src='../script/common.js'></script>
+<script>
+    $(function(){
+        if($api.getStorage('isLimitData') == 'true'){
+            $('#is-limit-data').addClass('mui-active');
+        }else{
+            $('#is-limit-data').removeClass('mui-active');
+        }
+        mui(".mui-table-view-cell").on('tap','#is-limit-data',function(){
+            if($('#is-limit-data').hasClass('mui-active')){
+                $api.setStorage('isLimitData',true);   
+                isLimitData = 'true'; 
+            }else{
+                $api.setStorage('isLimitData',false);   
+                isLimitData = 'false'; 
+            }
+        })
+        mui(".mui-table-view-cell").on('dragstart','.mui-switch-handle',function(){
+            setTimeout(function(){
+                //alert('sdf');
+                if($('#is-limit-data').hasClass('mui-active')){
+                    $api.setStorage('isLimitData',true);   
+                    isLimitData = 'true'; 
+                }else{
+                    $api.setStorage('isLimitData',false);   
+                    isLimitData = 'false'; 
+                }
+            },500);  
+        })
+    });
+   
+   function openFeedback() {
+	 	var action = "my-setting-fb.html";
+	 	if (!checkLogin(action, '', 'my-setting')) {
+			//api.closeWin();
+			return;      
+		}
+		openWin('my-setting-fb');
+   }
+   
+   function logout() {
+    	api.confirm({
+    			title:'',
+    			msg:'你确定要退出当前账号吗?',
+    			buttons:['取消', '确定']
+    			}, function(ret,err) {
+    				if (ret.buttonIndex == 2) {
+					    var uid = $api.getStorage('uid');
+						if(uid){
+						
+							api_ajax(2, 
+								'util_logout.php', 
+								{	
+								}, 
+								after_logout,
+								0,
+								0
+								); 			
+							}
+			    		return false;    				
+    				}
+    			});
+    }
+    
+    function after_logout(ret, _, _, _) {
+    	console.log(ret);
+   	
+	    $api.rmStorage('phone');
+	    $api.rmStorage('authcode');
+	    $api.rmStorage('userimage');
+	    $api.rmStorage('platform');			    
+		$api.rmStorage('userimage');
+		$api.rmStorage('platform');
+		$api.rmStorage('platform_userid');
+		$api.rmStorage('platform_username');
+		$api.rmStorage('platform_headimgurl');
+		
+		$api.rmStorage('isphone');
+		$api.rmStorage('uid');	
+		$api.rmStorage('token');
+			    
+		$api.rmStorage('username');
+		$api.rmStorage('uniqueid');    	
+		$api.rmStorage('sex');
+		$api.rmStorage('mobile');	
+		$api.rmStorage('is_ours');
+ 	    
+       	$api.rmStorage('b_phone');              
+       	$api.rmStorage('b_qq');              
+       	$api.rmStorage('b_wx');              
+       	$api.rmStorage('b_wb'); 		    	    
+	   						
+    	console.log(ret);		
+		
+	    api.execScript({
+	        name: 'root',
+	        frameName: 'topic-con1',
+	        script:  'init();'
+	    }); 
+	    		
+	    api.execScript({
+	        name: 'root',
+	        frameName: 'my',
+	        script:  'view_appear();'
+	    });		
+			
+    	console.log(ret);		
+		api.closeWin();   
+		gotoIndexTab('main','71bbe');
+	}
+
+    //清除下载缓存文件、拍照临时文件、网页缓存文件等
+    function clearData() {
+        api.clearCache();
+
+        setTimeout(function () {
+            setCacheSize();
+            myToast('缓存已清空!');
+        }, 300);
+    }
+    
+    function versionUpdate(){
+        // api.alert({
+        //     msg: '已是最新版!'
+        // });
+         myToast('已是最新版!');   
+    }
+
+    function openAboutUs(name){
+        api.openWin({
+            name:name,
+            url:name+'.html',
+            allowEdit : true
+        });
+    }
+
+     function setCacheSize() {
+      api.getCacheSize(
+    		function(ret, err) {
+        		var size = ret.size;
+        		if (size >= 0) {
+        			size = (size/1048576).toFixed(2);
+        			if (size == '0.00')
+        				size = 0;
+        			$('#cache_size').html(size+'M');
+        			}
+        		else 
+        			$('#cache_size').empty();
+    		}
+		);     
+     }
+
+	function init() {
+	 	var uid = $api.getStorage('uid');
+	
+		if(uid){
+			$('.label_logout').show();
+			$('#account-security').show();
+
+       		var b_phone = $api.getStorage('b_phone');              
+       		var b_qq = $api.getStorage('b_qq');              
+       		var b_wx = $api.getStorage('b_wx');              
+       		var b_wb = $api.getStorage('b_wb');
+       		if (typeof(b_phone) == "undefined")	b_phone = 0;
+       		if (typeof(b_qq) == "undefined")	b_qq = 0;
+       		if (typeof(b_wx) == "undefined")	b_wx = 0;
+       		if (typeof(b_wb) == "undefined")	b_wb = 0;
+//alert(b_phone+"/"+b_qq+"/"+b_wx+"/"+b_wb);       		
+       		if (b_phone == 1) {
+       			$('#security_status').html('已保护');
+       		} else {
+       			$('#security_status').html('未保护');
+       		}
+		} else {
+			$('.label_logout').hide();
+			$('#account-security').hide();	
+		}	
+	}  
+	   
+    apiready = function(){
+        var header = $api.byId('header');
+        $api.fixIos7Bar(header);
+  		setCacheSize();
+  		
+		init();	
+     }
+
+</script>
+</html>

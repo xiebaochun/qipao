@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<widget id="A6994754822960" version="0.0.1"> 
+  <name>气泡</name>  
+  <description>气泡</description>  
+  <author email="liuyizhang@sohu.com" href="http://www.91qipao.com">liuyz</author>  
+  <content src="index.html"/>  
+  <preference name="appBackground" value="rgba(0,0,0,0)"/>  
+  <preference name="windowBackground" value="rgba(0,0,0,0.0)"/>  
+  <preference name="frameBackgroundColor" value="rgba(0,0,0,0.0)"/>  
+  <preference name="hScrollBarEnabled" value="true"/>  
+  <preference name="vScrollBarEnabled" value="true"/>  
+  <preference name="autoLaunch" value="true"/>  
+  <preference name="slidBackEnabled" value="false"/>  
+  <preference name="fullScreen" value="false"/>  
+  <preference name="bounces" value="false"/>  
+  <preference name="softInputMode" value="resize"/>  
+  <preference name="autoUpdate" value="true"/>  
+  <preference name="smartUpdate" value="true"/>  
+  <preference name="pageBounce" value="false"/>  
+  <preference name="iOS7StatusBarAppearance" value="true"/>  
+  <preference name="debug" value="true"/>  
+  <permission name="readPhoneState"/>  
+  <permission name="call"/>  
+  <permission name="camera"/>  
+  <permission name="record"/>  
+  <permission name="location"/>  
+  <permission name="fileSystem"/>  
+  <permission name="internet"/>  
+  <permission name="bootCompleted"/>  
+  <permission name="hardware"/>  
+  <permission name="sms"/>  
+  <permission name="contact"/>  
+  <access origin="*"/>  
+  <feature name="wx"> 
+    <param name="urlScheme" value="wxe590f1be9768fc56"/>  
+    <param name="apiKey" value="wxe590f1be9768fc56"/>  
+    <param name="apiSecret" value="a1a17d82da302b3bf154a9b55849a7b2"/> 
+  </feature>  
+  <feature name="sinaWeiBo"> 
+    <param name="urlScheme" value="wb321386696"/>  
+    <param name="apiKey" value="321386696"/>  
+    <param name="rgistUrl" value="https://api.weibo.com/oauth2/default.html"/> 
+  </feature>  
+  <feature name="qq"> 
+    <param name="urlScheme" value="tencent1104712445"/>  
+    <param name="apiKey" value="1104712445"/> 
+  </feature> 
+</widget>

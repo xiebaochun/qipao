@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+        <meta name="format-detection"content="telephone=no">
+        <title></title>
+        <link rel="stylesheet" type="text/css" href="../css/common.css" />
+        <style>
+            .nav{display:flex;display:-webkit-flex;}
+            .nav-item{flex:1;-webkit-flex:1;display: inline-block;line-height: 39px;text-align: center; font-size:0.6rem;}
+            .nav-active{border-bottom:1px solid #666;color:#fd6600;}
+            .footer{position: absolute;bottom:0;width:100%; line-height: 40px;text-align: center;font-size: 0.6rem;color:#fd6600;}
+        </style>
+    </head>
+    <body>
+        <div id="wrap">
+            <div id="header">
+                <a class="back-icon iconfont icon-arrow-left" tapmode onclick="api.closeWin();"></a>
+                <h1 id='page_title'>我的收藏</h1>
+                <!--<a class="header-right-txt" onclick="openWin('my-q');">我的提问</a> -->
+            </div>
+            <div id="main">
+
+            </div>
+        </div>
+<script type="text/javascript" src="../script/api.js"></script>
+<script src="../script/common.js"></script>
+<script>
+$(function(){
+    initDev();
+});
+
+apiready = function(){
+    var header = $api.byId('header');
+    $api.fixIos7Bar(header);
+    headerPos =  headerPos = $api.offset(header);
+    var height = api.winHeight - headerPos.h;
+    width = $api.winWidth;
+    
+    var page_title = api.pageParam.page_title; 
+    var page_name = api.pageParam.page_name; 
+    var page_url = api.pageParam.page_url; 
+	var page_param = api.pageParam.page_param; 
+	page_param.headerHeight = headerPos.h;
+	
+	$('#page_title').html(page_title);
+    api.openFrame({
+          name: page_name,
+          url:  page_url,
+          reload: false,
+          bounces : false,
+          //opaque: true,
+          vScrollBarEnabled : false,
+          pageParam : page_param,
+          rect : {
+              x : 0,
+              y : headerPos.h,
+              w : width,
+              h : height
+          }
+      });  
+}
+</script>
+    </body>
+</html>

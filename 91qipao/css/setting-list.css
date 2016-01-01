@@ -1,0 +1,16 @@
+.setting-wrap{padding:0 .5rem;background-color:#fff}
+.mui-table-view:after{width:0}
+.mui-table-view-cell{height:2rem;line-height:2rem;padding:0;/*border-bottom:1px solid #eee*/}
+.mui-table-view-cell:after{border:none;outline:0;left: 0.2rem;background-color: #eee;}
+.mui-navigate-right{margin:0!important;font-size:.9rem;line-height:2rem;height:2rem;padding-left:.2rem!important}
+.mui-switch-mini.mui-active .mui-switch-handle{-webkit-transform:translate(25px,0);transform:translate(25px,0)}
+.mui-switch .mui-switch-handle{left:0}
+.mui-navigate-right:after{color:#999!important;right:0}
+.mui-switch-mini{width:55px;right:5px!important}
+.label{line-height:2rem;font-size:.6rem}
+.item-right {
+    float: right;
+    margin-right: 1.5rem;
+    line-height: 2rem;
+    font-size: .5rem;
+}

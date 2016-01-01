@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+        <meta name="format-detection"content="telephone=no">
+        <title>问答详情</title>
+        <link rel="stylesheet" type="text/css" href="../css/common.css" />
+        <style>
+            #wrap{
+                height: 100%;
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -webkit-flex-flow: column;
+                       flex-flow: column;
+            }
+            #main{
+                -webkit-box-flex: 1; 
+                -webkit-flex: 1;
+                flex: 1;
+                background-color: #eee;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="wrap">
+            <div id="header">
+                <a class="back-icon iconfont icon-arrow-left" tapmode onclick="api.closeWin();"></a>
+                <h1>问答详情</h1>
+                <a class="header-right-txt">分享</a>
+            </div>
+            <div id="main">
+                <div class="banner">
+                    <div class="item-header header">
+                        <div class="item-user-info author-info">
+                            <img class="item-avator author-avator" rc="../image/version_logo.png" alt="">
+                            <span class=".item-name author-name">青海湖</span>
+                        </div>
+                        <div class="item-header-right header-right"><span class="follow-bt">关注</span></div>
+                    </div>
+                    <div class="body">
+                        <div class="item-content banner-content">
+                            怎么评价sm行为呢？
+                        </div>
+                        <div class="tags">
+                            <span>情趣</span>
+                        </div>
+                    </div>
+                    <div class="nav footer" style="background-color:#fff; border-top:1px solid #666;">
+                        <div class="nav-item nav-0" onclick="" style="border-right:1px solid #666;">邀请回答</div>
+                        <div class="nav-item nav-1" onclick="">收藏</div>
+                    </div>
+                </div>
+                <div class="answer-wrap">
+                    <div class="item answer-item">
+                        <div class="item-header answer-header">
+                            <div class="user-info">
+                                <img class="item-avator user-avator" src="../image/version_logo.png" alt="">
+                                <span class="item-name user-name">名字</span>
+                                <span class="user-tag">标签</span>
+                            </div>
+                            <div class="answer-right">
+                                
+                            </div>
+                        </div>
+                        <div class="item-content answer-body">
+                            这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="../script/api.js"></script>
+        <script type="text/javascript" src="../script/common.js"></script>
+        <script>
+            $(function(){
+                initDev();
+            });
+            apiready = function(){
+                
+            } 
+        </script>
+    </body>
+</html>

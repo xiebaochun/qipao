@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+        <meta name="format-detection"content="telephone=no">
+        <title>专题</title>
+        <link rel="stylesheet" href="../css/common.css">
+        <style>
+            #header{position: fixed;width:100%;left:0;top:0;}
+            /*#main{overflow: hidden;}*/
+            .banner{padding:0.5rem;}
+            .banner>.banner-bg{display: block;height: 6rem;border:1px solid #990;}
+            .topic-wrap{margin:0.5rem;}
+            .topic-item{margin-top:0.5rem;}
+            .topic-header{padding:0.5rem;border-bottom: 1px solid #666;}
+            .topic-author-info{}
+            .topic-avator{display: inline-block;width: 1.8rem;height: 1.8rem;border-radius: 50%;vertical-align: middle;}
+            .topic-author-name{display: inline-block;line-height: 1.8rem;font-size: 0.5rem;}
+            .topic-author-follow-bt{float:right;display: inline-block;line-height: 1.8rem;}
+            .topic-body{}
+            .topic-content{}
+            .topic-bg{display: block;height: 5rem;margin-top:0.5rem;border: 1px solid #900;}
+            .topic-item-title{position:relative;line-height: 1.8rem;}
+            .topic-like-wrap{text-align: center;}
+        </style>
+    </head>
+    <body>
+        <div id="wrap">
+            <div id="header">
+                <a class="back-icon iconfont icon-arrow-left" tapmode="" onclick="api.closeWin();"></a>
+                <h1>专题</h1>
+            </div>
+            <div style="height:50px;"></div>
+            <div id="main">
+                <div class="transform-wrap">
+                    <div class="banner">
+                        <img class="banner-bg" src="" alt="">
+                    </div>
+                    <div class="content">
+                        <div class="topic-wrap">
+                            <div class="topic-item">
+                                <div class="topic-header">
+                                    <a class="topic-author-info" href="">
+                                        <img class="topic-avator" src="" alt="topic author avator">
+                                        <span class="topic-author-name">author name</span>    
+                                    </a>
+                                    <a class="topic-author-follow-bt" href="">关注</a>
+                                </div>   
+                                <div class="topic-body">
+                                    <div class="topic-content">
+                                        <img class="topic-bg" src="" alt="">
+                                        <h1 class="topic-item-title">topic title</h1>
+                                        <div class="topic-like-wrap">
+                                            <span class="topic-like-bt">like botton</span>
+                                            <span class="topic-like-count">topic like count</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="../script/api.js"></script>
+        <script src="../script/common.js"></script>
+        <script>
+            $(function(){
+                initDev();
+            });
+            apiready = function(){
+                var $topic_content = $('.topic-wrap');
+                var topic_item = $('.topic-item').html();
+                for(var i = 0; i<100; i++){
+                    console.log('sd');
+                     $topic_content.append($(topic_item)); 
+                }
+                $('#main').css({'height':($(window).height()-50)+'px'});
+
+                var alt = 0;
+                // setInterval(function(){
+                //     alt++;
+                //     if(alt>100) return;
+                //     $('.transform-wrap').css({'transform':'translateY('+(-alt*alt)+'px)'});
+                // },50);
+
+                //slide($('.transform-wrap'),20);
+
+            }
+
+            function slide(obj, offset, callback) {
+                var start={x:0,y:0},
+                    end={x:0,y:0},
+                    angle = 0,
+
+                    positionY = [],
+                    TOUCHANGLE = 50;
+                    isLock = false,//是否锁定整个操作
+                    isCanDo = false,//是否移动滑块
+                    isTouchPad = (/hp-tablet/gi).test(navigator.appVersion),
+                    hasTouch = 'ontouchstart' in window && !isTouchPad;
+                //将对象转换为jquery的对象
+                
+                var target = obj;
+                var objparent = obj;
+                obj = $(window);
+                var y = 0;
+                var ty = 0;
+                /*操作方法*/
+                var fn =
+                    {
+                        //移动容器
+                        translate: function (diff) {
+                            target.css({
+                                "-webkit-transform": "translate(0," + diff + "px)",
+                                "transform": "translate(0," + diff + "px)"
+                            });
+                            ty = diff;
+                        },
+                        //设置效果时间
+                        setTranslition: function (time) {
+                            target.css({
+                                "-webkit-transition": "all " + time + "s",
+                                "transition": "all " + time + "s"
+                            });
+                        },
+                        //返回到初始位置
+                        back: function () {
+                            fn.translate(0 - offset);
+                            //标识操作完成
+                            isLock = false;
+                        },
+                        //获取角度
+                        getAngle: function(){
+                            var diff_x = end.x - start.x,
+                                diff_y = end.y - start.y;
+                              //返回角度,不是弧度
+                            return 360*Math.atan(diff_y/diff_x)/(2*Math.PI);
+                        },
+                        runInertance:function(alta){
+
+                            
+                           //  fn.translate(ty+alta);
+                           // // alta = alta > 0 ? alta-- : (alta<0? alta++:0);
+                           // if(alta>0){
+                           //   alta--;
+                           // }else if(alta<0){
+                           //   alta++;
+                           // }else{
+
+                           // }
+                           //  if(alta){
+                           //      setTimeout(function(){
+                           //          console.log(alta);
+                           //          fn.runInertance(alta);
+                           //      },10);
+                           //  }
+                           var time = Math.abs(parseFloat(alta)/1000.0);
+                           console.log('sds');
+                            fn.translate(y+alta);
+                            target.css({'transition':'-webkit-transform '+time+'s cubic-bezier(0.333333,0.666667,0.666667,1) 0s'});
+                            
+                        }
+                    };
+                //滑动开始
+                obj.bind("touchstart", function (e) {
+                    positionY = [];
+                    if (objparent.scrollTop() <= 0 && !isLock) {
+                        var even = typeof event == "undefined" ? e : event;
+                        //标识操作进行中
+                        isLock = true;
+                        isCanDo = true;
+                        //保存当前鼠标Y坐标
+                        start.y = hasTouch ? even.touches[0].pageY : even.pageY;
+                        start.x = hasTouch ? even.touches[0].pageX : even.pageX;
+                        //消除滑块动画时间
+                        fn.setTranslition(0);
+                    }
+                });
+                //滑动中
+                obj.bind("touchmove", function (e) {
+                    //console.log(mySwiper.isBeginning);
+                    //console.log(objparent.scrollTop());
+                    //console.log(fn.getAngle());
+                    if (objparent.scrollTop() <= 0 && isCanDo) {
+                        //console.log('dd');
+                        var even = typeof event == "undefined" ? e : event;
+                        //保存当前鼠标Y坐标
+                        end.y = hasTouch ? even.touches[0].pageY : even.pageY;
+                        end.x = hasTouch ? even.touches[0].pageX : even.pageX;
+                        positionY.push(end.y);
+                        angle = fn.getAngle();
+                       
+                            even.preventDefault();
+                            //消除滑块动画时间
+                            //fn.setTranslition(0);
+                            //移动滑块
+                            fn.translate((end.y - start.y)+y);
+                    }
+                });
+                //滑动结束
+                obj.bind("touchend", function (e) {
+                    if (isCanDo) {
+                        isCanDo = false;
+                        //判断滑动距离是否大于等于指定值
+
+                        if (end.y - start.y >= offset && Math.abs(angle) > TOUCHANGLE) {
+                            //设置滑块回弹时间
+                            //fn.setTranslition(1);
+                            //保留提示部分
+                            //fn.translate(40);
+                            
+                            //执行回调函数
+                            if (typeof callback == "function") {
+                                callback.call(fn, e);
+                            }
+                        } else {
+                            //返回初始状态
+                            //fn.back();
+                        }
+                    }
+                    angle = 0;
+                    isLock =false;
+                    y = ty;
+                    //console.log();
+                    //执行惯性
+                    var distance = positionY[positionY.length-1]-positionY[positionY.length-3];
+                    if(Math.abs(distance)>2){
+                        fn.runInertance(distance*10);
+                    }
+                    y = ty + distance*3;
+                });
+            }
+
+        </script>
+    </body>
+</html>

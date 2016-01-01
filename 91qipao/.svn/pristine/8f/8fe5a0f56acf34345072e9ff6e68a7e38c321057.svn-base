@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>全部回复</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <style>
+        body{background-color:#fff}
+        #wrap{height:100%;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-flow:column;flex-flow:column}
+        #main{-webkit-box-flex:1;-webkit-flex:1;flex:1;background-color:#fff}
+        .comment-item{border-bottom:none}
+        .comment-item li{list-style-type:none;margin-left:.4rem}
+        .input-wrap{margin-left:10px}
+        .dianzan-wrap{position:absolute;right:2rem;display:inline-block}
+        .user-avator{display:inline-block;width:2rem!important;height:2rem;border:1px solid #eee;border-radius:50%;margin-bottom:0!important;vertical-align:middle}
+        .author-info-box{vertical-align:middle;height:1.1rem;line-height:.5rem}
+        .author-info-box>.nick-name{font-size:.6rem}
+        .author-info-box>.create-time{position:relative;left:0;font-size:.5rem;color:#999;vertical-align:middle}
+        .author-info-box .floor-index{color:#999}
+        .dianzan-wrap{right:2.5rem;line-height:1.5rem;font-size:.7rem;color:#999}
+        .dianzan-wrap i{vertical-align:middle}
+        .dianzan-count{margin-left:.3rem;font-size:.6rem;vertical-align:middle;color:#999}
+        .commend-wrap{right:.5rem}
+        .commend-wrap i{margin-top:-.2rem}
+        .user-reply-avator{display:inline-block;width:1rem!important;height:1rem;line-height:1.5rem;margin-left:.5rem;margin-bottom:0!important;border:1px solid #999;border-radius:50%;vertical-align:middle}
+        .user-reply-input-wrap{display:inline-block;width:80%}
+        /*.reply-position{color:#FFF;}*/
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <a class="back-icon iconfont icon-arrow-left" tapmode="" onclick="api.closeWin();"></a>
+            <h1>回复</h1>
+        </div>
+        <div id="main">
+            
+        </div>
+    </div>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/common.js"></script>
+    <script>
+        apiready = function(){
+            isDev =false;
+
+            var header = $api.byId('header');
+            $api.fixIos7Bar(header);
+
+            var toUserInfo = api.pageParam.toUserInfo;
+            var pid = api.pageParam.pid;
+            // var position = api.pageParam.position;
+            // $('.reply-position').text(position);
+
+            var width = api.winWidth;
+            var headerPos = $api.offset(header);
+            var height = api.winHeight - headerPos.h;
+
+            api.openFrame({
+                name: 'replyUsercon',
+                url: 'replyUsercon.html',
+                pageParam: {
+                    toUserInfo: toUserInfo,
+                    pid:pid
+                },
+                rect: {
+                    x: 0,
+                    y: headerPos.h,
+                    w: width,
+                    h: height
+                },
+                reload: false,
+                bounces: false,
+                opaque: true,
+                vScrollBarEnabled: true,
+                softInputMode: 'resize'
+            });
+        }
+        $(function(){ 
+			if(isDev){
+				setTimeout(function(){
+                    setDevEv();
+                    apiready();
+				},500);
+			}
+		});
+        function setUserPosition(position){            
+            $('.reply-position').text(position);
+        }
+        
+    </script>
+</body>
+</html>

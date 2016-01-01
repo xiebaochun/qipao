@@ -1,0 +1,103 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>我的</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../css/user.css" />
+    <link rel="stylesheet" type="text/css" href="../css/topic-list.css" />
+    <link rel="stylesheet" type="text/css" href="../css/user-list.css" />
+    <style>
+        html{background-color: #eee;}
+        #header{background-color:transparent}
+        .nav-active>span{/*color:#ffc72a!important*/}
+        .hongren-wrap{position:absolute;display:block;top:3rem;right:1.8rem;width:3rem;text-align:center;z-index:5}
+        .hongren-wrap>.hongren-ico{display:inline-block;width:1rem;height:1rem;margin-top: 1rem;}
+        .hongren-wrap>.hongren-txt{font-size:0.55rem;color:#eee}
+        .none-expression{width:5rem}
+        .user-name{font-size:0.7rem}
+        .setting-ico{display:inline-block;z-index:6;width:40px;height:40px;bottom:0px;right:0;}
+        .setting-ico>img{display:inline-block;position:absolute;top:0.4rem;left:5px;width:20px;height:20px;}
+        .setting-ico:before{content:none}
+        #user-info-edit{z-index:6;bottom:0.6rem;left:0.6rem}
+        .user-stamp{color:#ffc72a!important;margin-top:0.1rem;font-size:0.5rem}
+        .fa-pencil-square-o{width:20px;height:20px;background-image:url(../image/edit_ico.png);background-size:90% auto;background-repeat:no-repeat;background-position:bottom}
+        .fa-pencil-square-o:before{content:none}
+        #my-header{
+            position: relative;
+            height: 50px;
+            width: 100%;
+        }
+        .content{
+            margin-top:11rem;
+        }
+        .free-reward{padding:0 0.5rem;background-color: #fcd0a8;font-size: 0.55rem;}
+        .my-user-name{margin-top:0.1rem;/*position: absolute;top:4.3rem;*/color:#333;}
+        .user-stamp{/*position: absolute;top:4.4rem;*/color:#fdd600;}
+        .my-nav-item{padding:0.2rem 0.5rem;line-height: 1.5rem;border-bottom:1px solid #eee;font-size: 0.55rem;background-color: #fff;}
+        .icon-arrow-right{float:right;}
+        .info-compelete-degree{position:absolute;right:0.5rem;top:0;line-height: 3.2rem;/*padding-right:1rem;*/}
+        .info-compelete-degree-txt{padding:0 0.3rem; line-height: 1rem; background-color: #fd4f58;border-radius:1rem;}
+        .my-level-wrap{margin-left:0.6rem;padding:0 0.3rem;background-color: #ffc72a; color:#333;border-radius: 0.8rem;font-size: 0.3rem;}
+        .my-level{font-size: 0.5rem;}
+        .icon-setting{margin-left:15px;margin-top:2px; font-size: 25px !important;color:#444;}
+        #cover{padding-top:0.5rem;}
+        .my-nav-icon{margin-right:0.5rem;}
+        /*.icon-star{font-size: 0.8rem !important;}*/
+        .liwu-ico{width: 0.8rem;margin-right:0.3rem;vertical-align: middle;margin-bottom: 0.2rem;}
+        .icon-arrow-right{color:#eee;}
+        .header-right-txt{bottom:-2px;}
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <h1>我的</h1>
+            <span class="header-right-txt" onclick="openWin('my-setting')"><i class="iconfont icon-setting"></i></span>
+        </div>
+        <div id="main">
+ 		</div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/mui.min.js"></script>
+<script>
+ apiready = function () {
+     var header = $api.byId('header');
+      $api.fixIos7Bar(header);
+      var width,header,headerPos,height,nav,navPos;
+          width = api.winWidth;
+          header = $api.byId('header');
+          headerPos = $api.offset(header);
+          height = api.winHeight - headerPos.h -51;
+      api.openFrame({
+                  name: 'my',
+                  url: 'my.html',
+                  reload: false,
+                  bounces : false,
+                  vScrollBarEnabled : false,
+                  pageParam : {
+                      headerHeight : headerPos.h
+                  },
+                  rect : {
+                      x : 0,
+                      y : headerPos.h,
+                      w : width,
+                      h : height
+                  }
+              });                 
+ }
+    
+function goto_topic(index) {
+	gotoIndexTab('topic','21c8cf', index);
+}
+        
+$(function(){
+    initDev();
+});
+
+</script>
+</html>

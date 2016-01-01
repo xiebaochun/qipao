@@ -1,0 +1,211 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>设置</title>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <style>
+        body{background-color:#eee}
+        .setting-wrap{padding:0 .5rem;background-color:#fff}
+        .mui-table-view:after{width:0}
+        .mui-table-view-cell{height:2rem;line-height:2rem;padding:0;/*border-bottom:1px solid #eee*/}
+        .mui-table-view-cell:after{border:none;outline:0;left: 0.2rem;background-color: #eee;}
+        .mui-navigate-right{margin:0!important;font-size:.9rem;line-height:2rem;height:2rem;padding-left:.2rem!important}
+        .mui-switch-mini.mui-active .mui-switch-handle{-webkit-transform:translate(25px,0);transform:translate(25px,0)}
+        .mui-switch .mui-switch-handle{left:0}
+        .mui-navigate-right:after{color:#999!important;right:0}
+        .mui-switch-mini{width:55px;right:5px!important}
+        .label{line-height:2rem;font-size:.6rem}
+        .label_logout{/*padding:.5rem .5rem;*/line-height:1.6rem;font-size:.6rem;color:#FFF;display:block;text-align:center;margin:0 .3rem;margin-top:.5rem;background-color:#f46f59}
+        #cache_size{float:right;margin-right:1.5rem;line-height:2rem;color:#999;font-size:.5rem}
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <a class="back-icon iconfont icon-arrow-left" tapmode="" onclick="api.closeWin();"></a>
+            <h1 class="">设置</h1>
+        </div>
+        <div class="setting-wrap">
+            <ul class="mui-table-view">
+                <li class="mui-table-view-cell">
+                    <span class="label" style="padding-left:0.2rem;">省流量模式</span>
+                    <div class="mui-switch mui-switch-mini" id="is-limit-data">
+                        <div class="mui-switch-handle"></div>
+                    </div>
+                </li>
+                <li class="mui-table-view-cell" onclick="clearData();">
+                    <a class="mui-navigate-right">
+                      <span class="label">清除缓存</span>
+                      <span class="label" id="cache_size">12.4M</span>
+                    </a>
+                </li>
+                <li class="mui-table-view-cell" onclick="openWin('my-setting-fb');">
+                    <a class="mui-navigate-right">
+                     <span class="label">我要反馈</span>
+                    </a>
+                </li>
+                <li class="mui-table-view-cell" onclick="versionUpdate();" style="display:none;">
+                    <a class="mui-navigate-right">
+                     <span class="label">版本更新</span>
+                    </a>
+                </li>
+                <li class="mui-table-view-cell" style="border:none;" onclick="openAboutUs('my-setting-aboutus');">
+                    <a class="mui-navigate-right">
+                     <span class="label">关于我们</span>
+                    </a>
+                </li>
+                <!--  <li class="mui-table-view-cell" style="border:none;text-align:center;" >                    
+                                        
+                </li> -->
+                 
+                <!-- <li class="mui-table-view-cell"
+                    Item 4
+                    <div class="mui-switch mui-switch-blue mui-switch-mini mui-active">
+                        <div class="mui-switch-handle"></div>
+                    </div>
+                </li> -->
+                
+            </ul>
+
+        </div>
+        <span class="label_logout" onclick="logout();">退出账号</span>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src='../script/common.js'></script>
+<script type="text/javascript" src='../script/mui.min.js'></script>
+<script type="text/javascript" src='../script/common.js'></script>
+<script>
+    $(function(){
+        if($api.getStorage('isLimitData') == 'true'){
+            $('#is-limit-data').addClass('mui-active');
+        }else{
+            $('#is-limit-data').removeClass('mui-active');
+        }
+        mui(".mui-table-view-cell").on('tap','#is-limit-data',function(){
+            if($('#is-limit-data').hasClass('mui-active')){
+                $api.setStorage('isLimitData',true);   
+                isLimitData = 'true'; 
+            }else{
+                $api.setStorage('isLimitData',false);   
+                isLimitData = 'false'; 
+            }
+        })
+        mui(".mui-table-view-cell").on('dragstart','.mui-switch-handle',function(){
+            setTimeout(function(){
+                //alert('sdf');
+                if($('#is-limit-data').hasClass('mui-active')){
+                    $api.setStorage('isLimitData',true);   
+                    isLimitData = 'true'; 
+                }else{
+                    $api.setStorage('isLimitData',false);   
+                    isLimitData = 'false'; 
+                }
+            },500);  
+        })
+    });
+    
+   function logout() {
+    	api.confirm({
+    			title:'',
+    			msg:'你确定要退出当前账号吗?',
+    			buttons:['取消', '确定']
+    			}, function(ret,err) {
+    				if (ret.buttonIndex == 2) {
+					    var uid = $api.getStorage('uid');
+						if(uid){
+							api_ajax(2, 
+								'util_logout.php', 
+								{	
+								}, 
+								after_logout,
+								0,
+								0
+								); 			
+							}
+			    		return false;    				
+    				}
+    			});
+    }
+    
+    function after_logout(ret, _, _, _) {
+    	console.log(ret);
+
+        $api.rmStorage('uid');	   
+   	    $api.rmStorage('phone');
+        $api.rmStorage('authcode');
+        $api.rmStorage('isphone');	
+        $api.rmStorage('token');
+	    $api.rmStorage('userimage');
+	    $api.rmStorage('username');
+	    $api.rmStorage('sex');	
+		$api.rmStorage('platform');	
+	    $api.rmStorage('sex');
+	    $api.rmStorage('mobile');
+	    $api.rmStorage('platform');
+	    $api.rmStorage('platform_userid');
+	    $api.rmStorage('platform_username');
+	    $api.rmStorage('platform_headimgurl');	    
+	   						
+    	console.log(ret);		
+		api.execScript({
+			name: 'root',
+			frameName: 'topicFollow',
+			script:  'page_refresh();'
+		});	
+			
+    	console.log(ret);		
+		api.closeWin();   
+		gotoIndexTab('main','71bbe');
+	}
+
+    //清除下载缓存文件、拍照临时文件、网页缓存文件等
+    function clearData() {
+        api.clearCache();
+
+        setTimeout(function () {
+            setCacheSize();
+            myToast('缓存已清空!');
+        }, 300);
+    }
+    
+    function versionUpdate(){
+        // api.alert({
+        //     msg: '已是最新版!'
+        // });
+         myToast('已是最新版!');   
+    }
+    function openAboutUs(name){
+        api.openWin({
+            name:name,
+            url:name+'.html',
+            allowEdit : true
+        });
+    }
+    apiready = function(){
+        var header = $api.byId('header');
+        $api.fixIos7Bar(header);
+  		setCacheSize();
+     }
+     
+     function setCacheSize() {
+      api.getCacheSize(
+    		function(ret, err) {
+        		var size = ret.size;
+        		if (size >= 0) {
+        			size = (size/1048576).toFixed(2);
+        			if (size == '0.00')
+        				size = 0;
+        			$('#cache_size').html(size+'M');
+        			}
+        		else 
+        			$('#cache_size').empty();
+    		}
+		);     
+     }
+</script>
+</html>

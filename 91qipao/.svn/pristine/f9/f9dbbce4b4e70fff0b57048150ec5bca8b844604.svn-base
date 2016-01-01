@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+        <meta name="format-detection"content="telephone=no">
+        <title>情报局</title>
+        <link rel="stylesheet" type="text/css" href="../css/common.css" />
+        <link rel="stylesheet" type="text/css" href="../css/ui.css" />
+        <style>
+            html,body{background-color: #eee;}
+            #wrap{
+                height: 100%;
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -webkit-flex-flow: column;
+                       flex-flow: column;
+            }
+            #main{
+                -webkit-box-flex: 1; 
+                -webkit-flex: 1;
+                flex: 1;
+                background-color: #eee;
+            }
+            .banner>img{width: 100%;}
+        </style>
+    </head>
+    <body>
+        <div id="wrap">
+            <div id="main">
+                <div class="banner">
+                    <img src="../image/qingbaoju_banner_bg.png" alt="">
+                </div>
+                <div class="topic-wrap">
+                    
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="../script/api.js"></script>
+        <script type="text/javascript" src="../script/common.js"></script>
+        <script src="../script/util/ui.loader.js"></script>
+        <script>
+            //气泡测评fid
+            var FID = 108;
+        </script>
+        <script src="../script/topic_more_common.js"></script>
+        <script src="../script/special_channel.js"></script>
+    </body>
+</html>

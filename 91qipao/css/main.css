@@ -1,0 +1,14 @@
+#main{background-color: #eee;}
+.swipe{overflow:hidden;position:relative}
+.swipe-wrap{overflow:hidden;position:relative}
+.swipe-wrap>div{float:left;position:relative}
+.swipe-wrap>div{overflow:hidden;position:relative;background-color:#000;background:-webkit-linear-gradient(top,#666 0,#000 100%);background:-o-linear-gradient(top,#666 0,#000 100%);background:-ms-linear-gradient(top,#666 0,#000 100%);background:linear-gradient(top,#666 0,#000 100%)}
+.swipe-wrap a{display:block}
+.swipe-wrap img{width:100%;height: 10.3rem;-webkit-filter:brightness(.7);filter:brightness(.7);display:block}
+#slide{margin:0 auto;position:relative;-webkit-box-shadow:0 1px 1px #eee;box-shadow:0 1px 1px #eee;background-color: rgba(200,200,200,1);background-size: 100% 100%;background-position: center;background-repeat: no-repeat;z-index: 1;}
+#slide div label{white-space:nowrap;text-overflow:ellipsis;overflow:hidden;background-image:-webkit-linear-gradient(top,rgba(59,59,59,.6),rgba(27,27,27,.6),rgba(50,50,50,.4),rgba(31,31,31,.4));background-image:linear-gradient(top,rgba(59,59,59,.6),rgba(27,27,27,.6),rgba(50,50,50,.4),rgba(31,31,31,.4));position:absolute;left:0;bottom:0;width:100%;height:40px;line-height:40px;padding-left:20px;display:block;color:#fff;-webkit-box-sizing:border-box;box-sizing:border-box}
+.banner-title{position:absolute;bottom:3rem;left:.5rem;color:#fff;font-size:.8rem}
+.banner-content{position:absolute;width:12.5rem;bottom:.6rem;left:.5rem;color:#fff;font-size:.5rem}
+#pointer{position:absolute;width:32px;height:32px;right:.6rem;bottom:.6rem;display:block;text-align:center;clear:both;margin-top:100px}
+#pointer .pointer-bg{display:block;position:absolute;top:0;left:0;width:100%;height:32px;background-image:url(../image/pointer_bg.png);background-size:32px 32px;z-index:0;transition-property:transform;transition-duration:.3s;transition-timing-function:linear;-wbkit-transition-property:-wbkit-transform;-wbkit-transition-duration:.3s;-wbkit-transition-timing-function:linear}
+#pointer .pointer-content{position:absolute;left:0;top:0;height:32px;width:32px;line-height:32px;z-index:100;color:#333;font-size:.4rem;font-weight:700}

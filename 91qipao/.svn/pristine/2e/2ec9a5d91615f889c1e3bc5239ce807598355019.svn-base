@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>全部回复</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../css/user-list.css" />
+    <style>
+       body{background-color:#fff}
+       #wrap{height:100%;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-flow:column;flex-flow:column}
+       #main{-webkit-box-flex:1;-webkit-flex:1;flex:1;background-color:#fff}
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <!-- <div id="header">
+            <a class="back-icon" tapmode="" onclick="api.closeWin()"></a>
+            <h1>全部回复(<span class="reply-count">4</span>)</h1>
+        </div> -->
+        <div id="main">
+            <ul class="recommender-list user-list" onclick="dealWithClick(event);">
+                <!-- <div class="comment-item">
+                    <div class="comment-item-header">
+                        
+                        <img class="user-avator" src="" width="30px"/>  
+                        
+                        <div class="author-info-box">
+                            <span class="nick-name">昵称</span><br>
+                            <span class="create-time"><span class="floor-index">1F</span>2天前</span>
+                        </div>
+                        <div class="dianzan-wrap">
+                            <i class="fa fa-heart-o"></i><span class="dianzan-count">3</span>
+                        </div>
+                        <div class="dianzan-wrap commend-wrap">
+                            <i class="fa fa-commenting-o"></i><span class="dianzan-count">3</span>
+                        </div> 
+                    </div>
+                    <div class="comment-item-body">
+                        <ul id="reply-content-list">
+                            <li class="reply-content-item"></li>
+                        </ul>
+                    </div>
+                   
+                </div>   -->  
+            </ul>
+            <div style="height:50px;"></div>
+            <!-- <div id="comment">
+                <ul>
+                    <li style="width:83%;">
+                        <img class="user-reply-avator" src="" alt="">
+                        <div class="user-reply-input-wrap input-wrap">
+                            <input type="text" placeholder="我也说一句~" onfocus="edit(this)" onblur="cancel(this)" id="comment-content" class="txt" value="" /> <i class="del" tapmode="" onclick="delWord(this)"></i>
+                        </div>
+                    </li>
+                    <li id="comment-bt">
+                        <a style="color:#55abce;" tapmode="">发表</a>
+                    </li>
+                </ul>
+            </div> -->
+        </div>
+    </div>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/common.js"></script>
+    <script>
+    var fid = '';
+    var tid = '';
+    var uid = '';
+    var recommenderlist,current_page=1,total_page=0;
+    apiready = function(){
+        isDev =false;
+        fid = $api.getStorage('current_topic_fid');
+        tid = $api.getStorage('current_topic_tid');
+        uid = $api.getStorage('uid');
+        //recommenderlist = api.pageParam.recommenderlist;
+        loadCommenderList(1);
+    }
+
+    function loadCommenderList(page){
+        var ajaxUrl = 'topic_detail_recommender.php';
+        var data = {
+            tid:tid,
+            uid:uid,
+            page:page,
+            psize:20
+        }
+        api_ajax(1,ajaxUrl,data,afterLoadRecommenderList,null,0);
+    }
+    function afterLoadRecommenderList(ret, _, _, _){
+		if (ret.code != 100) {
+			return;
+		}
+        console.log(ret);
+        var recommenderList = ret.data.info.list;
+        total_page = ret.data.info.pageinfo.totalpage;
+        
+        var recommenderListHtml = '';
+        for(var index in recommenderList){
+            var recommender = recommenderList[index];
+            var rightHtml = '<span class="arrow-right"></span>';
+            if(recommender.me_fav_ta == 0){
+                rightHtml = '<span class="follow-bt" id="" data-user="'+recommender.userid+'">关注</span>';
+            }
+            switch(recommender.sex){
+                case '0':
+                sexHtml = '';;
+                break;
+                case '1':
+                sexHtml = '<i class="gender-ico gender-male-ico fa fa-mars"></i>';
+                break;
+                case '2':
+                sexHtml = '<i class="gender-ico gender-female-ico fa fa-venus"></i>';
+                break;
+                default:
+                break;
+            }
+            //onclick="followUser('+recommender.userid+',event);"
+            //onclick="openUserSpace('+recommender.userid+');"
+            var html =  '<div class="user-item" id="'+recommender.userid+'" data-uid="'+recommender.userid+'">'+
+                            '<div class="avator-wrap">'+
+                                '<img class="default-avator avator-img" src="'+recommender.ui+'" alt=""></div>'+
+                            '<div class="user-info">'+
+                                '<p>'+
+                                    '<span class="user-name">'+recommender.nickname+'</span>'+
+                                    sexHtml+
+                                '</p>'+
+                                '<span class="user-tag"></span>'+
+                            '</div>'+rightHtml
+                            +
+                        '</div>';
+            recommenderListHtml += html;
+        }
+        $('.recommender-list').append($(recommenderListHtml));
+    }
+
+    function openV(e){
+        //console.log(e);
+    }
+    function afterFavoriteUser(sid, act){
+        myToast('关注成功！');
+    }
+    function dealWithClick(e){
+        
+        var target = e.target;
+        var className = target.className;
+        switch(className){
+            case 'follow-bt':
+                favoriteUser($(target).parent().data('uid'),'add');
+                $(target).parent().append('<span class="arrow-right"></span>');
+                $(target).remove();
+                
+            break;
+            // case 'user-item' || 'user-name' || 'avator-img':
+            //     //console.log($(target).data('uid'));
+            //     openUserSpace($(target).data('uid'));
+            // break;
+            default:
+                var $parent =  $(target).parents('.user-item');
+                var uid;
+                if($parent.length>0){
+                    uid = $parent.data('uid');
+                } else{
+                    uid = $(target).data('uid');  
+                }
+                console.log(uid);
+                openUserSpace(uid);
+
+                
+        }
+        //console.log(e);
+    }
+    </script>
+</body>
+</html>

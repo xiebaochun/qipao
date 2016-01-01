@@ -1,0 +1,249 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>api</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <style>
+       #topicDetail-footer{position:absolute;bottom:0;width:100%}
+       .footer-nav{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:horizontal;-webkit-flex-direction:row;flex-direction:row;height:53px;line-height:52px;background-color:rgba(0,0,0,.8)}
+       .footer-nav>li{position:relative;-webkit-box-flex:1;-webkit-flex:1;flex:1;text-align:center}
+       .footer-nav>li>a>i,.footer-nav>li>a>span{vertical-align:middle;color:#fff}
+       .footer-nav>li>a>span{margin-left:5px;font-size:0.5rem}
+       .detail-footer-ico{display:inline-block;width:24px;height:24px;background-size:24px 24px}
+       .collect-ico{height:26px;background-image:url(../image/collect_white_ico.png);background-repeat:no-repeat}
+       .collect-active-ico{background-image:url(../image/collect_selected_ico.png)}
+       .recommend-ico{background-image:url(../image/recommend_white_ico.png)}
+       .recommend-active-ico{background-image:url(../image/dianzan_selected_ico.png)}
+       .comment-ico{background-image:url(../image/commend_white_ico.png)}
+       #share-bt{display:inline-block;position:absolute;right:15px;bottom:15px;width:18px;height:18px;margin-top:8px;background-image:url(../image/share_ico.png);background-size:18px 18px;background-repeat:none;background-position:center}
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header" style="position:relative">
+            <a class="back-icon" tapmode="" onclick="api.closeWin()"></a>
+            <h1></h1>
+                <!-- <a id="louzhu" onclick="louzhuClick();">楼主</a><a id="more-bt" onclick="popShareBox();">...</a> -->
+            <a class="share-bt" id="share-bt" href="javascript:;"></a>
+        </div>
+        <div id="main"></div>
+        <div class="none" id="topicDetail-footer">
+            <ul class="footer-nav">
+                <li>
+                    <a class="collect">
+                       <i class="detail-footer-ico collect-ico"></i>
+                       <span>收藏</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="recommend">
+                        <i class="detail-footer-ico recommend-ico"></i>
+                        <span class="count" id="topic-dianzan-count">0</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="comment">
+                        <i class="detail-footer-ico comment-ico"></i>   
+                        <span class="count" id="topic-comment-count">0</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/util/share.js"></script>
+<script>
+/*
+var inputWrap = $api.domAll('.input-wrap');
+var shareBox = $api.dom('#share-pop-box');
+var len = inputWrap.length;
+    
+for (var i = 0; i < len; i++) {
+    var txt = $api.dom(inputWrap[i], '.txt');
+    var del = $api.dom(inputWrap[i], '.del');
+    (function(txt, del) {
+        $api.addEvt(txt, 'focus', function() {
+            if (txt.value) {
+                $api.addCls(del, 'show');
+            }
+            $api.addCls(txt, 'light');
+        });
+        $api.addEvt(txt, 'blur', function() {
+            $api.removeCls(del, 'show');
+            $api.removeCls(txt, 'light');
+        });
+    })(txt, del);
+}
+*/
+
+
+var lastCollectTime = 0; 
+function init(){
+    $('.collect').click(function(){
+        // if($(this).hasClass('.collect-selected')){
+
+        // }
+		var nowTime = (new Date()).valueOf();
+		if (nowTime-lastCollectTime < 1000) return;		
+		lastCollectTime = nowTime;
+	
+        var self = $('.collect-ico')
+        var act = 'add';
+
+        if(isCollected){
+            act = 'cancel';
+        }
+        
+        var ajaxUrl = 'my_favorite_topic_set.php';
+
+        api_ajax(0,
+        	ajaxUrl,
+        	{
+            tid:tid,
+            act:act
+        	},
+        	function(ret, _, _, tid) {
+				if (ret.code == 988)
+				{
+					return;
+				}
+		 		$api.setStorage('collect_tid', tid);
+		 	       	
+	            console.log(ret);
+	            if(ret.code == 100||ret.code == 102){
+	                //setCollected(true);
+	                isCollected = !isCollected;
+	                $api.setStorage('set_my_change', 1);
+					$api.setStorage('set_my_change_topic', 1);
+	                if(isCollected){
+	                    //myToast('收藏成功！');
+	                    api.execScript({
+	                        frameName:'topicDetailCon-'+tid,
+	                        script:'detailPlayStar()'
+	                    });
+	                }else{
+	                    myToast('已取消收藏！');
+	                }
+	                //myToast(ret.msg);
+	                $(self).toggleClass('collect-active-ico');
+	            }else if(ret.code = 104){
+	                myToast(ret.msg);
+	            }else{
+	                myToast(ret.msg);
+	            }
+        	},
+        	tid,
+        	0
+        	);
+    });
+    $('.share-bt').click(function(){
+        //alert('fsd');
+        popShareBox();
+    });
+    $('.recommend').click(function(){
+        //alert('recommend');
+        api.execScript({
+            frameName:'topicDetailCon-'+tid,
+            script:'clickZan();'
+        });
+    });
+    $('.comment').click(function(){
+        api.execScript({
+            frameName:'topicDetailCon-'+tid,
+            script:'openAllComments();'
+        });
+    });
+}
+
+function popShareBox() {
+    //$api.addCls(shareBox,'on');
+    api.openFrame({
+        name: 'share',
+        url: 'component/share-pop-frame.html',
+        bounces: false,
+        vScrollBarEnabled: false,
+        pageParam: {},
+        bgColor:'rgba(0,0,0,0)',
+        rect: {
+            x: 0,
+            y: 0,
+            w: api.winWidth,
+            h: api.winHeight
+        }
+    });
+}
+
+function setCommentCount(count){
+    $('#topic-comment-count').text(count);
+}
+
+function setDianzanCount(count){
+    $('#topic-dianzan-count').text(count);
+}
+
+function setDianzan(){
+    $('.recommend-ico').addClass('recommend-active-ico');
+}
+
+function setCollected(bool){
+    isCollected = bool;
+    if(isCollected){
+        $('.collect-ico').addClass('collect-active-ico');
+    }
+}
+
+function showFooter(){
+    $('#topicDetail-footer').show();
+}
+
+var tid = '';
+var isCollected = false;
+apiready = function() {
+    isDev = false;
+    var header = $api.byId('header');
+    $api.fixIos7Bar(header);
+
+    var id = api.pageParam.id;
+    tid = id;
+    var fid = api.pageParam.fid;
+    var imgUrl = api.pageParam.imgUrl;
+    var width = api.winWidth;
+    var headerPos = $api.offset(header);
+    var height = api.winHeight - headerPos.h-51;
+
+    api.openFrame({
+        name: 'topicDetailCon-'+tid,
+        url: 'topicDetailCon.html',
+        pageParam: {
+            tid: tid,
+            fid: fid,
+            imgUrl: imgUrl
+        },
+        rect: {
+            x: 0,
+            y: headerPos.h,
+            w: width,
+            h: height
+        },
+        reload: false,
+        bounces: false,
+        opaque: true,
+        vScrollBarEnabled: false,
+        softInputMode: 'resize'
+    });
+ 
+    init();
+    
+    closeWinAboutLogin();
+};
+
+$(function(){
+    initDev();
+}); 
+</script>
+</html>

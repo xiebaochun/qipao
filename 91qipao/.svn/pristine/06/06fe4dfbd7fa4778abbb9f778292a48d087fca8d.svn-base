@@ -1,0 +1,157 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>黑名单</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../css/user-list.css" />
+    <style>
+        body{
+            background-color: #fff;
+        }
+        .none-expression {
+            width: 5rem;
+        }
+        .nopost-topic-wrap{padding:5rem 0;background-color:#fff;text-align:center}
+        .nopost-topic-wrap>span{margin-top:1rem;font-size:.7rem;color:#333}
+        .nopost-topic-wrap>.btn{display:inline-block;margin-top:1rem;font-size:.6rem;padding:.3rem 1.5rem;background-color:#ffd600} 
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div class="user-list" id="vip_list">
+        <div class="nopost-topic-wrap" id="t_none" style="display:none;">
+            <img class="none-expression" src="../image/none_ico.png" alt=""><br>
+            <span style="color:#999;">暂无黑名单！</span><br>
+            <a class="btn" href="javascript:api.closeWin();">返回</a>    
+        </div>
+       <!-- 
+            <div class="user-item">
+                <div class="avator-wrap">
+                    <img class="avator-img" src="" alt="">
+                    <img class="avator-tag" src="../image/user_tag_ico.png">
+                </div>
+                <div class="user-info">
+                    <p>
+                        <span class="user-name">大业纺织</span>
+                        <i class="gender-ico gender-female-ico fa fa-venus"></i>
+                    </p>
+                    <span class="user-tag">情趣专家</span>
+                </div>
+                <span class="follow-bt">+关注</span>
+            </div>
+         //-->   
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src='../script/common.js'></script>
+<script>
+    $(function(){
+        
+    });
+  
+	function getData() {
+		api_ajax(2, 
+			'my_blacklist_get.php', 
+			{	
+				page: page,
+				psize: psize
+			}, 
+			after_getData,
+			0,
+			0
+		);    
+	}
+    
+    function after_getData(ret, _, _, _) {
+		if (ret['code'] == 988) {
+			return;
+		}
+		if (ret['code'] == 101) {
+			page = -1;
+            $('.nopost-topic-wrap').show();
+		} else if (ret['code'] == 100) {
+    		data = ret.data;
+			createHtml(data.info.list);
+    		if (data.info.pageinfo.curpage >= data.info.pageinfo.totalpage)
+    			page = -1;  	  					
+        }
+    	else{
+    		page  = -1;
+    	}	    
+    }
+      
+	function createHtml(dlist) {
+		var cHtml = '';
+		for(var index in dlist){
+					cHtml +='<div class="user-item fans-item-'+page+'" data-us="'+dlist[index].userid+'">';
+	                cHtml += '        <div class="avator-wrap">';
+	                cHtml += '            <img class="default-avator avator-img" src="'+dlist[index].ui+'" alt="">';
+	                if (dlist[index].tag != '')
+	                	cHtml += '            <img class="avator-tag" src="../image/user_tag_ico.png">';
+	                cHtml += '        </div>';
+	                cHtml += '        <div class="user-info">';
+	                cHtml += '            <p>';
+	                cHtml += '                <span class="user-name">'+dlist[index].nickname+'</span>';
+	                if (dlist[index].sex == 1)
+	                	cHtml += '                <i class="gender-ico gender-male-ico fa fa-mars"></i>';
+	                else if (dlist[index].sex == 2)
+	                	cHtml += '                <i class="gender-ico gender-female-ico fa fa-mars"></i>';                	
+	                cHtml += '            </p>';
+	                cHtml += '            <span class="user-tag">'+dlist[index].tag+'</span>';
+	                cHtml += '        </div>';
+	               	cHtml += '        <span id="fav_'+dlist[index].userid+'" class="follow-bt fav-ta-'+page+'"  data-user="'+dlist[index].userid+'">移除</span>';
+	                cHtml += '    </div>';			
+
+	    }
+	    
+		var content = $("#vip_list");
+		if (page == 1) content.empty();
+		content.append(cHtml);
+	
+	    $('.fans-item-'+page).click(function(){
+	    	$this = $(this);
+	    	openUserSpace($this.data('us'));
+	    	return false;
+	    });	
+	    $('.fav-ta-'+page).click(function(){
+	    	$this = $(this);
+	    	blacklistUser($this.data('user'), 'cancel');
+	    	return false;
+		    });	
+	}
+
+	function afterBlacklistUser(sid, act) {
+		if (act == 'cancel') {
+			$("#fav_"+sid).parent().remove();
+			myToast('移除黑名单成功');
+		}	
+	}
+
+    var page = 1;
+    var psize = 10;
+    
+    apiready = function(){
+       
+	    api.addEventListener({
+	        name: 'scrolltobottom',
+	        extra:{
+	        	threshold:200
+	    	}
+	    }, function (ret, err) {	    	
+	   	   if (page > 0)
+		        {
+			        page = page + 1;
+			        getData();
+		        } 	
+ 	    });
+ 	    getData();        
+    }
+    $(function(){
+        initDev();
+    })
+</script>
+</html>

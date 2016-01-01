@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+        <meta name="format-detection"content="telephone=no">
+        <title>动态</title>
+        <link rel="stylesheet" type="text/css" href="../css/common.css" />
+        <link rel="stylesheet" type="text/css" href="../css/ui.css" />
+        <style>
+            html,body{background-color: #eee;}
+            #wrap{
+                height: 100%;
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -webkit-flex-flow: column;
+                       flex-flow: column;
+            }
+            #main{
+                -webkit-box-flex: 1; 
+                -webkit-flex: 1;
+                flex: 1;
+                background-color: #eee;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="wrap">
+            <div id="main">
+                <div class="activity">
+                    
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="../script/api.js"></script>
+        <script type="text/javascript" src="../script/common.js"></script>
+        <script>
+            var app_content = null;
+            var pop_frame = null;
+            $(function(){
+                initDev();
+            });
+            apiready = function(){
+
+                require('list_common',function(){
+                    app_content = new QIPAO.list({
+                        api_file:'topic_list.php',
+                        postData:{ 
+                            psize: 5,
+                            t:1
+                        },
+                        holder:'.activity',
+                        listF:listArticle,
+                        none:{
+                            txt:'发现心中的的TA,从关注开始~',
+                            btTxt:'+马上去关注',
+                            to:'util-login',
+                            clickCallBack:function(){
+                                if($api.getStorage('uid')){
+                                    //alert('logined');
+                                    api.setFrameGroupIndex({
+                                        name:'topic-frame-group',
+                                        index:1,
+                                        scroll:true
+                                    });
+                                }else{
+                                     //alert('unlogin');
+                                    openWin('util-login');
+                                }
+                            }
+                        }
+                    });
+                });
+            } 
+            function  view_appear() {
+				//alert('topic_view_appear');
+				//    init();
+			}  
+            function  init() {
+				//alert('topic_view_appear');
+				//    init();
+                app_content.getData(1);
+
+			} 			           
+        </script>
+    </body>
+</html>

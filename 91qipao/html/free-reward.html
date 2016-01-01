@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+        <meta name="format-detection"content="telephone=no">
+        <title>免费获取福利</title>
+        <link rel="stylesheet" type="text/css" href="../css/common.css" />
+        <link rel="stylesheet" type="text/css" href="../css/rich-list.css" />
+        <style>
+            #wrap{
+                height: 100%;
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -webkit-flex-flow: column;
+                       flex-flow: column;
+            }
+            #main{
+                -webkit-box-flex: 1; 
+                -webkit-flex: 1;
+                flex: 1;
+                background-color: #fff;
+            }
+            .banner{padding-top:1.2rem; text-align: center;}
+            .get-reward-tag{width: 3rem;}
+            .avator-wrap{display:inline-block; position: relative;}
+            .get-reward-tag{display: inline-block;position: absolute;left: -0.4rem;top:1.6rem;}
+            .banner-avator{width: 2.2rem;height: 2.2rem;}
+            .sdk-ico{font-size: 2.5rem !important;}
+            .sdk-nav{padding:1rem 2rem;}
+            .nav-item{line-height: 1.2rem;}
+        </style>
+    </head>
+    <body>
+        <div id="wrap">
+            <div class="fixed-header" id="header">
+                <a class="back-icon iconfont icon-arrow-left" tapmode onclick="api.closeWin();"></a>
+                <h1>免费获取福利</h1>
+                <a class="header-right-txt"></a>
+            </div>
+            <div style="height:50px;"></div>
+            <div id="main">
+                <div class="banner">
+                    <div class="avator-wrap">
+                        <img class="item-avator banner-avator" src="../image/version_logo.png" alt="">
+                        <img class="get-reward-tag" src="../image/get_reward.png" alt="">
+                    </div>
+                </div>  
+                <p class="f6 mt10" style="padding:0.8rem;">邀请新朋友下载气泡APP，您将获得30泡币，泡币可在泡币商城兑换物品。</p>
+                <h2 class="f6 color-999 tc mt10">给朋友福利</h2>  
+                <div class="nav sdk-nav">
+                    <div class="nav-item" onclick="share('weixin')"><i class="sdk-ico iconfont icon-weixin" style="color:#2ac568;"></i><br><span class="color-999 f5"style="line-height:0.7rem;">微信</span></div>
+                    <div class="nav-item" onclick="share('qq')"><i class="sdk-ico iconfont icon-qq" style="color:#2bc1ff;"></i><br><span class="color-999 f5"style="line-height:0.7rem;">QQ</span></div>
+                    <div class="nav-item" onclick="share('weixinfriend')"><i class="sdk-ico iconfont icon-pengyouquan" style="color:#5ece03;"></i><br><span class="color-999 f5"style="line-height:0.7rem;">朋友圈</span></div>
+                </div>       
+                <h2 class="f6 color-999 tc mt10">本周气泡大使排行</h2>  
+                <ul id="rich-list" style="margin-top:0.5rem;">
+                	<!--
+                    <li class="user-item">
+                        <span class="rank">1</span>
+                        <div class="item-user-info">
+                            <img class="item-avator" src="../image/version_logo.png" alt="">
+                            <span class="">土豪</span>
+                            <img class="huangguan" src="../image/huangguan_01.png" alt="">
+                        </div>
+                        <span class="wealth pull-right"><span class="color-red">3000000</span>泡币</span>
+                    </li>
+                    <li class="user-item">
+                        <span class="rank">2</span>
+                        <div class="item-user-info">
+                            <img class="item-avator" src="../image/version_logo.png" alt="">
+                            <span class="">土豪</span>
+                            <img class="huangguan" src="../image/huangguan_02.png" alt="">
+                        </div>
+                        <span class="wealth pull-right"><span class="color-red">3000000</span>泡币</span>
+                    </li>
+                    <li class="user-item">
+                        <span class="rank">3</span>
+                        <div class="item-user-info">
+                            <img class="item-avator" src="../image/version_logo.png" alt="">
+                            <span class="">土豪</span>
+                            <img class="huangguan" src="../image/huangguan_03.png" alt="">
+                        </div>
+                        <span class="wealth pull-right"><span class="color-red">3000000</span>泡币</span>
+                    </li>
+                    //-->
+                </ul>  
+                <div class="tc f4 color-999" style="line-height:1.5rem;">每日24点更新</div>                                                                            
+            </div>
+        </div>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/util/share.js"></script>
+<script>
+//分享
+function share(type){
+    var url = "http://app.91qipao.com/apk/qipao.apk";
+    var title = "气泡,重新定义情趣生活";
+    var desc = "气泡,重新定义情趣生活";
+    var imgUrl = "http://app.91qipao.com/img/logo.png";
+	url = 'http://app.91qipao.com/';
+	title = '气泡下载-气泡APP下载官网';
+	desc = '气泡下载-气泡APP下载官网';
+	imgUrl = 'http://www.91qipao.com/img/logo/logo.png';
+	
+	$api.setStorage('share_type', type);
+    switch(type){
+        case 'sina':
+            shareApi.sina(
+            	url,
+            	title,
+            	desc, 
+            	imgUrl);
+        	break;
+        case 'qq':
+            //alert($api.getStorage('current_img_url'));
+            shareApi.qq(            	
+            	url,
+            	title,
+            	desc, 
+            	imgUrl);
+        	break;
+        case 'weixin':
+            shareApi.weixin(            	
+            	url,
+            	title,
+            	desc, 
+            	imgUrl);
+        	break;
+        case 'weixinfriend':
+            shareApi.weixinfriend(            	
+            	url,
+            	title,
+            	desc, 
+            	imgUrl);
+        	break;
+        default:
+        	break;
+    }
+}
+        
+</script>
+
+<script>
+
+$(function(){
+    initDev();
+});
+
+function getData(){
+    isLoading = true;
+    var parms =  {   
+            page:page,
+            psize:psize
+        };   
+ 
+    api_ajax(0, 
+        'util_richer_list.php', 
+        parms,
+        after_getData,
+        0,
+        0
+    ); 
+}
+
+function after_getData(ret, _, _, _) {	
+	if(ret.code == 988){
+		isLoading = false;
+		return;
+	}
+	
+    if(ret.code == 101){
+        page = -1;   
+    } else if(ret.code == 100){
+    //  console.log(ret);
+        if (page == 1) {
+            $('#rich-list').empty();
+        }   
+ 
+       	createList(ret.data.info.list);
+        
+        if (ret.data.info.pageinfo.curpage >= ret.data.info.pageinfo.totalpage
+        	|| ret.data.info.pageinfo.curpage >= maxPage){
+            page = -1;
+            //$bottomTip.html('没有更多了哦！');
+            //$bottomTip.show();
+        }
+    }else{
+        page = -1;
+    }
+    isLoading = false;
+}
+
+function createList(List){
+    var Html = '';
+    var ii = 0;
+    for(var index in List){
+        ii = (page-1)*psize + parseInt(index) + 1;
+        Html += '<li class="user-item">';
+        Html += '<span class="rank">'+ii+'</span>';
+        Html += '<div class="item-user-info">';
+        Html += '<img class="item-avator" src="'+List[index].ui+'" alt="">';
+        Html += '<span class="item-name">'+List[index].nickname+'</span>';
+        if (ii == 1) {
+        	Html += '<img class="huangguan" src="../image/huangguan_01.png" alt="">';
+        } else if (ii == 2) {
+        	Html += '<img class="huangguan" src="../image/huangguan_02.png" alt="">';
+        } else if (ii == 3) {
+        	Html += '<img class="huangguan" src="../image/huangguan_03.png" alt="">';
+        } 
+        Html += '</div>';
+        Html += '<span class="wealth pull-right"><span class="color-red">'+List[index].money+'</span>泡币</span>';
+        Html += '</li>';
+    }
+    $('#rich-list').append(Html);
+}
+
+var page = 1;
+var psize = 3;
+var isLoading = false;
+var maxPage = 1;
+
+apiready = function(){
+	var header = $api.byId('header');
+	$api.fixIos7Bar(header);
+    /*	
+    api.setRefreshHeaderInfo({
+        visible: true,
+        // loadingImgae: 'wgt://image/refresh-white.png',
+        bgColor: '#f2f2f2',
+        textColor: '#4d4d4d',
+        textDown: '下拉刷新...',
+        textUp: '松开刷新...',
+        showTime: false
+    }, function (ret, err) {
+        api.hideProgress();
+        if(!isLoading){
+             page = 1;
+             getData();
+        }
+        api.refreshHeaderLoadDone();
+    });
+
+    api.addEventListener({
+        name: 'scrolltobottom',
+        extra:{
+            threshold:200
+        }
+    }, function (ret, err) {
+       if (page > 0 && !isLoading)
+        { 
+            page = page + 1;
+            getData();
+        }
+    }); 
+    */
+    getData();    	
+} 
+
+</script>
+    </body>
+</html>

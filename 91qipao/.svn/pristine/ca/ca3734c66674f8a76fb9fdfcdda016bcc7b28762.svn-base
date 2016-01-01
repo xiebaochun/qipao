@@ -1,0 +1,233 @@
+<!doctype html>
+<html class="feedback">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>反馈</title>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../css/feedback-page.css" />
+    <style>
+        body{background-color:#fff!important}
+        .fb-wrap{padding:0 .5rem}
+        p{background-color:#fff}
+        .mui-content{background-color:#fff}
+        #question{border:1px solid #eee!important;border-radius:.2rem}
+        #contact{border:1px solid #eee!important;border-radius:.2rem}
+        .mui-content>p{padding-left:0;font-size:.6rem;color:#333}
+        .label_logout{display:block!important;width:auto!important;margin:.5rem .3rem 0 .3rem;padding:.5rem 0;font-size:.6rem;color:#FFF;display:block;text-align:center;background-color:#f46f59;border:0;border-radius:0}
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <a class="back-icon" tapmode="" onclick="api.closeWin()"></a>
+            <h1 class=""></h1>
+        </div>
+        <div class="fb-wrap">
+            <div class="mui-content">
+                <p>问题和意见</p>
+                <div class="row mui-input-row">
+                    <textarea id='content' class="mui-input-clear question" placeholder="请详细描述你的问题和意见..."></textarea>
+                </div>
+                <p>问题截图</p>
+                <div id='image-list' class="row image-list">
+                </div>
+            </div>
+        </div>
+        <span id='submit' type="button" class="label_logout">提交</span><br>
+        <span style="display:block;margin-left:0.3rem;text-align:left;color:#999;font-size:0.6rem;">调戏产品MM: 3183317032(QQ)</span>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src='../script/common.js'></script>
+<script type="text/javascript" src='../script/mui.min.js'></script>
+<script>
+(function(mui, window, document, undefined) {
+    mui.init();
+    var get = function(id) {
+        return document.getElementById(id);
+    };
+    var qsa = function(sel) {
+        return [].slice.call(document.querySelectorAll(sel));
+    };
+    var ui = {
+        question: get('content'),
+        title:get('title'),
+        imageList: get('image-list'),
+        submit: get('submit')
+    };
+    ui.clearForm = function() {
+        ui.question.value = '';
+        ui.title.value = '';
+        ui.imageList.innerHTML = '';
+        ui.newPlaceholder();
+    };
+    ui.getFileInputArray = function() {
+        return [].slice.call(ui.imageList.querySelectorAll('input[type="file"]'));
+    };
+    ui.getFileInputIdArray = function() {
+        var fileInputArray = ui.getFileInputArray();
+        var idArray = [];
+        fileInputArray.forEach(function(fileInput) {
+            if (fileInput.value != '') {
+                idArray.push(fileInput.getAttribute('id'));
+            }
+        });
+        return idArray;
+    };
+    var imageIndexIdNum = 0;
+    ui.newPlaceholder = function() {
+        var fileInputArray = ui.getFileInputArray();
+        if (fileInputArray &&
+            fileInputArray.length > 0 &&
+            fileInputArray[fileInputArray.length - 1].parentNode.classList.contains('space')) {
+            return;
+        }
+        imageIndexIdNum++;
+        var placeholder = document.createElement('div');
+        placeholder.setAttribute('class', 'image-item space');
+        var closeButton = document.createElement('div');
+        closeButton.setAttribute('class', 'image-close');
+        closeButton.innerHTML = 'X';
+        closeButton.addEventListener('click', function(event) {
+            event.stopPropagation();
+            event.cancelBubble = true;
+            setTimeout(function() {
+                ui.imageList.removeChild(placeholder);
+            }, 0);
+            return false;
+        }, false);
+        var fileInput = document.createElement('input');
+        fileInput.setAttribute('type', 'file');
+        fileInput.setAttribute('accept', 'image/*');
+        fileInput.setAttribute('id', 'image-' + imageIndexIdNum);
+        fileInput.addEventListener('change', function(event) {
+            var file = fileInput.files[0];
+            console.log(file);
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function() {
+                    //处理 android 4.1 兼容问题
+                    var base64 = reader.result.split(',')[1];
+                    console.log(base64);
+                    var dataUrl = 'data:image/png;base64,' + base64;
+                    //
+                    placeholder.style.backgroundImage = 'url(' + dataUrl + ')';
+                    placeholder.setAttribute('data-base64', dataUrl);
+                }
+                reader.readAsDataURL(file);
+                placeholder.classList.remove('space');
+                ui.newPlaceholder();
+            }
+        }, false);
+        placeholder.appendChild(closeButton);
+        placeholder.appendChild(fileInput);
+        ui.imageList.appendChild(placeholder);
+    };
+    ui.newPlaceholder();
+    ui.submit.addEventListener('click', function(event) {
+        if (ui.question.value == ''){
+            return mui.toast('请填写反馈意见');
+        } 
+        //plus.nativeUI.showWaiting();
+        // feedback.send({
+        //     content: ui.question.value,
+        //     images: ui.getFileInputIdArray()
+        // }, function() {
+        //     //plus.nativeUI.closeWaiting();
+        //     mui.toast('感谢您的发表~');
+        //     ui.clearForm();
+        //     mui.back();
+        // });
+        var imageArray = ui.getFileInputIdArray();
+        var images = [];
+        for(var index in imageArray){
+            var baseUrl = $('#'+imageArray[index]).parent().data('base64'); 
+            images[index] = baseUrl;
+        }
+
+        var imageLength = images.length; 
+        var image_files = [];
+        
+        function sentImage(index){
+            var index = index;
+            var postData = {
+                            fid:fid,
+                            uid:uid,
+                            images:images[index]
+                        };
+              api_ajax(2,
+              	'util_upload_img.php',
+              	postData,
+                function(ret, _, postData, index){
+					if (ret.code == 988) {
+						return;
+					}
+                    console.log(ret);
+                    if(ret.code == 100){
+                     	image_files[image_files.length] = ret.img;
+						index++;
+                        if(index<imageLength){
+                            sentImage(index);
+                        }else{
+                            sentMessage();
+                        }
+                    }
+                    //1mui.toast('感谢您的发表~');
+                },
+                index,
+                2);
+        }
+        
+        function sentMessage(){   
+            var postData = {
+                        uid:uid,
+                        message: ui.question.value,
+                        sysinfo: getSysInfo(),
+                        images: image_files
+                    };
+            api_ajax(2,
+            	'my_feedback.php',
+            	postData,
+            	function(ret, _, _, _){
+					if (ret.code == 988) {
+						return;
+					}
+        			if (ret.code ==100 ){
+            			console.log(ret);
+            			api.alert({msg:'感谢您的反馈,我们将及时作出处理'});
+            		} else {
+            			//alert(ret.code + "/" + ret.msg);	
+            		}
+                 	api.closeWin({});
+            	},
+            	0,
+            	0);
+        }
+        if(imageLength>0){
+            sentImage(0);
+        }else{
+            sentMessage();
+        }
+       	console.log(images[0]);        
+    }, false);
+})(mui, window, document, undefined);
+</script>
+
+<script>
+    var fid,uid;
+    $(function(){
+        
+    });
+    function publish(){
+        $('#submit').trigger('click');
+    }
+    apiready = function(){
+        var header = $api.byId('header');
+        $api.fixIos7Bar(header);
+       uid = $api.getStorage('uid');
+    }
+</script>
+</html>

@@ -1,0 +1,890 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>动态详情</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../css/topicDetail.css" />
+    <link rel="stylesheet" type="text/css" href="../css/topicDetail_body.css" />
+    <style>
+       /*#main{display1:none}*/
+      
+       .dianzan-bt{background-image:none!important}
+       .dianzan-bt>i{display:inline-block;width:30px;height:30px;font-size:1.3rem;color:#999;background-size:30px 30px}
+       .dianzan-bt>i:before{content:none}
+       .dianzan-bt>.fa-heart-o{background-image:url(../image/dianzan_ico.png)}
+       .dianzan-bt>.fa-heart{background-image:url(../image/dianzan_selected_ico.png)}
+       #commend-bt{text-align:center}
+       #commend-bt>i:before{content:none}
+       #commend-bt>i{display:inline-block;width:20px;height:20px;margin-top:7.5px;background-image:url(../image/reply_white_ico.png);background-size:20px 20px;background-repeat:none;background-position:center}
+       #share-bt{text-align:center}
+       #share-bt>i:before{content:none}
+       #share-bt>i{display:inline-block;width:18px;height:18px;margin-top:8px;background-image:url(../image/share_white_ico.png);background-size:18px 18px;background-repeat:none;background-position:center}
+       #check-allcomments-bt{padding:0.5rem 0;color:#999;font-size:0.6rem}
+       #check-allcomments-bt span{color:#999}
+       .more-recommend-header{margin:0.5rem 0.5rem;margin-top:0.5rem;font-size:0.7rem;height:1.4rem;border-bottom:1px solid #eee}
+       .more-recommend-header span{margin-top:0.2rem;padding:0 0.3rem;background-color:#fff}
+       .fa-commenting-o{display:inline-block;height:30px;width:30px;background-image:url(../image/comment_ico.png);background-size:30px 30px}
+       .fa-commenting-o:before{content:none}
+       .fa-heart-o:before{content:none}
+       .fa-heart-o{display:inline-block;height:18px;width:18px;background-size:18px 18px;background-image:url(../image/dianzan_ico.png)}
+       .fa-heart:before{content:none}
+       .fa-heart{display:inline-block;height:18px;width:18px;background-size:18px 18px;background-image:url(../image/dianzan_selected_ico.png)}
+       .recommend-to-user{display:inline-block;margin-right:0!important}
+       .reply-to-user{margin-right:0!important}
+       .none-comment{text-align:center}
+       .none-comment>img{margin-top:1rem;width:40%!important}
+       .follow-bt{float:right;width:2.5rem;text-align:center;margin-top: 0.15rem;}
+       .icon-fav {
+            color: #fdd600;
+        }
+        .v2-article-footer{margin:0.5rem 0;}
+        #content-body{background-color: #fff;}
+    </style>
+</head>
+<body>
+    <!-- <div class="topic-info">
+        <div id="author">
+            <img id="author-pic" src="" alt="楼主头像">
+            <span id="author-name"></span><span id="author-tag">楼主</span>
+            <span id="create-time"></span>
+        </div>          
+    </div> -->
+    <div id="wrap">
+        <div id="main">
+        	<div id="content_head">
+                <!-- <div class="author-info-box">
+                    <span>hth</span>&nbsp<span id="author-tag">楼主</span><br>
+                    <span style="font-size:12px;color:#ccc;">rtyrt</span>
+                </div> -->   
+            </div>
+        	<div id="content-body">
+                    <!-- <h1 class="topic-title detail-topic-title"></h1> -->
+                    <div class="topic-top-info">
+                        <div class="author-avator" data-uid="">
+                            <img id="author-avator-img" src="../image/bookmark_ico.png" width="30px"/>  
+                        </div>
+                        <div class="author-info-box">
+                            
+                            <span class="author-nickname detail-author-nickname" data-uid="">小贱</span>&nbsp<span class="color-blue" id="author-tag">测评专家</span><br>
+                        
+                            <span id="create-time" style="color:#ccc;">1分钟前</span>
+
+                        </div>
+                        <div class="item-right inline-block fr">
+                            
+                            <span class="follow-bt" onclick="followAuthor(this,event);">+关注</span>
+                        </div>
+                        <!-- <div class="view-count-wrap"><span>阅读&nbsp;</span><span id="view-count">448</span></div> -->
+                    </div>
+                    
+                    <div id="topic-context">
+                        
+                    </div>
+                    <div class="v2-article-footer"><div class="v2-article-footer-item"><i class="iconfont icon-xin vm" id="dianzan-icon" data-tid="38686" onclick="clickZan(this,event);"></i> <span class="dianzan-count vm" style="margin-left:0;"></span></div><span></span><div class="v2-article-footer-item">
+                    <div class="inline-block vm color-666" onclick="colloct();"> 
+                        <i class="collect-icon iconfont icon-fav-1"></i><span class="ml2 color-666">收藏</span>
+                    </div>
+                    </div><span></span><div class="v2-article-footer-item" onclick="openShare();"><i class="iconfont icon-item-share"></i> <span>分享</span></div></div>
+                    <!--
+                    <a id="fav" class="btn" tapmode="active" news-id="{{=it.id}}" >收藏</a>
+                    //-->   
+            </div>
+
+            <!-- <div class="wrap" id="copyright">
+                <div class="copyright-statement">
+                    <span class="copyright-title">© 版权声明</span>
+                    <br>                
+                    <span class="copyright-content">
+                        本文内容由&nbsp;<span class="author-nickname color-front" style="font-weight:700;"></span>&nbsp; 授权，经气泡整理发出，如有任何建议或合作意向请直接与气泡联系
+                    </span>
+                </div>
+            </div> -->
+<!--             <div class="dianzan-bt-wrap" style="display:none;">
+                <div class="dianzan-bt" onclick="clickZan();"><i class="topic-dianzan-ico fa fa-heart-o topic-content-dianzan-ico" id="content-dianzan-bt"></i></div><br>
+                <span class="color-999">TA们赞</span>
+            </div> -->
+            <!-- <div class="dianzan-user-list-wrap">
+                <ul class="dianzan-user-list">
+                    <li class="recommender" data-uid=""><img src="../image/user-icon.png" alt=""></li>
+                    <li class="recommender" data-uid=""><img src="../image/user-icon.png" alt=""></li>
+                    <li class="recommender" data-uid=""><img src="../image/user-icon.png" alt=""></li>
+                    <li class="recommender" data-uid=""><img src="../image/user-icon.png" alt=""></li>
+                    <li class="recommender" data-uid=""><img src="../image/user-icon.png" alt=""></li>
+                    <li class="recommender" data-uid=""><img src="../image/user-icon.png" alt=""></li>
+                </ul>
+                <div class="topic-dianzan-member topic-dianzan-count none">0</div>
+            </div> -->
+        	<div id="content_comment" style="display:none;border-top:0.5rem solid #eee;background-color:#fff;">
+                <!-- <div class="comment-bt-wrap" onclick="openAllComments();">
+
+                    <div class="comment-bt"><i class="fa fa-commenting-o"></i></div><br>
+                    <span class="color-999" style="background-color:#fff;padding:0 5px;">TA们说</span>
+                </div> -->
+                <div class="none-comment none" onclick="openAllComments();">
+                    <img src="../image/none_comment_express.png" alt="">
+                </div>
+
+                <div class="comment-body" style="margin-top:0.5rem;">
+                    <div class="ml6 f7" style="line-height:1.5rem;">回复(<span class="reply-count f7"></span>)</div>
+                    <div class='no-comment-wrap' onclick="openAllComments();">
+                        <img src="" alt="">
+                    </div>
+                     <ul class="comment-list">
+                        
+ 
+                     </ul>
+                     
+                </div>   
+            </div>
+            
+            <div class="tc"><span id="check-allcomments-bt" class="none" onclick="openAllComments();">查看所有<span class="reply-count">0</span>条回复 ></span></div>
+             <div class="" style="height:50px;"></div>
+
+            <div class="more-recommend-header tc none" style="padding-top:0px;"><span style="font-weight:700;">RELATED ITEMS</span><br><span style="font-size:0.5rem;">更多有趣内容</span></div>
+            <div id="activity" class="ad-list none" style="margin-top:0.5rem;">
+            </div>
+        </div>
+
+        
+        <div id="tool-bt-wrap" style="display:none;">
+            <div class="fixed-bt" id="dianzan-bt" onclick="clickZan();"><i class="topic-dianzan-ico fa fa-heart-o" id="fixed-dianzan-bt"></i><span class="topic-dianzan-count" id="topic-dianzan-count-bottom">0</span></div>
+            <div class="fixed-bt" id="commend-bt"><i class="fa fa-commenting"></i></div>
+            <div class="fixed-bt" id="share-bt" onclick="popShareBox();"><i class="fa fa-share-alt"></i></div>
+        </div>
+    </div>
+   
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/util/emoData.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/comment.js"></script>
+<script>
+
+var tid = '';
+var fid = '';
+var uid ='';
+var recommenderlist;
+var authorid;
+var recommenderUidArray = [];
+var isFirstLoad = true;
+var topicType = '';
+var isFollowed = 0;
+var isCollect = false;
+var FRAME_NAME = 'topicDetailCon';
+var viewCount = 0;
+
+//广告列表
+var adlist = {};
+//评论最大字数
+var COMMENT_MAX_LENGTH = 100;
+
+//收藏文章
+var lastCollectTime = 0;
+function colloct(){
+    var nowTime = (new Date()).valueOf();
+    if (nowTime-lastCollectTime < 1000) return;     
+    lastCollectTime = nowTime;
+    
+    var self = $('.collect-ico')
+    var act = 'add';
+
+    if(isCollected){
+        act = 'cancel';
+    }
+    
+    var ajaxUrl = 'my_favorite_topic_set.php';
+
+    api_ajax(2,
+        ajaxUrl,
+        {
+        tid:tid,
+        act:act
+        },
+        function(ret, _, _, tid) {
+            if (ret.code == 988)
+            {
+                return;
+            }
+            $api.setStorage('collect_tid', tid);
+                
+            console.log(ret);
+            if(ret.code == 100||ret.code == 102){
+                //setCollected(true);
+               
+                $api.setStorage('set_my_change', 1);
+                $api.setStorage('set_my_change_topic', 1);
+                if(isCollected){
+                   
+                    //playStar();
+                    $('.collect-icon').removeClass('icon-fav').addClass('icon-fav-1');
+                     isCollected = !isCollected;
+                     myToast('已取消收藏！');
+                }else{
+                    
+                    $('.collect-icon').addClass('icon-fav').removeClass('icon-fav-1');
+                     isCollected = !isCollected;
+                    myToast('收藏成功！');
+                }
+                //myToast(ret.msg);
+            }else if(ret.code = 104){
+                myToast(ret.msg);
+                isCollected = true;
+                $('.collect-icon').addClass('icon-fav').removeClass('icon-fav-1');
+            }else{
+                myToast(ret.msg);
+            }
+        },
+        tid,
+        0
+        );
+}
+
+//关注作者
+function followAuthor(self,e){
+    if(e) e.cancelBubble = true;
+    var act = 'add';
+    if(isFollowed) act = 'cancel';
+    favoriteUser(authorid,act,function(ret){
+        if(ret.code == 100){
+            if(isFollowed){
+                $(self).text('+关注').removeClass('bg-gray');
+                myToast('取消关注成功');
+                isFollowed = 0;
+            }else{
+                //$(self).text('取消关注').addClass('bg-gray');
+                $('.item-right').html('<span style="line-height:0.9rem;color:#999;margin-top:0.2rem;">阅读数:<span class="color-999">'+viewCount+'</span></span>');
+                myToast('关注成功');
+                isFollowed = 1;
+            }
+        }else if(ret.code == 101){
+            myToast(ret.msg);
+        }
+    });
+}
+
+function openAllComments(){
+    //console.log('open');
+    api.openWin({
+        name: 'reply-'+tid,
+        url: 'reply.html',
+        pageParam: {fid: fid,tid:tid}
+    });
+}
+
+function popShareBox() {
+    //$api.addCls(shareBox,'on');
+    api.openFrame({
+        name: 'share',
+        url: 'component/share-pop-frame.html',
+        bounces: false,
+        opaque: true,
+        vScrollBarEnabled: false,
+        pageParam: {},
+        rect: {
+            x: 0,
+            y: 0,
+            w: api.winWidth,
+            h: api.winHeight
+        }
+    });
+}
+
+function get_topic_datail() {
+    var ajaxUrl = 'topic_detail.php';
+
+    // if(tid == ''){
+    //     tid='7855';
+    // }
+    // console.log(tid );
+    // console.log(type);
+    // console.log($api.getStorage('uid'));
+    api_ajax(0,ajaxUrl,{
+                    tid:tid
+                },
+   	    function(ret, _, _, _){
+				if (ret.code == 988)
+				{
+					return;
+				}
+                console.log(ret['topics']);
+                if (ret['code'] == 100) {
+                    adlist = ret['topics']['adlist'];
+					fup = ret['topics']['fup'];
+                    tid = ret['topics']['tid'];
+                    fid = ret['topics']['fid'];
+
+                    isFollowed = ret['topics']['me_fav_ta'];
+                    
+
+                    if(adlist && fup == '57'){	//fup=1 话题；fup=57 文章
+                        //listAd(adlist);    
+                    }
+                    //$('#tool-bt-wrap').show();
+                    /*
+                    api.execScript({
+                        name:'topicDetail-'+tid,
+                        script:'showFooter();'
+                    });
+					*/                    
+                    //alert($api.jsonToStr(ret));
+                    var content_head = $api.byId('content_head');
+                    content_head.innerHTML = "";
+                    if (ret['topics']['movies'] !== "") {
+                        var vStr = "";
+                        vStr += "<video id='player' width='100%' controls='controls'  preload='auto' autoplay='autoplay' webkit-playsinline>";
+                        vStr += "<source type ='video/mp4' src='" + ret['topics']['movies'] + "'>";
+                        vStr += "   抱歉，您的浏览器不支持video标记，请使用其他浏览器";
+                        vStr += "   </video>";
+                        content_head.innerHTML += vStr;
+                    }
+                    $('#author-avator-img').attr('src',ret['topics']['authorimage']);
+                    $('.detail-author-nickname').text(ret['topics']['nickname']);
+                    if(ret['topics']['title']!=''){
+                        var html = '本文内容由&nbsp;<span class="author-nickname color-front" style="font-weight:700;" onclick="openUserSpace('+ret['topics']['authorid']+');">'+ret['topics']['nickname']+'</span>&nbsp; 授权，经气泡整理发出，如有任何建议或合作意向请直接与气泡联系';
+                        $('.copyright-content').html(html);
+                    }                    
+
+                    authorid = ret['topics']['authorid'];                    
+
+                    if(fup == '1'){
+                        //alert('dfsd');
+                        $('#copyright').hide();
+                        $('.topic-title').remove();
+                    }
+                    if(ret['topics']['tag']){
+                        $('#author-tag').text(ret['topics']['tag']);    
+                    }else{
+                        $('#author-tag').remove();
+                    }
+                    
+                    $('#view-count').text(ret['topics']['viewcount']);
+                    viewCount = ret['topics']['viewcount'];
+                    if(isFollowed){
+                        //$('.follow-bt').text('取消关注').addClass('bg-gray');
+                        $('.item-right').html('<span style="line-height:0.9rem;color:#999;margin-top:0.2rem;">阅读数:<span class="color-999">'+viewCount+'</span></span>');
+                    }
+                    var dianzanCount = parseInt(ret['topics']['recommend']);
+                    dianzanCount = dianzanCount>999?'999+':dianzanCount;
+                    $('.topic-dianzan-count').text(dianzanCount);
+                    api.execScript({
+                        name: 'topicDetail-'+tid,
+                        script: 'setDianzanCount(\''+dianzanCount+'\');'
+                    });
+                    
+                    $('.detail-topic-title').text(ret['topics']['title']);
+                    $('#create-time').text(ret['topics']['createdate']);
+                    
+                    
+                    // api.execScript({
+                    //     name:'topicDetail-'+tid,
+                    //     script:'setCommentCount(\''+ret['topics']['commentcount']+'\');'
+                    // });
+                    $('.reply-count').text(ret['topics']['commentcount']);
+                   
+                    //$('#topic-dianzan-count-bottom').text(ret['topics']['commentcount']);
+                    
+                    if(ret['topics']['favorite'] == 1){
+                       isCollected = true;
+                       $('.collect-icon').addClass('icon-fav').removeClass('icon-fav-1');
+
+                    }else{
+                        isCollected =false;
+                    }
+                    //getRecommenderList();
+                    get_content_comment();
+
+                    api.parseTapmode();
+                    if (ret['topics']['movies'] !== "") {
+                        $api.byId('player').play();
+                    }
+
+					$('#main').show();
+					
+                    $('.dianzan-count').text(ret['topics']['recommend']);
+                    $('#dianzan-icon').data('tid',ret['topics']['tid']);
+                    //判断是否已点赞
+                    if(ret['topics']['myrecommend'] == 1){                        
+                        $('#dianzan-icon').addClass('icon-xin-fill color-red').removeClass('icon-xin');
+                    }
+
+
+                    $api.setStorage('current_topic_tid',ret['topics']['tid']);
+                    $api.setStorage('current_topic_authorid',ret['topics']['authorid']);
+                    $api.setStorage('current_topic_fid',ret['topics']['fid']);                    
+  
+                    
+                    $api.setStorage('current_title',ret['topics']['title']);
+                    $api.setStorage('current_url',ret['topics']['share_url']);
+                    $api.setStorage('current_img_url',api.pageParam.imgUrl);                            
+                    $api.setStorage('current_desc',ret['topics']['summary']);       
+					api.execScript({
+                    	name:'topicDetail-'+tid,
+                    	script:'showFooter();'
+                	});                       
+                   	get_content_body();                            
+                   }
+                },null,0);
+    
+    $('#commend-bt').click(function(){
+        api.openWin({
+            name:'reply',
+            url:'reply.html',
+            pageParam:{
+                fid:fid,
+                tid:tid
+            }
+        });
+    });
+
+};
+
+var picCount = 0;
+var picUrl = Array();
+function get_content_body() {
+	var ajaxUrl = 'topic_detail_body.php';
+    api_ajax(0,
+    	ajaxUrl,
+    	{
+    	tid:tid
+		},
+        function(ret, _, _, _) {
+			if (ret.code == 988)
+			{
+				return;
+			}
+            console.log(ret);
+            //console.log(ret);
+            $('#main').show();
+            if(ret.code == 100) {
+				var isBreak = ret.result.isBreak;          
+            	ret = ret.result.content;       
+ 				//if(ret.indexOf('Powered by Discuz')>0) {
+ 				//	ret = '你访问的话题('+tid+')被管理员禁止，请和管理员联系。';
+ 				//} 				
+  				if (isBreak == 0) {              
+	                if($api.getStorage('isLimitData')=='true'){
+	                    ret = ret.replace(/<img .*?>/g, '');
+	                } 
+	                var reg = new RegExp('<a href=\".*?</a>', 'g');
+	                var reg1 = new RegExp('href=\".*?\"', 'g');
+	                var reg2 = new RegExp('src=\".*?\"', 'g');
+	                var cc = "";
+	                var ret1 = ret;
+	                while ((rr = reg.exec(ret1)) != null) {
+	                    //r += rr+"\r\n";
+	                    cc = "" + rr;
+	                    //r += "rr.input="+rr.input+"</br>";
+	                    ss = cc.match(reg2);
+	                    //r += "SS="+ss+"\r\n";
+	                    hh = cc.match(reg1);
+	                    //r += "HH="+hh+"\r\n";
+	                    //r += "rr.index="+rr.index+"\r\n";
+	                    //r += "rr.lastIndex ="+rr.lastIndex +"\r\n";
+	                    var cc1 = cc.replace("" + hh, "href=\"#\" onclick=\"return openImageBrowser(" + picCount + ");\"");
+	                    ret = ret.replace(cc, cc1); //+"__/"+picCount+"/"); 
+	                    var ss1 = "" + ss;
+	                    ss1 = ss1.replace("src=\"", "");
+	                    ss1 = ss1.replace("\"", "");
+	                    picUrl[picCount] = ss1;
+	                    picCount++;
+	                }
+                }
+                $('#topic-context').html(ret);
+    
+            } 
+     
+            if(isBreak){
+                $('.dianzan-bt-wrap').hide();
+				$('.dianzan-user-list-wrap').hide();
+                $('#content_comment').hide();
+            } else {
+               // $('.dianzan-bt-wrap').show();
+				//$('.dianzan-user-list-wrap').show();
+                //$('#content_comment').show();
+			}
+     }, 0, 1);
+}
+
+
+function openImageBrowser(index) {
+	var obj = api.require('imageBrowser');
+
+	obj.openImages({
+	    imageUrls: picUrl,
+	    showList:false,
+	    activeIndex:index
+	});
+    return false;
+}
+
+// function getRecommenderList(){
+//     var ajaxUrl = 'topic_detail_recommender.php';
+//     var data = {
+//         tid:tid,
+//         page:1,
+//         psize:7
+//     }
+//     api_ajax(1, ajaxUrl, data, after_GetRecommenderList, null, 0);
+// }
+
+// var recommenderUidArrayT = [];
+// function after_GetRecommenderList(ret,ajaxUrl,data,others)
+// {
+// 	if (ret.code == 988)
+// 	{
+// 		return;
+// 	}
+//     console.log(ret);
+//     if (ret.code == 100) {
+// 	    recommenderlist = ret.data.info.list;
+// 	    var remommenderLength = ret.data.info.pageinfo.recordcount;
+// 	    $('.topic-dianzan-member').hide();
+// 	    if(remommenderLength>6){
+// 	        $('.topic-dianzan-member').css({'display':'inline-block'});
+// 	    }
+//  console.log(remommenderLength);
+// 	    $('.topic-dianzan-member').text(remommenderLength);
+	       
+//         var recommenderListHtml = '';
+// 	    for(var index in recommenderlist){
+// 	        var recommender = recommenderlist[index];
+// 	        //console.log(recommender[index].imageurl);
+// 	        // $('.recommender').eq(index).children('img').attr('src',recommender.ui);
+// 	        // $('.recommender').eq(index).data('uid',recommender.userid);
+// 	        recommenderUidArray[index] = recommender.userid;
+//             var html = '<li class="recommender" data-uid="'+recommender.userid+'" onclick="openUserSpace('+recommender.userid+')"><img class="default-avator" src="'+recommender.ui+'" alt=""></li>';
+//             recommenderListHtml += html;
+//         }
+//         //$('.dianzan-user-list').html(recommenderListHtml);
+//         $('.dianzan-user-list').html(recommenderListHtml);
+
+//         if(remommenderLength == 0){
+//             $('.dianzan-bt-wrap').hide();
+//             $('.dianzan-user-list-wrap').hide();
+//         }else{
+//             $('.dianzan-bt-wrap').show();
+//             $('.dianzan-user-list-wrap').show();
+//         }         
+//     }else{
+//         $('.dianzan-bt-wrap').hide();
+//         $('.dianzan-user-list-wrap').hide();
+//     }
+// }
+
+function listAd(adlist){
+    $('.more-recommend-header').show();
+    $('.ad-list').show();
+    listArticle(adlist,'.ad-list');
+}
+
+function get_content_comment() {
+    //console.log('hhhhh');
+    var postData = {
+            	tid:tid,
+            	page:1,
+            	psize:3
+            };
+     api_ajax(0,
+    	'topic_comment_list.php',
+    	postData,
+        function(ret, _, _, tid) {
+				if (ret.code == 988)
+				{
+					return;
+				}
+	            if (ret['code'] == 100) {
+	                try{	                	
+	                    console.log(ret);
+	            		var uid = $api.getStorage('uid');
+	                    var count = ret.pageinfo.recordcount;
+                        if(count == 0){
+                            $('.none-comment').show();
+                        }else{
+                            $('.no-comment-wrap').hide();
+                            $('.none-comment').hide();
+                        }
+                        
+	                    // api.execScript({
+	                    //     name:'topicDetail-'+tid,
+	                    //     script:'setCommentCount(\''+count+'\');'
+	                    // });  
+
+                        
+                        $('.reply-count').text(count);
+                        if(ret.pageinfo.totalpage>1){
+                            $('#check-allcomments-bt').show();
+                        }
+
+	                    //console.log(count);
+						var tid = postData.tid;
+	                    var commentsHtml = getCommentHtml(ret);
+
+
+	                    $('.comment-list').html(commentsHtml);	                    
+						$('#content_comment').show();
+
+	                    $('.reply-to-user').on('click',function(){
+	                        var comment_item = $(this).parent().parent().parent();
+	                        var toUserInfo = $("<p>").append(comment_item.clone()).html();
+	                        var pid = comment_item.data('pid');
+                            var position = $(this).data('position');
+	                        api.openWin({
+	                            name:   'replyUser',
+	                            url:    'replyUser.html',
+	                            pageParam: {toUserInfo: toUserInfo,
+	                                        pid:pid,
+                                            position:position
+	                                    },
+	                            reload: false,
+	                            bounces: true,
+	                            opaque: true,
+	                            vScrollBarEnabled: true,
+	                            softInputMode: 'resize'
+	                        });
+                            return false;
+	                    });
+	                }catch(e){
+	                }  
+	           }else{
+                    //$('.none-comment').show();
+                    $('#content_comment').hide();
+               };
+			isFirst = 0;
+            //openGuide('topic-detail-guide');
+
+    },tid,0);
+}
+
+function replyToUser(self){
+    $(self).find('.reply-to-user').trigger('click');
+}
+
+function dianzanToUserV(count_dom,e){
+    if(e){e.cancelBubble = true;}
+    $(count_dom).prev('.reply-img').trigger('click');
+    return false;
+}
+
+// function dianzanToUser(dianzan_dom,e){
+//     playHeart();
+//     if(e){e.cancelBubble = true;}
+//     var comment_item = $(dianzan_dom).parent().parent().parent();
+//     var pid = comment_item.data('pid');
+    
+//     var postData = {
+//             	pid:pid
+//             };  
+//     api_ajax(2,
+//     	'topic_comment_recommend.php',
+// 		postData,
+//         function(ret,_, postData, dianzan_dom){
+// 				if (ret.code == 988)
+// 				{
+// 					return;
+// 				}
+//         		var uid = $api.getStorage('uid');
+// 				var pid = postData.pid;
+						
+// 	            console.log(pid+''+uid);
+// 	            $api.setStorage(pid+''+uid,1);
+//                 var $dianzan_ico = $(dianzan_dom).children('i');
+// 	            if($dianzan_ico.hasClass('fa-heart-o')){
+// 	                $dianzan_ico.addClass('fa-heart').removeClass('fa-heart-o').css('color','#ff6263');    
+// 	            }
+// 	            var $dianzan_count = $dianzan_ico.next('span');
+// 	            var current_count = parseInt($dianzan_count.text());
+// 	                current_count++;
+// 	                if(current_count>999){
+// 	                    current_count = 999+'+';
+// 	                }
+// 	            $dianzan_count.text(current_count);
+//     	},
+//     	dianzan_dom,
+//     	0);
+     
+// }
+
+var isClickZaned = false;
+var lastZanTime = 0; 
+function clickZan() {
+	var nowTime = (new Date()).valueOf();
+	if (nowTime-lastZanTime < 1000) return;	
+	lastZanTime = nowTime;
+    playHeart();    
+    // var tid = api.pageParam.id;
+    var uid = $api.getStorage('uid');
+    //!isInArray(recommenderUidArray,uid)
+    // if(!isInArray(recommenderUidArray,uid)){
+    //     var html = '<li class="recommender" data-uid="'+uid+'"><img src="'+$api.getStorage('user_image')+'" alt=""></li>';
+    //     $('.dianzan-user-list').prepend($(html));
+    //     if(recommenderUidArray.length>5){
+    //         $('.topic-dianzan-member').show();
+    //         $('.recommender:last-child').remove();
+    //     }
+    // }
+    
+    var ajaxUrl ='topic_recommend_add.php';
+    console.log(uid+"/"+tid);
+    api_ajax(2,
+            ajaxUrl,
+            {
+                tid:tid,
+                uid:uid
+            },
+
+        function(ret, _, _, _){
+				if (ret.code == 988)
+				{
+					return;
+				}
+                console.log(ret);
+                if (ret['code'] == 100) {
+                        //alert('success');
+						 $('.dianzan-bt-wrap').show();
+						 $('.dianzan-user-list-wrap').show();
+                         $api.setStorage(tid+''+uid,1);
+                         var $topic_dianzan_count = $('#topic-dianzan-count-bottom'); 
+                         var currentCount = parseInt($topic_dianzan_count.text()); 
+                         currentCount++;
+                         if(currentCount>999){
+                            currentCount = 999+'+';
+                         }
+                         if(!isClickZaned){
+                            getRecommenderList();
+                         }
+                         isClickZaned = true;
+                         console.log(currentCount);
+                         api.execScript({
+                            name:'topicDetail-'+tid,
+                            script:'setDianzanCount(\''+currentCount+'\');'
+                         });
+                         api.execScript({
+                            name:'topicDetail-'+tid,
+                            script:'setDianzan();'
+                         });
+
+                    $topic_dianzan_count.text(currentCount);
+                    // if($('.topic-dianzan-ico').hasClass('fa-heart-o')){
+                    //     $('.topic-dianzan-ico').css({'color':'#ff6263'});    
+                    // }
+                   if($('.topic-content-dianzan-ico').hasClass('fa-heart-o')){                       
+                        $('.topic-dianzan-ico').removeClass('fa-heart-o').addClass('fa-heart').css({'color':'#ff6263'});    
+                   }
+                       
+                  }  
+            },
+        null,0);
+}
+
+function detailPlayStar(){
+    playStar();
+}
+ function inputCallback(ret) {
+    //点击发送按钮文字
+    if (ret.eventType == 'send') {
+        postReply(ret.msg);
+    }
+}
+
+function postReply(msg){
+    if(msg == ''){
+        myToast('说点什么吧');
+        return false;
+    }
+    var reply_text;// = $('#comment-content').val();
+    var postData = {    
+                fid: fid,
+                tid: tid,
+                uid: uid,
+                //parentCommentId:$('.user-id').html(),
+                content:msg
+                };
+        
+   api_ajax(2,
+        'topic_comment_add.php',
+         postData,
+         function(ret,_,postData,_){
+            // alert(ret.code);
+            if (ret.code == 988) {
+                return;
+            }
+             if (ret.code == 104) {
+                    myToast(ret.msg);
+            } else if (ret.code == 100) {
+                console.log(ret);
+                myToast(ret.msg);
+                get_content_comment();
+            }
+    },
+    0,
+    0); 
+}
+
+$('.topic-dianzan-member').click(function(){
+    //openWin('recommend-users');
+    api.openWin({
+        name:'recommend-users',
+        url:'recommend-users.html',
+        pageParam:{
+            fid:fid,
+            tid:tid,
+            recommenderlist:recommenderlist    
+        }
+    });
+});
+
+$('.recommender').click(function(){
+    var uid = $(this).data('uid');
+    if(uid != ''){
+        openUserSpace(uid);    
+    }        
+});
+
+$('.author-nickname').click(function(){
+    openUserSpace(authorid);
+});
+
+$('.author-avator').click(function(){
+    openUserSpace(authorid);
+});
+
+var tid = '';
+var fid = '';
+var uid ='';
+var recommenderlist;
+var authorid;
+var recommenderUidArray = [];
+var isFirstLoad = true;
+var adlist = {};
+var isFirst = 1;
+var fup = '';
+
+apiready = function() {
+
+    isDev =false;
+
+    tid = api.pageParam.tid;    
+
+    console.log(tid);
+
+    get_topic_datail(); 
+
+
+	api.addEventListener({
+           name:'reply'
+      },function(ret,err){	   
+    		setTimeout(function () {
+    			get_content_comment();
+    	  	}, 50);
+    });
+
+    openInputField(inputCallback);
+}
+$(function(){
+    initDev();
+});
+</script>
+</html>

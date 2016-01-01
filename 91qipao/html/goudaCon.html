@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>勾搭</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <style>
+        #header{background-color:#fff}
+        .header-left{position:absolute;left:.5rem;line-height:44px}
+        .info-ico{background-image:url(../image/gouda/info_ico.png)}
+        .dianzan-ico{width:16px!important;height:16px!important;background-image:url(../image/gouda/dianzan_ico.png)}
+        .info-count{color:#fff;display:inline-block;line-height:14px;width:15px;height:15px;font-size:12px;border-radius:50%;background-color:#f33;vertical-align:middle}
+        #header h1{font-size:16px}
+        #wrap{height:100%;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-flow:column;flex-flow:column}
+        #main{-webkit-box-flex:1;-webkit-flex:1;flex:1}
+        .forward-icon{display:inline-block;position:absolute;right:.8rem;width:.31rem;height:.6rem;margin-top:.7rem;background-image:url(../image/arr-r.png);background-size:100% 100%}
+        .main-nav{margin-top:0}
+        .main-nav>li{position:relative;line-height:2rem;text-align:left;padding-left:.8rem;/*border-bottom:1px solid #eee;*/background-color:#fff;font-size:.6rem}
+        .main-nav>li:after{
+            position: absolute;
+            right: 0.5rem;
+            bottom: 0;
+            left: 0.5rem;
+            height: 1px;
+            content: '';
+            -webkit-transform: scaleY(.5);
+            transform: scaleY(.5);
+            background-color: #eee;
+        }
+        .main-nav>li span{margin-left:.5rem;vertical-align:middle}
+        .main-nav>li i{display:inline-block;width:18px;height:18px;vertical-align:middle;background-size:100% auto;background-repeat:no-repeat;background-position:center}
+        .fa-heart-o:before{content:none}
+        .fa-heart-o{display:inline-block;width:14px;height:14px;background-size:14px 14px;background-image:url(../image/gouda/dianzan_ico.png);vertical-align:middle}
+        .fa-commenting-o{display:inline-block;width:14px;height:14px;background-image:url(../image/gouda/reply_ico.png);background-size:18px auto!important;vertical-align:middle}
+        .fa-commenting-o:before{content:none}
+        .fa-envelope-o{background-image:url(../image/gouda/pm_ico.png);background-size:100% auto!important}
+        .main-nav>li>.count{position:absolute;right:1.6rem;top:.7rem}
+        .fa-bell-o{background-size: auto 100% !important;}
+        .mui-badge {
+        font-size: 12px;
+        line-height: 1;
+        display: inline-block;
+        padding: 3px 6px;
+        color: #333;
+        border-radius: 100px;
+        background-color: rgba(0,0,0,.15);
+        }
+        .mui-badge-danger, .mui-badge-red {
+            color: #fff;
+            background-color: #dd524d;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="main" style="margin-top:0.5rem;">
+            <ul class="main-nav" id="main_ul">
+                <li class="" id="notice-tab">
+                    <i class="info-ico fa fa-bell-o"></i>
+                    <span>消息</span>
+                    <div class="count mui-badge mui-badge-danger" id="n_count" style="display:none">2</div>
+                    <!-- <span class="mui-badge mui-badge-danger">456</span> -->
+                    <a class="forward-icon" tapmode="" onclick=""></a>
+                </li>
+                <li class="" id="likeme-tab" style="margin-top:0.5rem;">
+                    <i class="dianzan-ico fa fa-heart-o"></i>
+                    <span>赞我的</span>
+                    <div class="count mui-badge mui-badge-danger" id="l_count" style="display:none;">2</div>
+                    <a class="forward-icon" tapmode="" onclick=""></a>
+                </li>
+                <li class="" id="replyme-tab">
+                    <i class="fa fa-commenting-o"></i>
+                    <span>回复我的</span>
+                    <div class="count mui-badge mui-badge-danger" id="r_count" style="display:none;">2</div>
+                    <a class="forward-icon" tapmode="" onclick=""></a>
+                </li>
+                <li class="" id="pm-index-tab" style="margin-top:0.5rem;">
+                    <i class="fa fa-envelope-o"></i>
+                    <span>私信</span>
+                    <div class="count mui-badge mui-badge-danger" id="p_count" style="display:none;">2</div>
+                    <a class="forward-icon" tapmode="" onclick=""></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/common.js"></script>
+    <script>
+        function openWindow(name){
+		 	var action = "openWindow('"+name+"')";
+		 	if (!checkLogin(action, 'goudaCon')) 
+	 			return;        
+            api.openWin({        
+                name:   name,
+                url:    name+'.html',
+                pageParam: {},
+                reload: false,
+                opaque: true,
+                bounces:false,
+                vScrollBarEnabled: false,
+                softInputMode: 'resize'
+            });
+        }
+  
+        function set_div(id, data) {
+            if (data == "")
+                $("#"+id).css("display","none");
+            else {
+                $api.byId(id).innerHTML = data;
+                $("#"+id).css("display","block");
+            }   
+        } 
+        
+        $('#notice-tab').click(function(){
+            openWindow('gouda-notice');
+        });        
+        $('#likeme-tab').click(function(){
+            openWindow('gouda-likeme');
+        });
+        $('#replyme-tab').click(function(){
+            openWindow('gouda-replyme');
+        });
+        $('#pm-index-tab').click(function(){
+            openWindow('gouda-pm-index');
+        });
+            
+	   var canMore = 1;
+	   var lastTime = 0; 
+       apiready = function(){            
+		   lastTime = (new Date()).valueOf();
+	       api.setRefreshHeaderInfo({
+	           visible: true,
+	           loadingImgae: 'wgt://image/refresh.gif',
+	           bgColor: '#f2f2f2',
+	           textColor: '#4d4d4d',
+	           textDown: '下拉刷新...',
+	           textUp: '松开刷新...',
+	           showTime: false
+	       }, function (ret, err) {
+	       		api.hideProgress();
+		        var nowTime = (new Date()).valueOf();
+		        if (nowTime-lastTime > 5000) {		//5*1000 = 5000
+		        	lastTime = nowTime;  
+		        	if (canMore)       		
+		       	    	get_gouda_datainfo(1);
+		         }
+		        api.refreshHeaderLoadDone();
+	       });
+	        
+           get_gouda_datainfo(1);   
+                    
+           api.addEventListener({
+                   name:'viewappear'
+              },function(ret,err){
+			        api.execScript({
+			            name: 'root',
+			            script: 'checkCurPid("gouda","goudaCon")'
+        			});
+			});  
+
+     }  
+     
+function view_appear() {
+	get_gouda_datainfo(1);
+	console.log("view_appear(goudaCon)");
+}          
+
+</script>
+        
+</body>
+</html>

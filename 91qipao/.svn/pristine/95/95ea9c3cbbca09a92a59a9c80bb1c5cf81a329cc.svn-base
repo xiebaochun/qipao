@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>个人签名</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <style>
+        .text-area-wrap{margin-top:0.8rem;padding:0.5rem;background-color:#fff;}
+        .edit-area{width: 100%;line-height: 0.8rem; font-size:0.6rem;outline: none;resize:none;}
+        #remain-count{position: absolute;display: block;bottom:10px;right:10px;color:#999;font-size: 0.6rem;}
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <a class="back-icon iconfont icon-arrow-left" tapmode="" onclick="api.closeWin();"></a>
+            <h1 class="">个人签名</h1>
+            <a class="header-right-txt" tapmode onclick="save();">保存</a>
+        </div>
+        <div style="position:relative;">
+            <div class="text-area-wrap">
+                <textarea name="" class="edit-area" id="my-sign" cols="30" rows="10" resize="disable" placeholder="说的叼一点，吓死别人" oninput="onInput(this);"></textarea>    
+            </div>
+            <span id="remain-count">128</span>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script>
+    //限制输入长度
+    var LIMIT_CHAR_COUNT = 128;
+    var $remainCount;
+
+    $(function(){
+        initDev();
+    });
+    apiready = function(){
+        $remainCount = $('#remain-count').text( LIMIT_CHAR_COUNT );
+    }
+    function onInput( self ){
+        var remainCount = LIMIT_CHAR_COUNT - $(self).val().length;
+        remainCount = remainCount > 0 ? remainCount : getRemainCount( $(self) );
+        $remainCount.text( remainCount );
+    }
+    function getRemainCount( $textArea ){
+        $textArea.val($textArea.val().substring(0,LIMIT_CHAR_COUNT));
+        return 0;
+    }
+    function save(){
+        api.ajax({
+
+        });
+        afterSave();
+    } 
+    function afterSave(){
+        myToast('保存成功！');
+        setTimeout(function(){
+            api.closeWin();
+        },1000);
+    }   
+</script>
+</html>

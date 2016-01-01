@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+        <meta name="format-detection"content="telephone=no">
+        <title>泡币规则</title>
+        <link rel="stylesheet" type="text/css" href="../css/common.css" />
+        <style>
+            #wrap{
+                height: 100%;
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -webkit-flex-flow: column;
+                       flex-flow: column;
+            }
+            #main{
+                -webkit-box-flex: 1; 
+                -webkit-flex: 1;
+                flex: 1;
+                background-color: #fff;
+                padding:0.5rem;
+            }
+            .banner{padding-top:0.5rem;text-align: center;}
+            .paobi-mascot{
+                width: 5rem;
+                height: 3rem;
+                line-height: 3rem;
+                border:1px solid #999;
+                border-radius: 2rem;
+                margin:1rem auto;
+                text-align: center;
+            }
+            .item-avator{width: 2.5rem;height: 2.5rem;}
+            .caculate-item{line-height: 1rem;color:#999;}
+            .caculate-item>span{color:#999;}
+            .huangguan-wrap{display: inline-block;position: relative;}
+            .huangguan{width: 1.2rem;}
+            .level-item{padding-top:0.5rem;line-height: 1.5rem;border-bottom: 1px solid #eee;}
+            .level{display: inline-block;position: absolute;top:0rem;left: 0.5rem;font-size:0.3rem; color:#ffd478;}
+        </style>
+    </head>
+    <body>
+        <div id="wrap">
+            <div class="fixed-header" id="header">
+                <a class="back-icon iconfont icon-arrow-left" tapmode onclick="api.closeWin();"></a>
+                <h1>泡币规则</h1>
+                <a class="header-right-txt"></a>
+            </div>
+            <div style="height:50px;"></div>
+            <div id="main">
+                <div class="banner">
+                    <!-- <div class="paobi-mascot">泡币吉祥物</div> -->
+                    <img class="item-avator" id='user-avator' src="" alt=""><br>
+                    <span class="mt10 f6">我的泡币</span><br>
+                    <span class="color-red f4" id='money'>现有泡币：12</span><br>
+                    <span class="color-999 f4" id='money_sum'>历史总泡币：30</span><br>
+                </div>
+                <h1 class="title f6 color-red fw-700" style="line-height:1.5rem;">泡币详细规则</h1>
+                <div class="paobi-rule">
+                    <div class="content">
+                        <h1 class="f6 color-000 fw-700" style="line-height:1.3rem;">泡币的价值</h1>
+                        <p class="color-999">
+                            通过各种互动获得的泡币可以用户提升等级等级越高拥有的特权就越高。
+                        </p>
+                        <p class="color-999">
+                            泡币可在泡币商城中兑换等价值的商品。
+                        </p>
+                       <!--  <p>
+                            100泡币＝1元，可兑换泡币商城所有物品。
+                        </p> -->
+                    </div>
+                </div>
+                <div class="paobi-caculate">
+                    <h1 class="fw-700 color-red f6 mt30" style="line-height:1.5rem;">泡币的计算</h1>
+                    <h1 class="f6 fw-700" style="line-height:1.2rem;">如何获得泡币<span class="f4 color-999">（主动获得）</span></h1>
+                    <div class="caculate-item">每日签到 <span class="pull-right">+1</span></div>
+                    <div class="caculate-item">连续签到7天（额外奖励）<span class="pull-right">+50</span></div>
+                    <div class="caculate-item">给动态点赞<span class="pull-right">+1</span></div>
+                    <div class="caculate-item">给动态回复<span class="pull-right">+1</span></div>
+                    <div class="caculate-item">发布动态<span class="pull-right">+5</span></div>
+                    <div class="caculate-item">分享气泡<span class="pull-right">+30</span></div>
+
+                    <h1 class="f6 fw-700 mt10" style="line-height:1.2rem;">如何获得泡币<span class="f4 color-999">（被动获得）</span></h1>
+                    <div class="caculate-item">动态被动推荐<span class="pull-right">+20</span></div>
+                    <div class="caculate-item">动态被动点赞<span class="pull-right">+1</span></div>
+                    <div class="caculate-item">被关注<span class="pull-right">+1</span></div>
+
+                    <h1 class="f6 fw-700 mt10" style="line-height:1.2rem;">贡献或被处罚<span class="f4 color-999">（核实后奖励及扣罚）</span></h1>
+                    <div class="caculate-item">有效的动态举报<span class="pull-right">+10</span></div>
+                    <div class="caculate-item">发布违规动态<span class="pull-right">-10</span></div>
+                    <div class="caculate-item">发布违规的回复<span class="pull-right">-10</span></div>
+                    <div class="caculate-item">删除已发布的内容<span class="pull-right">-5</span></div>
+
+                </div>
+                <h1 class="fw-700 color-red f6 mt30" style="line-height:1.5rem;">泡币等级划分</h1>
+                <ul class="level-list">
+                    <li class="level-item">
+                        <div class="huangguan-wrap">
+                            <img class="huangguan" src="../image/level_huangguan.png" alt="">
+                            <span class="level">1</span>
+                        </div>
+                        <span class="pull-right">0泡币</span>
+                    </li>
+                    <li class="level-item">
+                        <div class="huangguan-wrap">
+                            <img class="huangguan" src="../image/level_huangguan.png" alt="">
+                            <span class="level">2</span>
+                        </div>
+                        <span class="pull-right">50泡币</span>
+                    </li>
+                    <li class="level-item">
+                        <div class="huangguan-wrap">
+                            <img class="huangguan" src="../image/level_huangguan.png" alt="">
+                            <span class="level">3</span>
+                        </div>
+                        <span class="pull-right">300泡币</span>
+                    </li>
+                    <li class="level-item">
+                        <div class="huangguan-wrap">
+                            <img class="huangguan" src="../image/level_huangguan.png" alt="">
+                            <span class="level">4</span>
+                        </div>
+                        <span class="pull-right">800泡币</span>
+                    </li>
+                    <li class="level-item">
+                        <div class="huangguan-wrap">
+                            <img class="huangguan" src="../image/level_huangguan.png" alt="">
+                            <span class="level">5</span>
+                        </div>
+                        <span class="pull-right">2000泡币</span>
+                    </li>
+                    <li class="level-item">
+                        <div class="huangguan-wrap">
+                            <img class="huangguan" src="../image/level_huangguan.png" alt="">
+                            <span class="level">6</span>
+                        </div>
+                        <span class="pull-right">10000以上泡币</span>
+                    </li>
+                </ul>
+                <h1 class="fw-700 color-red f6 mt20" style="line-height:1.5rem;">泡币补充说明</h1>
+                <p class="color-999 mb30">泡币等级和泡币兑换是为了更好地回馈亲们，我们不允许刷榜及恶意灌水发布等行为，各种刷榜行为被发现后将扣除违规泡币或清零泡币，严重给予封号。</p>
+            </div>
+
+        </div>
+        <script type="text/javascript" src="../script/api.js"></script>
+        <script type="text/javascript" src="../script/common.js"></script>
+        <script>
+            $(function(){
+                initDev();
+            });
+            apiready = function(){
+                var header = $api.byId('header');
+    			$api.fixIos7Bar(header);
+    			
+            	$('#user-avator').attr('src',$api.getStorage('userimage'));
+                var money = $api.getStorage('my_money');
+                $('#money').html("现有泡币："+money.money); 
+                $('#money_sum').html("历史总泡币："+money.money_sum);                
+            } 
+        </script>
+    </body>
+</html>

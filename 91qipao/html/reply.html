@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>全部回复</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <style>
+        body{background-color:#fff}
+        #wrap{height:100%;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-flow:column;flex-flow:column}
+        #main{-webkit-box-flex:1;-webkit-flex:1;flex:1;background-color:#fff;margin-top:44px}
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <a class="back-icon iconfont icon-arrow-left" tapmode="" onclick="api.closeWin();"></a>
+            <h1>全部回复(<span class="reply-count">0</span>)</h1>
+        </div>
+        <div id="main">
+            
+        </div>
+    </div>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/common.js"></script>
+    <script>
+        apiready = function(){
+            var header = $api.byId('header');
+            $api.fixIos7Bar(header);
+            var fid = api.pageParam.fid;
+            var tid = api.pageParam.tid;
+            $api.setStorage('current_topic_fid',fid);
+            $api.setStorage('current_topic_tid',tid);
+
+            var header = $api.byId('header');
+            var headerPos = $api.offset(header); 
+            var width = api.winWidth;
+            var height = api.winHeight - headerPos.h;
+            api.openFrame({
+                name : 'replyCon',
+                url : 'replyCon.html',
+                bounces : true,
+                opaque : true,
+                vScrollBarEnabled : false,
+                pageParam : {
+                    fid : fid,
+                    tid: tid
+                },
+                rect : {
+                    x : 0,
+                    y : headerPos.h,
+                    w : width,
+                    h : height
+                }
+            });
+        } 
+        function closeWin(){
+            api.closeWin();
+        }  
+        function setReplyCount(count){
+            $('.reply-count').text(count);
+        }        
+    </script>
+</body>
+</html>

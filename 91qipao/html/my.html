@@ -1,0 +1,319 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>我的</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../css/user.css" />
+    <link rel="stylesheet" type="text/css" href="../css/topic-list.css" />
+    <link rel="stylesheet" type="text/css" href="../css/user-list.css" />
+    <style>
+        html{background-color: #eee;}
+        #header{background-color:transparent}
+        .nav-active>span{/*color:#ffc72a!important*/}
+        .hongren-wrap{position:absolute;display:block;top:3rem;right:1.8rem;width:3rem;text-align:center;z-index:5}
+        .hongren-wrap>.hongren-ico{display:inline-block;width:1rem;height:1rem;margin-top: 1rem;}
+        .hongren-wrap>.hongren-txt{font-size:0.55rem;color:#eee}
+        .none-expression{width:5rem}
+        .user-name{font-size:0.7rem}
+        .setting-ico{display:inline-block;z-index:6;width:40px;height:40px;bottom:0px;right:0;}
+        .setting-ico>img{display:inline-block;position:absolute;top:0.4rem;left:5px;width:20px;height:20px;}
+        .setting-ico:before{content:none}
+        #user-info-edit{z-index:6;bottom:0.6rem;left:0.6rem}
+        .user-stamp{color:#ffc72a!important;margin-top:0.1rem;font-size:0.5rem}
+        .fa-pencil-square-o{width:20px;height:20px;background-image:url(../image/edit_ico.png);background-size:90% auto;background-repeat:no-repeat;background-position:bottom}
+        .fa-pencil-square-o:before{content:none}
+        #my-header{
+            position: relative;
+            height: 50px;
+            width: 100%;
+        }
+        .content{
+            margin-top:11rem;
+        }
+        .free-reward{padding:0 0.5rem;background-color: #fcd0a8;font-size: 0.55rem;}
+        .my-user-name{margin-top:0.1rem;/*position: absolute;top:4.3rem;*/color:#333;}
+        .user-stamp{/*position: absolute;top:4.4rem;*/color:#fdd600;}
+        .my-nav-item{padding:0.2rem 0.5rem;line-height: 1.5rem;border-bottom:1px solid #eee;font-size: 0.55rem;background-color: #fff;}
+        .icon-arrow-right{float:right;}
+        .info-compelete-degree{position:absolute;right:0.5rem;top:0;line-height: 3.2rem;/*padding-right:1rem;*/}
+        .info-compelete-degree-txt{padding:0 0.3rem; line-height: 1rem; background-color: #fd4f58;border-radius:1rem;}
+        .my-level-wrap{margin-left:0.6rem;padding:0 0.3rem;background-color: #ffc72a; color:#333;border-radius: 0.8rem;font-size: 0.4rem;}
+        .my-level{font-size: 0.5rem;}
+        .icon-setting{margin-left:15px;margin-top:2px; font-size: 25px !important;color:#444;}
+        #cover{padding-top:0.5rem;}
+        .my-nav-icon{margin-right:0.5rem;}
+        /*.icon-star{font-size: 0.8rem !important;}*/
+        .liwu-ico{width: 0.8rem;margin-right:0.3rem;vertical-align: middle;margin-bottom: 0.2rem;}
+        .icon-arrow-right{color:#eee;}
+        .header-right-txt{bottom:-2px;}
+        .info-arrow-right{display: inline-block;position: absolute;right: -0.3rem;top:0rem;}
+    </style>
+</head>
+<body>
+    <div id="wrap">
+    <!--
+        <div id="header">
+            <h1>我的</h1>
+            <span class="header-right-txt" onclick="openWin('my-setting')"><i class="iconfont icon-setting"></i></span>
+        </div>
+    //-->
+        <div id="main">
+                <div class="free-reward" id="free-reward" style="display:none;line-height:2rem;" onclick="openWindow('free-reward');">
+                    <img class="liwu-ico" src="../image/liwu_ico.png" alt="">
+                    免费拿福利
+                </div>        
+            <div id="cover">
+                <img class="cover" />
+                <div id="avatar" onclick="openWindow('my-info-edit')">
+                    <div class="headImg vm" id="headImg"></div>
+                    <div class="inline-block vm" style="margin-left:0.5rem;">
+                        <label class="my-user-name" onclick="openFillInfo();"></label>
+                        <span class="my-level-wrap" style="display:none;" onclick="openWin('my-level');">
+                        LV
+                        <span class="my-level color-333">1</span></span><br>
+                        <label class="user-stamp" id="user-title"></label>
+                    </div>
+                    <div class="inline-block info-compelete-degree" id="degree_bar"  onclick1="openWindow('my-info-edit')">
+                    <span class="info-compelete-degree-txt color-fff f5"                     
+                    style="display:none;margin-right:0.5rem;" id="degree_value">完善度50%</span>
+                     <i class="iconfont icon-arrow-right color-999 info-arrow-right"></i></div>
+                </div>
+                <!-- <div class="hongren-wrap">
+                    <img class="hongren-ico" src="../image/hongren_ico.png" alt=""><br>
+                    <span class="hongren-txt"></span>
+                </div> -->
+                <div class="nav">
+                    <li class="nav-item nav-active" data-id="t-section" onclick="openWindow('paobi');">
+                        <span>泡币</span><span id="m_count">0</span>
+                        <span class="increment-count" id="m_inc" style="display:none;">+99</span>
+                    </li>
+                    <li class="nav-item" data-id="f-section" onclick="openWindow('my-followeds');">
+                        <span>关注</span><span id="f_count">0</span>
+                        <span class="increment-count" id="f_inc" style="display:none;">+99</span>
+                    </li>
+                    <li class="nav-item" data-id="bf-section" onclick="openWindow('my-fans');">
+                        <span>粉丝</span><span id="bf_count">0</span>
+                        <span class="increment-count" id="bf_inc" style="display:none;">+99</span>
+                    </li>
+                </div>
+                <!-- <div id="user_info"></div> -->
+            </div>
+            <div style="background-color:#eee;margin-top:-2px;">
+                <div class="my-nav-item" style="margin-top:0.5rem;border-top:1px solid #eee;" onclick="openWindow('my-activity');">
+                    <i class="my-nav-icon iconfont icon-clock"></i>我的动态<i class="iconfont icon-arrow-right"></i></div>
+                <div class="my-nav-item" id="nav-collect" onclick="openWindow('my-collect');">
+                    <i class="my-nav-icon iconfont icon-star"></i>我的收藏<i class="iconfont icon-arrow-right"></i></div>
+                <div class="my-nav-item" onclick="openWindow('my-task-reward');">
+                    <i class="my-nav-icon iconfont icon-liwu"></i>任务福利<i class="iconfont icon-arrow-right"></i></div>
+            </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/mui.min.js"></script>
+<script>
+   function openFillInfo(){
+        /*
+        api.openWin({
+            name: 'userLoginFillInfo',
+            url: 'util-login-fill-info.html',
+            pageParam:{},
+            reload:false,
+            opaque:true,
+            cScrollBarEnabled:false,
+            softInputMode:'resize'
+        });
+        */
+        openWindow('my-info-edit');
+   }
+   
+var page_shells = [
+		['my-activity','我的动态'],
+		['my-followeds','我的关注'],
+		['my-fans','我的粉丝'],
+	];   
+	
+function openWindow(name){
+ 	var action = "";  	//"openWindow('"+name+"')";
+ 	if (!checkLogin(action, 'my')) 
+		return;   
+	
+	for (var i=0; i<page_shells.length;i++)
+	{
+		if (page_shells[i][0] == name) {
+		    api.openWin({ 
+		        name:   'page-shell',
+		        url:    'page-shell.html',
+		        pageParam: {
+		        	page_title:page_shells[i][1],
+		        	page_name: name,
+		        	page_url: name+'.html',
+		        	page_param:{}
+		        },
+		        reload: false,
+		        opaque: true,
+		        bounces:false,
+		        vScrollBarEnabled: false,
+		        softInputMode: 'resize'
+		    });			
+		return;
+		}
+	}
+
+    api.openWin({        
+        name:   name,
+        url:    name+'.html',
+        pageParam: {},
+        reload: false,
+        opaque: true,
+        bounces:false,
+        vScrollBarEnabled: false,
+        softInputMode: 'resize'
+    });
+    event.cancelBubble = true;
+}
+
+function init() {
+    var uid = $api.getStorage('uid');  
+    if(!uid || typeof(uid) == "undefined") {
+    	$('.my-level-wrap').hide();
+    	$('.my-user-name').html("未登录");
+    	$('#info-compelete').hide();
+    	$('.user-title').html('');
+    	$('#m_inc').hide();
+    	$('#f_inc').hide();
+    	$('#bf_inc').hide();
+ 		for (var i=0; i<3; i++) {
+ 			$("#"+item[i]+"_count").text('0');  
+ 			$api.rmStorage('my_'+item[i]); 
+ 		} 	
+    	$('#headImg').css({'background-image': 'url("../image/usericon.jpg")'});
+    	$("#degree_value").hide();
+    	$('#free-reward').show();
+    	return;
+     } 
+     
+    if ($api.getStorage('my_share_qipao'))
+    	$('#free-reward').hide();
+    else
+    	$('#free-reward').show();
+    var headImgUrl = $api.getStorage('userimage');        
+    if(headImgUrl && typeof(headImgUrl) !== undefined){
+        $('#headImg').css({'background-image': 'url('+headImgUrl+')'});    
+    }
+    	
+	var nickname = $api.getStorage('username');
+	//nickname = nickname + "("+uid+")";
+	$(".my-user-name").text(nickname);        
+
+	api_ajax(2, 
+		'my_info_get.php', 
+		{	
+		}, 
+		after_init,
+		0,
+		0
+		); 
+}
+
+function after_init(ret, _, _, _) {
+	if(ret.code == 988){
+		return;
+	}
+   //	console.log(ret);
+	if(ret.code == 100){
+		data = ret.data;
+        if(data.userimage && typeof(data.userimage) !== undefined){
+        	$api.setStorage('userimage', data.userimage);
+            $('#headImg').attr('src', data.userimage);    
+        }
+        //$('#user-title').text(data.tag);
+ 		var d_count = Array(data.money.money, data.my_fav_user, data.fav_me_user);
+ 		for (var i=0; i<3; i++) {
+ 			$("#"+item[i]+"_count").text(d_count[i]);
+	    	var my_data = $api.getStorage('my_'+item[i]);  
+	    	if(typeof(my_data) !== "undefined" && i != 1) {
+	    		var ccc = d_count[i] - my_data;
+	    		if (ccc > 0) {
+	    			var ccc_str = '';
+	    			if (ccc >= 100)
+	    				ccc_str = '99+';
+	    			else 
+	    				ccc_str = '+'+ccc;
+	    			$("#"+item[i]+"_inc").html(ccc_str);	
+	    			$("#"+item[i]+"_inc").show();	
+	    		} else {
+	    			$("#"+item[i]+"_inc").hide();
+	    		}
+	    	}			
+ 			$api.setStorage('my_'+item[i], d_count[i]);
+ 		}
+		
+		$api.setStorage('my_money', data.money);
+		$('.my-level').html(data.money.lv);
+		$('.my-level-wrap').show();
+		$('.user-title').html(data.tag);
+		
+		if (data.degree >= 100){
+			$("#degree_value").hide();
+		} else {
+			$("#degree_value").html("完善度"+data.degree+"%");
+			$("#degree_value").show();
+		}
+	}
+}
+
+var item = new Array('m','f','bf');
+
+apiready = function () {
+
+        isDev= false;
+
+	    init();
+	    
+	    api.addEventListener({
+	      name:'viewappear'
+	    },function(ret,err){	
+	        api.execScript({
+    	        name: 'root',
+        	    script: 'checkCurPid("root","my")'
+        	});	
+	    });
+	    
+	    api.setRefreshHeaderInfo({
+	        visible: true,
+	        // loadingImgae: 'wgt://image/refresh-white.png',
+	        bgColor: '#f2f2f2',
+	        textColor: '#4d4d4d',
+	        textDown: '下拉刷新...',
+	        textUp: '松开刷新...',
+	        showTime: false
+	    }, function (ret, err) {
+	    	api.hideProgress();
+    		init();
+	        api.refreshHeaderLoadDone();
+	    });
+};
+
+function  view_appear() {
+    init();
+    if($api.getStorage('userimage') !== undefined){
+           $('#headImg').css({'background-image': 'url('+$api.getStorage('userimage')+')'});   
+      }	    
+	console.log("view_appear(my)");
+}  
+    
+function goto_topic(index) {
+	gotoIndexTab('topic','21c8cf', index);
+}
+        
+$(function(){
+    initDev();
+});
+
+</script>
+</html>

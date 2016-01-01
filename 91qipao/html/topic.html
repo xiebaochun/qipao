@@ -1,0 +1,126 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>发现首页</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <style>
+        #header{background-color:#fff}
+        .header-bt{display:block;float:left;line-height:30px;/*height:47px;*/font-size:16px;padding:0 20px;}
+        .nav-active{color:#fdd600;background-color: #47432e;}
+        .daren-slide{position:relative;height:5rem;background-color:#fff}
+        .daren-item-list{padding:0.5rem 0;text-align:center}
+        .daren-item{width:3.6rem;display:inline-block}
+        .daren-item .daren-avator{display:inline-block;width:2rem;height:2rem;border:2px solid #666;border-radius:50%}
+        .slide-nav{position:absolute;width:100%;left:0;height:1rem;bottom:.1rem;text-align:center}
+        .slide-nav>.slide-nav-item{display:inline-block;width:.5rem;height:.5rem;border:1px solid #666;background-color:#fff;border-radius:50%}
+        .topic-list .topic-item{background-color:#fff;margin:0;margin-top:.5rem}
+        .topic-list .topic-item .topic-item-header{padding:.5rem .5rem}
+        .topic-list .topic-item .topic-item-header .user-avator{display:inline-block;width:1.5rem;height:1.5rem;background-color:#eee;vertical-align:middle;border-radius:50%}
+        .gender-ico{display:inline-block;width:.5rem;height:.5rem;background-color:#55f;border-radius:50%}
+        .from-where{display:inline-block;float:right;color:#ffd600}
+        .topic-item-body>img{display:inline-block;height:7rem;width:100%;background-color:#eee}
+        .topic-list .topic-item .topic-item-footer{height:3rem;color:#999}
+        .topic-item-title{margin:0;padding:0 .5rem}
+        .create-time{padding:.5rem;color:#999}   
+        .nav-wrap{display: inline-block;margin-top:10px;line-height: 30px; border:1px solid #47432e;border-radius: 5px;overflow: hidden;}   
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <div class="header active">
+                <h1>
+                    <div class="nav-wrap">
+                        <a class="nav-0 header-bt header-explore nav-active" 
+                        href="javascript:;" tabmode="" onclick="switchFrame(0)">动态</a>
+                        <a class="nav-1 header-bt header-follow" href="javascript:;" 
+                        tabmode="" onclick="switchFrame(1)">发现</a>
+                        
+                    </div>
+                </h1>
+            </div>
+           
+        </div>
+        <div id="main">
+            <!-- <ul class="mui-table-view news-list" id="forum-list">
+                <li class="mui-table-view-cell">
+                    <a class="mui-navigate-right"><img src="../image/user/my_message.png" alt=""><span>最爱自拍</span></a>
+                </li>
+            </ul> -->
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src='../script/common.js'></script>
+<script>
+$(function(){
+    initDev();
+});
+
+            
+apiready = function(){
+    var header = $api.byId('header');
+    $api.fixIos7Bar(header);
+    headerPos = $api.offset(header);
+    
+    api.addEventListener({
+      name:'viewappear'
+    },function(ret,err){	
+   		var action_task_id = $api.getStorage('action_task_id');
+   		$api.rmStorage('action_task_id');
+   		if (action_task_id) {
+   			//myToast(action_task_id, 3000);
+   		}
+    	  
+    	/* 	
+        api.execScript({
+	        name: 'root',
+    	    script: 'checkCurPid("root","topic-con2")'
+    	});	  
+    	*/      	
+    });
+	        
+    var height;
+    height = api.winHeight - headerPos.h -51;
+
+    api.openFrameGroup({
+        name:'topic-frame-group',
+        rect:{
+            x: 0,
+            y: headerPos.h,
+            w: api.winWidth,
+            h: height,    
+        },
+        frames:[{
+            name:'topic-con1',
+            url:'topic-con1.html'
+        },{
+           name:'topic-con2',
+           url:'topic-con2.html' 
+        }]
+    },function(ret,err){
+    	var index=ret.index;
+     	$('.nav-'+index).addClass('nav-active')
+    	$('.nav-'+(1-index)).removeClass('nav-active');   
+    });
+    var index = api.pageParam.other; 
+    if(typeof(index) == "undefined")
+			index = 0;
+	switchFrame(index);		
+}
+
+function switchFrame(index){
+    api.setFrameGroupIndex({
+        name:'topic-frame-group',
+        index:index,
+        scroll:true
+    });
+}
+
+
+</script>
+
+</html>

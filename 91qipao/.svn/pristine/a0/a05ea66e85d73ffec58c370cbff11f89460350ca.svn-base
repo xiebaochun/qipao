@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>回复我的</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <style>
+        body{background-color:#fff}
+        #main{background-color:#fff}
+        .user-avator{display:inline-block;width:2rem;height:2rem;border-radius:50%;background-color:#eee;vertical-align:middle}
+        .info-item{margin:0 .5rem;padding:.5rem 0;border-bottom:1px solid #ccc}
+        .info-item-middle{margin-left:.3rem;vertical-align:middle}
+        .info-item-middle>.user-name{font-size:.7rem}
+        .gender-ico{display:inline-block;width:.6rem;height:.6rem;font-size:.3rem;line-height:.6rem;text-align:center;color:#fff;border-radius:50%;background-color:#ff6263}
+        .create-time{font-size:.5rem}
+        .summary{margin-top:.5rem;background-color:#eee}
+        .summary>img{display:inline-block;width:3rem;height:3rem;vertical-align:middle}
+        .summary>span{margin-left:.5rem;vertical-align:middle}
+        .from{display:inline-block;position:absolute;right:.5rem;color:#ccc;font-size:.45rem}
+        .reply-content{margin-top:.5rem}
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <a class="back-icon" tapmode="" onclick="api.closeWin()"></a>
+            <h1 class="">回复我的</h1>
+        </div>
+       
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src='../script/common.js'></script>
+<script>
+    
+    apiready = function(){   
+        var header = $api.byId('header');
+        $api.fixIos7Bar(header); 
+        
+        var width,header,headerPos,height,nav,navPos;
+            width = api.winWidth;
+            header = $api.byId('header');
+            headerPos = $api.offset(header);
+            height = api.winHeight - headerPos.h -51;
+        api.openFrame({
+                    name: 'gouda-replymecon',
+                    url: 'gouda-replymecon.html',
+                    reload: false,
+                    bounces : false,
+                    //opaque: true,
+                    vScrollBarEnabled : false,
+                    pageParam : {
+                        headerHeight : headerPos.h,
+                        // tid : tid
+                    },
+                    rect : {
+                        x : 0,
+                        y : headerPos.h,
+                        w : width,
+                        h : height
+                    }
+                });  
+    }
+</script>
+</html>

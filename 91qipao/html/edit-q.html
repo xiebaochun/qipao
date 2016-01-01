@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html class="feedback">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+        <meta name="format-detection"content="telephone=no">
+        <title>提问</title>
+        <link rel="stylesheet" type="text/css" href="../css/mui.min.css" />
+        <link rel="stylesheet" type="text/css" href="../css/common.css" />
+        <link rel="stylesheet" type="text/css" href="../css/feedback-page.css" />
+        <style>
+            #wrap{
+                height: 100%;
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -webkit-flex-flow: column;
+                       flex-flow: column;
+            }
+            #main{
+                -webkit-box-flex: 1; 
+                -webkit-flex: 1;
+                flex: 1;
+                background-color: #fff;
+            }
+            .cate-wrap{padding:0.5rem;}
+            .cate-wrap .title{line-height: 0.8rem;}
+            .cate-options{margin-top:0.5rem;line-height: 0.8rem;}
+            .edit-wrap{padding:0.5rem;background-color: #fff;}
+            #question-content{width:100%;height: 6rem;line-height: .8rem;font-size: 0.6rem;outline: none;resize:none;}
+            .image-wrap{padding:0.5rem;}
+            .image-file-wrap{position:relative; display: inline-block;background-color: #fff;border:1px solid #666;}
+            .plus{position: absolute;display: inline-block;top:0;width:100%;line-height:4rem;left:0;font-size: 1rem;text-align: center;}
+            .image-file{display: inline-block;height:4rem;width:4rem;opacity:0;}
+            .submit-bt{
+                margin:0.5rem;
+                height: 1.8rem;
+                background-color: #fdd600;
+                border-radius: 0.2rem;
+                text-align: center;
+                line-height: 1.8rem;
+            }
+
+            .cate-options>span{font-size: 0.6rem;margin:0 0.5rem;padding:0.05rem 0.5rem;border-radius: 0.6rem;border:1px solid #999;}
+            .cate-options>.option-active{background-color: #ffd600;border:1px solid #ffd600;}
+            .image-list{margin-top:0.5rem;padding:0.5rem;}
+            .icon-check{color:green;}
+        </style>
+    </head>
+    <body>
+        <div id="wrap">
+            <div id="header">
+                <a class="back-icon iconfont icon-arrow-left" tapmode onclick="api.closeWin();"></a>
+                <h1>提问</h1>
+                <a class="header-right-txt" id="submit">发布</a>
+            </div>
+            <div id="main">
+                <div class="edit-wrap">
+                    <textarea name="question" id="content" cols="30" rows="10" placeholder="请描述你的问题"></textarea>
+                </div>
+                <div class="image-list" id="image-list">
+                    
+                </div>
+                <div class="cate-wrap">
+                    <div class="title">类别</div>
+                    <div class="cate-options">
+                        <span data-fid="110" class="option-active">情趣</span>
+                        <span data-fid="117">感情</span>
+                        <span data-fid="118">健康</span>
+                    </div>
+                </div>
+                <div style="margin:0rem 0.5rem;line-height:2rem;" onclick="anonymousF();"><i class="iconfont icon-uncheck vm" id="an-check"></i><span class="ml2 vm">匿名</span></div>
+                <!-- <div class="submit-bt">提交</div> -->
+            </div>
+        </div>
+        <script type="text/javascript" src="../script/api.js"></script>
+        <script type="text/javascript" src="../script/common.js"></script>
+        <script type="text/javascript" src='../script/mui.min.js'></script>
+        <script>
+        var fid = 110;
+        var anonymous = 0;
+        (function(mui, window, document, undefined) {
+            mui.init();
+            var get = function(id) {
+                return document.getElementById(id);
+            };
+            var qsa = function(sel) {
+                return [].slice.call(document.querySelectorAll(sel));
+            };
+            var ui = {
+                question: get('content'),
+                title:get('title'),
+                imageList: get('image-list'),
+                submit: get('submit')
+            };
+            ui.clearForm = function() {
+                ui.question.value = '';
+                ui.title.value = '';
+                ui.imageList.innerHTML = '';
+                ui.newPlaceholder();
+            };
+            ui.getFileInputArray = function() {
+                return [].slice.call(ui.imageList.querySelectorAll('input[type="file"]'));
+            };
+            ui.getFileInputIdArray = function() {
+                var fileInputArray = ui.getFileInputArray();
+                var idArray = [];
+                fileInputArray.forEach(function(fileInput) {
+                    if (fileInput.value != '') {
+                        idArray.push(fileInput.getAttribute('id'));
+                    }
+                });
+                return idArray;
+            };
+            var imageIndexIdNum = 0;
+            ui.newPlaceholder = function() {
+                var fileInputArray = ui.getFileInputArray();
+                if (fileInputArray &&
+                    fileInputArray.length > 0 &&
+                    fileInputArray[fileInputArray.length - 1].parentNode.classList.contains('space')) {
+                    return;
+                }
+                imageIndexIdNum++;
+                var placeholder = document.createElement('div');
+                placeholder.setAttribute('class', 'image-item space');
+                var closeButton = document.createElement('div');
+                closeButton.setAttribute('class', 'image-close');
+                closeButton.innerHTML = 'X';
+                closeButton.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    event.cancelBubble = true;
+                    setTimeout(function() {
+                        ui.imageList.removeChild(placeholder);
+                        if(document.querySelectorAll('.image-item').length<1) ui.newPlaceholder();
+                    }, 0);
+                    return false;
+                }, false);
+                var fileInput = document.createElement('input');
+                fileInput.setAttribute('type', 'file');
+                fileInput.setAttribute('accept', 'image/*');
+                fileInput.setAttribute('id', 'image-' + imageIndexIdNum);
+                fileInput.addEventListener('change', function(event) {
+                    var file = fileInput.files[0];
+                    console.log(file);
+                    if (file) {
+                        var reader = new FileReader();
+                        reader.onload = function() {
+                            //处理 android 4.1 兼容问题
+                            var base64 = reader.result.split(',')[1];
+                            // console.log(base64);
+                            var dataUrl = 'data:image/png;base64,' + base64;
+                            //
+                            placeholder.style.backgroundImage = 'url(' + dataUrl + ')';
+                            placeholder.setAttribute('data-base64', dataUrl);
+                        }
+                        reader.readAsDataURL(file);
+                        placeholder.classList.remove('space');
+
+                        if($('.image-item').length<6){
+                            ui.newPlaceholder();
+                        }
+                    }
+                }, false);
+                placeholder.appendChild(closeButton);
+                placeholder.appendChild(fileInput);
+                ui.imageList.appendChild(placeholder);
+            };
+            ui.newPlaceholder();
+            ui.submit.addEventListener('click', function(event) {
+                if(!fid){
+                    return myToast('请选择话题圈');
+                }
+                if (ui.question.value == ''){
+                    return myToast('请填写内容');
+                } 
+                //plus.nativeUI.showWaiting();
+                // feedback.send({
+                //     content: ui.question.value,
+                //     images: ui.getFileInputIdArray()
+                // }, function() {
+                //     //plus.nativeUI.closeWaiting();
+                //     mui.toast('感谢您的发表~');
+                //     ui.clearForm();
+                //     mui.back();
+                // });
+                var imageArray = ui.getFileInputIdArray();
+                var images = [];
+                for(var index in imageArray){
+                    var baseUrl = $('#'+imageArray[index]).parent().data('base64'); 
+                    images[index] = baseUrl;
+                }
+
+                var imageLength = images.length; 
+                var image_files = [];
+                
+                function sentImage(index){
+                    var index = index;
+                    var postData = {
+                                    fid:fid,
+                                    // uid:uid,
+                                    images:images[index]
+                                };
+                      api_ajax(2,
+                        'util_upload_img.php',
+                        postData,
+                        function(ret, _, postData, index){
+                            if (ret.code == 988) {
+                                return;
+                            }
+                            console.log(ret);
+                            if(ret.code == 100){
+                                image_files[image_files.length] = ret.img;
+                                index++;
+                                if(index<imageLength){
+                                    sentImage(index);
+                                }else{
+                                    sentMessage();
+                                }
+                            }
+                            //1mui.toast('感谢您的发表~');
+                        },
+                        index,
+                        2);
+                }
+                function sentMessage(){   
+                    var postData = {
+                                fid: fid,
+                                // uid:uid,
+                                anonymous: anonymous,
+                                message: ui.question.value,
+                                images: image_files
+                            };
+                    api_ajax(2,
+                        'my_ask.php',
+                        postData,
+                        function(ret, _, _, _){
+                            if (ret.code == 988) {
+                                return;
+                            }
+                            if (ret.code == 104) {
+                                    myToast(ret.msg);
+                            } else if (ret.code ==100 ){
+                                console.log(ret);
+                                myToast('发表成功！');
+                                api.execScript({
+                                    name:'topic-circle',
+                                    frameName:'topic-circlecon',
+                                    script:'openNew();'
+                                });
+                                api.execScript({
+                                    name:'my-q',
+                                    frameName:'my-q-con',
+                                    script:'refresh();'
+                                });
+                                api.execScript({
+                                    name:'expert-qa',
+                                    frameName:'expert-qa-con2',
+                                    script:'refresh();'
+                                });
+                                var _timeout = 500;
+                                if (api.systemType == 'ios')
+                                {
+                                    _timeout = 50;
+                                }
+                                setTimeout(function(){
+                                    api.closeWin();
+                                },_timeout);
+                            } else {
+                                //alert(ret.code + "/" + ret.msg);  
+                            }
+                            
+                        },
+                        0,
+                        0);
+                }
+                if(imageLength>0){
+                    sentImage(0);
+                }else{
+                    sentMessage();
+                }
+                //console.log(images[0]); 
+            }, false);
+        })(mui, window, document, undefined);
+        </script>
+        <script>
+
+            
+            $(function(){
+                initDev();
+            });
+            apiready = function(){
+			    var header = $api.byId('header');
+			    $api.fixIos7Bar(header);
+    
+                $('.cate-options>span').click(function(){
+                    $(this).addClass('option-active').siblings().removeClass('option-active');
+                    fid = $(this).data('fid');
+                });
+            } 
+            function anonymousF(){
+                if(!anonymous){
+                    $('#an-check').addClass('icon-check').removeClass('icon-uncheck');
+                    anonymous = 1;
+                }else{
+                    $('#an-check').removeClass('icon-check').addClass('icon-uncheck');
+                    anonymous = 0;
+                }
+            }
+        </script>
+    </body>
+</html>

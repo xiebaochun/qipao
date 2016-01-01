@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+        <meta name="format-detection"content="telephone=no">
+        <title>我的提问</title>
+        <link rel="stylesheet" type="text/css" href="../css/common.css" />
+        <style>
+            #wrap{
+                height: 100%;
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -webkit-flex-flow: column;
+                       flex-flow: column;
+            }
+            #main{
+                -webkit-box-flex: 1; 
+                -webkit-flex: 1;
+                flex: 1;
+                background-color: #eee;
+            }
+            .del-wrap{position: relative;z-index: 100;display: none;}
+            #header{position: fixed;top:0;width: 100%;}
+            .del-check{color:#999;}
+            .icon-check{color:red;}
+            .item-header-right{position: absolute;right: 0.8rem;top:0.5rem;}
+        </style>
+    </head>
+    <body>
+        <div id="wrap">
+           <!--  <div style="height:50px;"></div> -->
+            <div id="main">
+                <!-- <div class="v2-qa-item">
+                    <div class="v2-qa-header">
+                        <div class="v2-qa-author-info">
+                            <img class="v2-qa-author-avator" src="../image/version_logo.png" alt="">
+                        </div>
+                        <div class="v2-qa-title">标题标题标题标题标题</div>
+                    </div>
+                    <div class="v2-qa-body">
+                        <div class="v2-qa-like-wrap"></div>
+                        <div class="v2-qa-content">
+                            这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容
+                        </div>
+                    </div>
+                    <div class="v2-qa-footer">
+                        <div class="v2-qa-tags-wrap">
+                            <span class="v2-qa-tag">标签</span>
+                        </div>
+                    </div>
+                </div> -->
+                
+            </div>
+            <div class="footer del-wrap" style="border-top:1px solid #aaa;">
+                <div class="nav">
+                    <div class="nav-item" id="select-all" onclick="selectAll(this);">全选</div>
+                    <div class="nav-item color-999" id="delete-bt" onclick="delQas();">删除</div>
+                </div>
+            </div> 
+        </div>
+        <script type="text/javascript" src="../script/api.js"></script>
+        <script type="text/javascript" src="../script/common.js"></script>
+        <script>
+            var isSelectAll = false;
+            var app_content = null;
+
+            $(function(){
+                initDev();
+            });
+            apiready = function(){                  
+                require('list_common',function(){
+                    //console.log('nishuone');
+                    app_content = new QIPAO.list({
+                        api_file:'my_ask_list.php',
+                        postData:{ 
+                            psize: 10
+                        },
+                        holder:'#main',
+                        listF:listQA,
+                        none:{
+                            txt:'暂无提问,要不来一发？',
+                            btTxt:'我来提问',
+                            to:'edit-q'
+                        },
+                        noneCallBack:function(){
+                            api.execScript({
+                                name:'my-q',
+                                script:'lockEdit()'
+                            });
+                        },
+                        haveCallBack:function(){
+                            api.execScript({
+                                name:'my-q',
+                                script:'unlockEdit()'
+                            });
+                        }
+                    });
+                });
+            } 
+            function refresh(){
+                app_content.getData(1);
+            }
+            function delQa(){
+                addCheckbox();
+
+                $('.item-header-right').children('i').removeClass('icon-check').addClass('icon-uncheck');
+                $('.item-header-right').data('check','1');
+                isSelectAll = false;
+                $('#select-all').text('全选');
+                checkDelStatus();
+
+            }
+            function delQas(){
+                //$('.icon-check').parent().parent().parent().fadeOut();
+                //$('.icon-check').remove();
+                var delIdArray = [];
+                $('.icon-check').parent().parent().each(function(){
+                    var self = this;
+                    delIdArray.push($(self).data('tid'));
+                });
+                var delIdStr = delIdArray.join();
+                console.log(delIdStr);
+                if(!delIdStr) {
+                    myToast('删除失败！'+delIdStr);
+                    return false;
+                }
+                api_ajax(0,'my_ask_delete.php',{
+                    tid:delIdStr
+                },function(ret){
+                    if(ret.code == 100){
+                        $('.icon-check').parent().parent().parent().fadeOut();
+                        setTimeout(function(){
+                            $('.icon-check').parent().parent().parent().remove();
+                            if($('.v2-qa-item').length <=0){
+                                api.execScript({
+                                    name:'my-q',
+                                    script:'lockEdit()'
+                                });
+                                $('.del-wrap').hide();
+                            }
+                        },500);
+                        myToast(ret.msg,2000);
+
+                    }else{
+                        myToast(ret.msg,2000);
+                    }
+                    //alert(ret.msg);
+                },null,0);
+
+            }
+            function checkDel(self){
+                if($(self).data('check') == 0){
+                    $(self).children('i').addClass('icon-check').removeClass('icon-uncheck');
+                    $(self).data('check','1') 
+                }else{
+                    $(self).children('i').removeClass('icon-check').addClass('icon-uncheck');
+                    $(self).data('check','0')                    
+                }
+                checkDelStatus();
+            }
+            function delQaDone(){
+                $('.item-header-right').remove();
+                $('.del-wrap').hide();
+            }
+            function selectAll(self){
+                // delQa();
+               
+                addCheckbox();
+
+                if(!isSelectAll){
+                    $('.item-header-right').children('i').addClass('icon-check').removeClass('icon-uncheck');
+                    $('.item-header-right').data('check','1');
+                    $(self).text('取消全选');
+                    
+                    isSelectAll = true;
+                }else{
+                    $('.item-header-right').children('i').removeClass('icon-check').addClass('icon-uncheck');
+                    $('.item-header-right').data('check','1');
+                    isSelectAll = false;
+                    $(self).text('全选');
+                    
+                }
+                checkDelStatus();
+                
+            }
+
+            function addCheckbox(){
+                 $('.item-header-right').remove();
+                $('.del-wrap').show();
+                var html = '<div class="item-header-right" data-check="0" onclick="checkDel(this);" style="line-height:0.9rem;"><i class="del-check iconfont icon-uncheck"></i></div>';
+                $('.v2-qa-header').append($(html));
+            }
+
+            function checkDelStatus(){
+                if($('.icon-check').length>0){
+                    $('#delete-bt').addClass('color-333').removeClass('color-999');
+                }else{
+                    $('#delete-bt').addClass('color-999').removeClass('color-333');
+                }
+            }
+
+        </script>
+    </body>
+</html>

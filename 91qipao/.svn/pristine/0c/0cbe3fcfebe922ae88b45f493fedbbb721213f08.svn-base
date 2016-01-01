@@ -1,0 +1,147 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>关于我们</title>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <style>
+        body{background-color:#fff}
+        .setting-wrap{padding:0 .5rem}
+        /*.mui-table-view:after{width:0}*/
+        .mui-table-view:after{background-color: #eee;}
+        .mui-switch.mui-active{border-color:#666;background-color:#666}
+        .mui-table-view-cell{height:2rem;line-height:2rem;padding:0;/*border-bottom:1px solid #eee*/}
+        .mui-table-view-cell:after{border:none;outline:0;left: 0.2rem;background-color: #eee;}
+        .mui-navigate-right{margin:0!important;font-size:.9rem;line-height:2rem;padding-left:.2rem!important}
+        .mui-navigate-right:after{color:#999!important;right:0}
+        .label{line-height:2rem;font-size:.6rem}
+        .logo-wrap{padding:2rem 0;text-align:center}
+        .logo{display:inline-block;width:3.2rem;height:3.2rem}
+        .version{margin-top:.5rem;font-size:.6rem}
+        .right-txt{float:right;margin-right:1.5rem;line-height:2rem;font-size:.5rem;color:#999}
+        .footer{
+            position: absolute;
+            width: 100%;
+            bottom: 1rem;
+            margin-top: 1rem;
+            font-size: 0.5rem;
+            color:#999;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <a class="back-icon" tapmode="" onclick="api.closeWin()"></a>
+            <h1 class=""></h1>
+        </div>
+        <div class="setting-wrap">
+            <div class="logo-wrap">
+                <img class="logo" src="../image/version_logo.png" alt=""><br>
+                <span class="version color-999">V2.0.0</span>
+            </div>
+            <ul class="mui-table-view">
+                <li class="mui-table-view-cell" onclick="openWin('my-setting-pt');">
+                    <a class="mui-navigate-right">
+                      <span class="label">用户协议</span>
+                    </a>
+                </li>
+                <!-- <li class="mui-table-view-cell">
+                    <a class="mui-navigate-right">
+                      <span class="label">分享给好友</span>
+                    </a>
+                </li> -->
+                <li class="mui-table-view-cell" onclick="copyUs()">
+                    <a class="mui-navigate-right">
+                      <span class="label">气泡微信</span>
+                      <span class="right-txt">气泡脸红馆</span>
+                    </a>
+                </li>
+                <li class="mui-table-view-cell" onclick="openWeibo();">
+                    <a class="mui-navigate-right">
+                      <span class="label">气泡微博</span>
+                      <span class="right-txt">气泡官方微博</span>
+                    </a>
+                </li>
+                 <!-- <li class="mui-table-view-cell" style="border:none;">
+                    <a class="mui-navigate-right">
+                      <span class="label">气泡招聘</span>
+                      
+                    </a> 
+                </li> -->
+                <!-- <li class="mui-table-view-cell">
+                    Item 4
+                    <div class="mui-switch mui-switch-blue mui-switch-mini mui-active">
+                        <div class="mui-switch-handle"></div>
+                    </div>
+                </li> -->
+            </ul>
+        </div>
+        <div class="footer"> Copyright © 2015<br>
+广州高潜网络科技有限公司</div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src='../script/common.js'></script>
+<script type="text/javascript" src='../script/mui.min.js'></script>
+<script type="text/javascript" src='../script/util/share.js'></script>
+<script>
+    $(function(){
+        
+    });
+    apiready = function(){
+       var header = $api.byId('header');
+       $api.fixIos7Bar(header);
+    }
+    function share(){
+        var shareData = {
+            url:'http://app.91qipao.com/',
+            title:'气泡下载-气泡APP下载官网',
+            desc:'气泡下载-气泡APP下载官网',
+            imgUrl:'http://www.91qipao.com/img/logo/logo.png'
+        }
+        shareApi.weixinfriend(shareData.url,shareData.title,shareData.desc,shareData.imgUrl);   
+    }
+    function openWeibo(){
+        if(api.systemType == 'ios'){
+            api.openApp({
+                iosUrl: 'http://weibo.com/91qipao',         //例如调用系统浏览器Safari打开百度，其中http为Safari的URL Scheme；同理，微信的URL Scheme为weixin，因此可以通过传weixin://来打开微信
+                appParam: {
+                    //appParam: 'app参数'
+                }
+            });
+        }else{
+            api.openApp({
+                androidPkg: 'android.intent.action.VIEW',
+                mimeType: 'text/html',
+                uri: 'http://weibo.com/91qipao'
+            },function(ret,err){
+                //var msg = JSON.stringify(ret);
+                // api.alert({
+                //     title: 'openApp',
+                //     msg: msg,
+                //     buttons: ['确定']
+                // });
+            });
+        }
+    }
+    function copyUs(){
+        var obj = api.require('clipBoard');
+        obj.set({
+            value: '气泡脸红馆'
+        }, function(ret, err){
+            if(ret.status){
+                //api.alert({msg:'复制到剪切板成功'});
+                myToast('复制到剪切板成功');
+            }else{
+                //api.alert({msg:err.msg});
+                myToast('复制到剪切板失败');
+            }
+        });
+    }
+</script>
+</html>

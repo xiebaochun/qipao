@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+        <meta name="format-detection"content="telephone=no">
+        <title></title>
+        <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+         <link rel="stylesheet" type="text/css" href="../../css/ui.css" />
+        <style>
+            html,body{background-color: transparent !important;}
+            #wrap{
+                height: 100%;
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -webkit-flex-flow: column;
+                       flex-flow: column;
+            }
+            #main{
+                -webkit-box-flex: 1; 
+                -webkit-flex: 1;
+                flex: 1;
+            }
+            #nav{position: relative; background-color: rgba(0,0,0,0.5) !important;overflow: hidden; box-shadow:none;border-top:none;z-index: 100;}
+            #nav ul{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:horizontal;-webkit-flex-direction:row;flex-direction:row;padding-top:4px}
+            #nav ul li{position:relative;-webkit-box-flex:1;-webkit-flex:1;flex:1}
+            #nav ul li>a{font-size:9px}
+            .icon-close{margin-top:4px;padding-top:0px !important;font-size: 30px !important;color:#fdd600 !important;}
+            .publish-active{
+                    -webkit-animation:rotate .2s forwards;animation:rotate .2s forwards;
+                    /*-webkit-transform:rotate(45deg);transform:rotate(45deg);*/-webkit-transform-origin:39px 24px;transform-origin:39px 24px;
+            }
+            .publish-return{ -webkit-animation:rotateR .2s forwards;animation:rotateR .2s forwards;-webkit-transform-origin:39px 24px;transform-origin:39px 24px;}
+            
+            .modal{/*height: 14rem;*/top:8rem;background-color: transparent;}
+          
+           .sign-wrap{height:100%;margin:0 1rem;padding-top:0.3rem;background-color: #f29f03;}
+            .sign-banner{width: 100%;text-align: center;padding:1rem 0;background-color: #f29f03;}
+            .sign-content{position: relative; margin:0.5rem;border:1px solid #333;background-color: #ffd600;}
+            .sign-day-wrap{margin:0.2rem;}
+            .sign-day{margin:0.3rem;border:1px dashed #f29f03;line-height: 1rem;padding:0.35rem 0;}
+            .signed-bg{background-image: url(../../image/signed_bg.png);background-size: 100% 100%;}
+            .signed-no-bg{background-image: url(../../image/signed_no_bg.png);background-size: 100% 100%;}
+            .sign-bt{background-color: #f29f03;border:1px solid #333;border-radius: 0.3rem;padding:0rem 0.5rem;}
+            .sign-bt-success{background-color: #ccc;}
+            .banner-txt{position: absolute;top:-0.3rem;left: 4rem;padding:0 0.3rem;background-color: #f29f03;line-height: 0.6rem;}            
+                      
+            .nav-item{margin-top:0rem;/*line-height: 5rem;*/line-height: 0.8rem;color:#fff;}
+            .nav-item > img{display: inline-block;width: 2.6rem;}
+            .nav-item>span{color:#fff;}
+            @-webkit-keyframes rotate{
+                0%{
+                    
+                }
+                100%{
+                    -webkit-transform:rotate(135deg);transform:rotate(135deg);
+                }
+            }
+            @keyframes rotate{
+                0%{
+                    
+                }
+                100%{
+                    -webkit-transform:rotate(135deg);transform:rotate(135deg);
+                }
+            }
+            @-webkit-keyframes rotateR{
+                0%{
+                   /* -webkit-transform:rotate(0deg);transform:rotate(0deg);}*/
+                }
+                100%{
+                    -webkit-transform:rotate(-90deg);transform:rotate(-90deg);
+                }
+                
+            @keyframes rotateR{
+                0%{
+                     /*-webkit-transform:rotate(0deg);transform:rotate(0deg);}*/
+                }
+                100%{
+                   -webkit-transform:rotate(-90deg);transform:rotate(-90deg);
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div id="wrap">
+            <div id="main">
+                <div class="modal-wrap sign-modal" style="display:none;"
+                onclick="closePop();">
+                     <div class="modal-mask"></div>
+                     <div class="modal animated" style="display:none;">
+                        <div class="sign-wrap">
+                            <div class="sign-content">
+                                <div class="banner-txt">签到立刻送1个泡币</div>
+                                <div class="sign-banner">
+                                    <img style="width:60%;" src="../../image/pig.png" alt="">
+                                </div>
+                                <div class="f6" style="background-color:#333;color:#f29f03;text-align:center;padding:0.1rem 0;">连续签到7天就送50泡币</div>
+                                <div class="nav sign-day-wrap">
+                                    <div class="nav-item sign-item">
+                                        <div class="sign-day">
+                                            <!-- <span class="f4 sign-txt">未签到</span><br> -->
+                                            <span class="f8">1</span><span class="f4">天</span>
+                                        </div>
+                                    </div>
+                                    <div class="nav-item sign-item">
+                                        <div class="sign-day">
+                                            <!-- <span class="f4 sign-txt">未签到</span><br> -->
+                                            <span class="f8">2</span><span class="f4">天</span>
+                                        </div>
+                                    </div>
+                                    <div class="nav-item sign-item">
+                                        <div class="sign-day">
+                                            <!-- <span class="f4 sign-txt">未签到</span><br> -->
+                                            <span class="f8">3</span><span class="f4">天</span>
+                                        </div>
+                                    </div>
+                                    <div class="nav-item sign-item">
+                                        <div class="sign-day">
+                                            <!-- <span class="f4 sign-txt">未签到</span><br> -->
+                                            <span class="f8">4</span><span class="f4">天</span>
+                                        </div>
+                                    </div>
+                                    <div class="nav-item sign-item">
+                                        <div class="sign-day">
+                                            <!-- <span class="f4 sign-txt">未签到</span><br> -->
+                                            <span class="f8">5</span><span class="f4">天</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="nav sign-day-wrap">
+                                    <div class="nav-item sign-item">
+                                        <div class="sign-day">
+                                            <!-- <span class="f4 sign-txt">未签到</span><br> -->
+                                            <span class="f8">6</span><span class="f4">天</span>
+                                        </div>
+                                    </div>
+                                    <div class="nav-item sign-item">
+                                        <div class="sign-day">
+                                            <!-- <span class="f4 sign-txt">未签到</span><br> -->
+                                            <span class="f8">7</span><span class="f4">天</span>
+                                        </div>
+                                    </div>
+                                    <div class="nav-item sign-item">
+                                        <div class="sign-day" style="border:none;line-height:0.7rem;padding-top:0;">
+                                            <img style="width:80%;line-height:0.3rem;" src="../../image/paobi0.png" alt="" id='paopi_7'><br>
+                                            <span style="line-height:0.3rem;color:#565656" id='days_7_ok'>50</span>
+                                        </div>
+                                    </div>
+                                    <div class="nav-item sign-item" style="flex:2;-webkit-flex:2;">
+                                        <div class="sign-day" style="border:none;padding-top:0.1rem;">
+                                            <span class="sign-bt f6" onclick="signEveryday(this);">马上签到</span><br>
+                                            <span class="f4 color-666">每天签到即可获得1泡币</span>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                     </div>
+                 </div>
+            </div>
+        </div>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/util/ui.modal.js"></script>
+<script>
+
+var modal = null;
+$(function(){
+    initDev();
+ });
+ 
+apiready = function(){
+    modal = new UI.modal({
+        closed:function(){
+            api.execScript({
+                name:'root',
+                script:'closeSignPop()'
+            });
+       },
+        startClose:function(){
+        }
+    });
+    modal.show();
+} 
+function addAnimate(){
+    modal.show();
+}
+function closePop(){
+    modal.close();
+}
+
+function openSign(){
+    updateSign();
+}
+
+function signEveryday(self){
+	event.cancelBubble = true;
+    if(isSigned){
+        //myToast('');
+    }else{
+        api_ajax(2,
+        	'my_signin.php',
+        	{},
+        	function(ret){
+	            console.log(ret);
+	            if(ret.code == 100){
+	                $(self).text('签到成功').addClass('sign-bt-success');
+	                var timeout = 1000;
+	                if(days == 6) {
+	                	timeout = 3000;
+	                 	myToast("恭喜！ 您已连续签到7天，奖励50个泡币！", timeout);
+	                 	$('#days_7_ok').css("color","#ff0000");
+	                 	$('#paopi_7').attr('src','../../image/paobi.png');
+	                } else {
+	                    myToast(ret.msg);
+	                }
+	                updateSign();
+	                setTimeout(function(){
+	                    //sign_modal.close();
+                       api.execScript({
+                            name:'root',
+                            script:'closeSignPop()'
+                        });
+	                }, timeout);
+	            }
+	     },null,0);       
+	   }
+    
+}
+function openLogin(){
+    api.openWin({
+        name: 'userLogin',
+        url: '../util-login.html',
+        opaque: true,
+        vScrollBarEnabled:false
+    }); 
+}
+
+var day = 0;
+var isSigned = false;
+function updateSign(){
+    api_ajax(2,
+    	'my_signin_status.php',
+    	{},
+    	function(ret){
+	        console.log(ret);
+	        days = parseInt(ret.data.days);
+	        isSigned = !!parseInt(ret.data.signined);
+	        // days = 3;
+	        $('.sign-day').removeClass('signed-bg');
+	         $('.sign-day').removeClass('signed-no-bg');
+	        for(var i=0;i<days;i++){
+	            $('.sign-day').eq(i).addClass('signed-bg');
+	        }
+	        var nosign_days = parseInt(ret.data.nosign_days);	
+	        if  (nosign_days>(7-days))
+	        	 nosign_days = 7-days;       
+	        for(var i=0;i<nosign_days;i++){
+	            $('.sign-day').eq(days+i).addClass('signed-no-bg');
+	        }
+	        	        
+	        if (days >= 7) {
+	        	$('#days_7_ok').css("color","#ff0000");
+	        	$('#paopi_7').attr('src','../../image/paobi.png');
+	        } else {
+	        	$('#days_7_ok').css("color","#000000");
+	        	$('#paopi_7').attr('src','../../image/paobi0.png');
+	        }
+	        
+	        if(isSigned){
+	            $('.sign-bt').addClass('sign-bt-success').text('已签到');
+	        }else{
+	            $('.sign-bt').removeClass('sign-bt-success').text('马上签到');
+	        }
+	        //$('.sign-day>span:first-child').text('已签到');
+	    },null,0);
+}
+             
+</script>
+    </body>
+</html>

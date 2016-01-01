@@ -1,0 +1,390 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>吐槽区</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/user.css" />
+    <link rel="stylesheet" type="text/css" href="../css/topic-list.css" />
+    <style>
+        body{background-color:#fff;}
+        .none-expression{width:5rem}
+        .nav{position:fixed;top:0;width:100%;height:37px;border-bottom:1px solid #eee;background-color:#fff;z-index:100}
+        .nav>a{display:inline-block;width:49%;line-height:37px;text-align:center;font-size:14px;color:#999}
+        .nav-active{color:#333!important;border-bottom:1px solid #333}
+        .section{margin-top:38px}
+        .first-tips{padding:0.3rem 1.1rem;background-color:#eee;color:#666;font-size: 0.6rem;line-height: 1rem;}
+        #topPopover{position:fixed;width:5.5rem;top:10px!important;right:6px;text-align:center;background-color:#fff}
+        .mui-table-view-cell:after{left:0;margin:0 0.5rem}
+        #topPopover .mui-popover-arrow{left:auto;right:6px}
+        span.mui-icon{font-size:14px;color:#007aff;margin-left:-15px;padding-right:10px}
+        .mui-popover{height:129px}
+        .mui-popover .mui-scroll-wrapper{margin:0;}
+        .mui-content{padding:10px}
+        .topic-rule{position:fixed;left:0;top:0;display:block;height:100%;width:100%;background-color:#666;opacity:.99;z-index: 200;}
+        .topic-rule>span{margin:0 1rem;margin-top:8rem;color:#eee;z-index:10;}
+        .publish-topic-bt{position:fixed;right:0.8rem;bottom:3rem;width:2rem;z-index:100}
+        .mui-popover .mui-table-view{background-color:#fff}
+        .mui-ios .mui-table-view-cell {font-size: 0.53rem;}
+    </style>
+</head>
+<body>
+    <div id="wrap" onclick="removePopover();">
+        <img class="publish-topic-bt" src="../image/publish_topic_bt.png" alt="" onclick="openPublishWin();">
+        <div class="main">
+            <div class="nav">
+                <a class="nav-active" id="a-section" href="javascript:;" data-id="article-section">精选</a>
+                <a href="javascript:;" id="t-section" data-id="topic-section">最新</a>
+            </div>
+            <!-- <a href="#topPopover" class="mui-btn mui-btn-link mui-pull-right none" id="more-bt">菜单</a>  -->   
+            <div class="section article-section">
+                <div class="nopost-topic-wrap none" id="none-article">
+                    <img class="none-expression" src="../image/none_collect_ico.png" alt=""><br>
+                    <span>你暂无收藏内容喔~</span><br>
+                    <a class="btn" href="javascript:;">去收藏吧</a>    
+                </div>
+                <div class="first-tips none rules-txt">
+                    所有不开心的都可以在这里吐槽，你们所有都不开心都发泄在这里。
+                </div>
+
+                <div class="topic-list jingxuan-topic-list">
+
+                </div> 
+
+            </div>
+            <div class="section topic-section none">
+                <div class="nopost-topic-wrap none" id="none-topic">
+                    <img class="none-expression" src="../image/none_collect_ico.png" alt=""><br>
+                    <span>你暂无收藏内容喔~</span><br>
+                    <a class="btn" href="javascript:;">去收藏吧</a>    
+                </div>
+                <div class="topic-list newest-topic-list">
+                </div>    
+            </div>
+            
+        </div>
+        <div id="topPopover" class="mui-popover">
+            <div class="mui-popover-arrow"></div>
+            <div class="mui-scroll-wrapper">
+                <div class="mui-scroll">
+                    <ul class="mui-table-view">
+                        <li class="mui-table-view-cell">
+                            <a href="javascript:openPublishWin();">发表话题</a>
+                        </li>
+                        <li class="mui-table-view-cell" id="follow-topic-bt" data-isFollowed="0"><a href="javascript:;">关注话题</a>
+                        </li>
+                        <li class="mui-table-view-cell" id="topic-rule-bt"><a href="javascript:;">话题规则</a>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="topic-rule" style="display:none;">
+        <span class="rules-txt">所有不开心的都可以在这里吐槽，你们所有都不开心都发泄在这里。</span>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/mui.min.js"></script>
+
+<script>
+    function afterFavoriteCircle(act,dom){        
+        if(act == 'cancel'){
+            myToast('已取消关注！');
+            $('#follow-topic-bt').text('关注话题');
+            $('#follow-topic-bt').attr('data-isFollowed',0);
+
+            api.execScript({
+                name:'topic',
+                frameName:'topicFollow',
+                script:'removeCircle('+fid+');'
+            });
+        }else if(act == 'add'){
+            myToast('关注成功！'); 
+            $('#follow-topic-bt').text('取消关注');  
+            $('#follow-topic-bt').attr('data-isFollowed',1); 
+        }
+        
+	 	var fav_fid = $api.getStorage('fav_fid');	
+	 	if(!fav_fid || typeof(fav_fid) == "undefined") {
+	 		if(act == 'cancel'){
+	 			$api.setStorage('fav_fid', -1*fid);	
+	 		}else if(act == 'add'){
+	 			$api.setStorage('fav_fid', fid);
+	 		}
+	 	} else {
+	 		$api.rmStorage('fav_fid');
+	 	}
+        
+    }
+    // 打开最新
+    function openNew(){
+        loadTopics(1);
+        $('#t-section').trigger('click');
+    }
+    //更多按钮
+    var $mask = 0;
+    function openMore(){
+        //alert('open-more');
+        //var btn = document.getElementById("more-bt");
+        //监听点击事件
+        // btn.addEventListener("tap",function () {
+        //   console.log("tap event trigger");
+        // });
+        //触发submit按钮的点击事件
+        //mui.trigger(btn,'tap');
+        
+        if ($('#topPopover').hasClass('mui-active')) {
+            $('#topPopover').removeClass('mui-active');
+            $mask.remove();
+            switchScroll(1);
+        }else{
+            $('#topPopover').addClass('mui-active'); 
+            $mask = $('<div class="mui-backdrop mui-active" id="mask" style="" onclick="closeTopPover(this);"></div>');
+            $('body').append($mask);
+            switchScroll(0);
+            $(document).click(function(){
+                $mask.remove();
+                $('#topPopover').removeClass('mui-active');
+                switchScroll(1);
+            });
+        }
+       
+        // $(document).click(function(){
+        //     //alert('remove mask');
+        //     removePopover();
+        // });
+        // mui('#wrap').on('tap','.main',function(){
+        //     console.log('fsd');
+        //     removePopover();
+        // });
+        //document.addEventListener('touchstart',removePopover,false);
+        //$('#more-bt').trigger('click');
+        // api.setFrameAttr({
+        //     name: 'topic-circlecon',
+        //     bounces: false,
+        //     bgColor: '#fff',
+        //     vScrollBarEnabled:false,
+        //     hScrollBarEnabled:false
+        // });
+        
+    }
+    function closeTopPover(dom){
+        $(dom).remove();
+        $('#topPopover').removeClass('mui-active');
+        switchScroll(1);
+    }
+    // $('#more-bt').click(function(){
+    //     alert('nis');
+    // });
+    //document.addEventListener('touchstart',removePopover,false);
+    
+    //移除弹出框
+    function removePopover(){
+        //console.log('movestart');
+        //if(event){event.cancelBubble = true;}
+        $('#mask').remove();
+        $('#topPopover').removeClass('mui-active');
+        switchScroll(1);
+        //document.removeEventListener('touchstart',removePopover,false);
+    }
+    //打开发布话题页面
+    function openPublishWin(){
+        api.openWin({
+            name:'publish-topic',
+            url:'publish-topic.html',
+            pageParam:{
+                fid:fid,
+                fname:fname
+            }
+        });
+    }
+    
+    
+    //type:1精选，2最新
+    function loadTopics(type){
+        // console.log(type);
+        //var uid = $api.getStorage('uid');
+        //console.log(uid+fid);
+       
+       isTopicLoaded[type] = false;
+       var postData = {
+      //            uid:uid,
+                    page: currentPage[type],
+                    fid: fid,
+                    psize: 5,
+                    t: type +1
+                };
+                
+        api_ajax(0,
+        	'topic_list.php',
+        	postData,	        	
+		    function(ret, _, postData, type){
+					if (ret.code == 988) {
+						return;
+					}
+		        	if (ret.code == 101){
+		        		currentPage[type] = -1; 
+		        	} else if (ret.code == 100){
+				        var holderclass = type;
+				        if(type == 0){
+				            holderclass = '.jingxuan-topic-list';
+				        }else if(type == 1){
+				            holderclass = '.newest-topic-list';
+				        }	        
+			            console.log(ret);
+		                if(currentPage[type] == 1) {
+		                  $(holderclass).empty();
+		                 if (type == 0){
+		                    $('.rules-txt').text(ret.data.topicinfo.circle.rules.replace('<br />','').replace('&amp',''));
+		                 }
+		                }
+			            if(ret.data.topicinfo.circle.my_fav_circle == 0){
+			                $('#follow-topic-bt').text('关注话题');
+			                $('#follow-topic-bt').attr('data-isFollowed',0);       
+			            }else{
+			                $('#follow-topic-bt').text('取消关注');  
+			                $('#follow-topic-bt').attr('data-isFollowed',1); 
+			            }
+		                fname = ret.data.topicinfo.circle.fname;
+			            var jsfun = 'setForumName(\''+fname+'\')';
+				        api.execScript({
+				            name: 'topic-circle',
+				            //frameName: 'topic-circlecon',
+				            script: jsfun
+				        });
+		          
+			            listTopics(ret.data.topicinfo.topicslist, holderclass);
+			            //totalPage[type] = ret.data.topicinfo.pageinfo.totalpage;
+			            if (ret.data.topicinfo.pageinfo.curpage >= ret.data.topicinfo.pageinfo.totalpage)
+    						currentPage[type] = -1;  
+			            
+		                if(isFirstLoad){
+		                    api.execScript({
+		                        name:'topic-circle',
+		                        script:'showMore();'
+		                    });
+		                    isFirstLoad = false;
+		                };
+			        };
+			        isTopicLoaded[type] = true; 
+                    openGuide('topic-circle-detail-guide');
+		        },
+	        type,
+	        0);
+    }
+    var type = 0;
+    var fid = 0;
+    var fname = "";
+    
+    var currentPage = [1,1];
+    var totalPage = [0,0];
+    var isTopicLoaded = [false, false];
+    var isFirstLoad = true;
+	var lastTime = 0;
+	
+    apiready = function(){
+        isDev = false;
+        fid = api.pageParam.fid;
+		$api.rmStorage('fav_fid');
+		$api.setStorage('fid_no_new', fid);
+        //fid =98;
+        //alert(fid);
+        $('.nav>a').click(function(){
+           $this = $(this);
+           type = $this.index(); 
+           console.log(type);          
+           $this.siblings().removeClass('nav-active');
+           $this.addClass('nav-active');
+           $('.section').hide();
+           $('.'+ $this.data('id')).show();
+       });
+       
+        api.addEventListener({
+            name:'swiperight'
+        },function(ret,err){
+            $('#a-section').trigger('click');
+        });
+        
+        api.addEventListener({
+            name:'swipeleft'
+        },function(ret,err){
+            $('#t-section').trigger('click');
+        });
+       //提示
+       if(typeof $api.getStorage('had_opened_tucao') == 'undefined'){
+           $('.first-tips').show();
+           $api.setStorage('had_opened_tucao',true);
+       }
+       loadTopics(0);
+       loadTopics(1);
+       
+	   lastTime = (new Date()).valueOf();
+       api.setRefreshHeaderInfo({
+           visible: true,
+           loadingImgae: 'wgt://image/refresh.gif',
+           bgColor: '#f2f2f2',
+           textColor: '#4d4d4d',
+           textDown: '下拉刷新...',
+           textUp: '松开刷新...',
+           showTime: false
+       }, function (ret, err) {
+       		api.hideProgress();
+	        var nowTime = (new Date()).valueOf();
+	        if (nowTime-lastTime > 180000) {		//3*60*1000 = 180000
+	        	lastTime = nowTime;         		
+	       	    if (isTopicLoaded[type]) {
+		       		currentPage[type] = 1;
+		            loadTopics(type);            
+	            }
+	         }
+	        api.refreshHeaderLoadDone();
+       });
+
+       api.addEventListener({
+           name: 'scrolltobottom',
+           extra:{
+               threshold:200    //设置距离底部多少距离时触发，默认值为0，数字类型
+           }
+       }, function (ret, err) {
+          if (currentPage[type] > 0 && isTopicLoaded[type])
+           {   
+               currentPage[type] = currentPage[type] + 1;
+               loadTopics(type); 
+               console.log(currentPage[type]);
+           }
+       });
+
+       $('#topic-rule-bt').click(function(event){
+            $('.topic-rule').show();
+            switchScroll(0);
+            //event.cancelBubble = true;
+            $('#mask').remove();
+            $('#topPopover').removeClass('mui-active');
+            event.stopPropagation();
+       });
+
+       $('.topic-rule').click(function(){
+            $(this).hide();
+            switchScroll(1);
+       });
+
+       $('#follow-topic-bt').click(function(){
+        //alert($(this).attr('data-isFollowed'));
+            if($(this).attr('data-isFollowed') == 0){
+                favoriteCircle(fid,'add',false,this);    
+            }else{
+                favoriteCircle(fid,'cancel',false,this);   
+            } 
+       });
+    }
+    $(function(){
+        initDev();
+    });
+</script>
+</html>

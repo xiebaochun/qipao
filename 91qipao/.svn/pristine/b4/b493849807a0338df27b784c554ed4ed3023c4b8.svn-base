@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+        <meta name="format-detection"content="telephone=no">
+        <title>邀请回答</title>
+        <link rel="stylesheet" type="text/css" href="../css/common.css" />
+        <style>
+            #wrap{
+                height: 100%;
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -webkit-flex-flow: column;
+                       flex-flow: column;
+            }
+            #main{
+                -webkit-box-flex: 1; 
+                -webkit-flex: 1;
+                flex: 1;
+                background-color: #eee;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="wrap">
+            <div id="main">
+
+            </div>
+        </div>
+        <script type="text/javascript" src="../script/api.js"></script>
+        <script type="text/javascript" src="../script/common.js"></script>
+        
+        <script>
+        var app_content,tid,fid; 
+            $(function(){
+                initDev();
+            });
+            apiready = function(){
+                tid = api.pageParam.tid;
+                fid = api.pageParam.fid;
+                require('list_common',function(){
+                    app_content = new QIPAO.list({
+                        api_file:'my_invite_daren_list.php',
+                        postData:{ 
+                            psize: 10,
+                            tid:tid,
+                            fid:fid
+                        },
+                        holder:'#main',
+                        listF:listHongren,
+                        none:{
+                            txt:'暂无收藏动态',
+                            btTxt:'马上去收藏动态',
+                            to:'publish-topic'
+                        }
+                    });
+                    //app_content.sayOption();
+                });
+
+                ///console.log(tid);
+               /* api_ajax(0,'my_invite_daren_list.php',{tid:tid,page:1,psize:10},function(ret){
+
+                    console.log(ret);
+                },null,1);*/
+                
+                
+            } 
+            function listHongren(List){
+                console.log(List);
+                var Html = '';
+                for(var index in List){
+                    Html += '<div class="item user-item-wrap" ';
+                    Html += 'onclick="openUserSpace('+List[index].userid+');">';
+                    Html += '<div class="user-item">';
+                    Html += '<img class="item-avator" src="'+List[index].ui+'" alt="">';
+                    Html += '<div class="item-user-info vm">';
+                    Html += '<span class="item-name">'+List[index].nickname+'</span>';
+                    Html += '<span class="color-yellow ml2 f4">'+List[index].tag+'</span><br>';
+                    Html += '<span class="activity-count f4 color-666 ml3">'+List[index].ta_topics.total+'</span>';
+                    Html += '<span class="ml2 f4 color-666">动态</span>&nbsp;&nbsp;&nbsp;&nbsp;';
+                    Html += '<span class="fans-count f4 color-666">'+List[index].fav_ta_user.total+'</span>';
+                    Html += '<span class="ml2 f4 color-666">粉丝</span>';
+                    Html += '</div>';
+                    if(List[index].invited){
+                        Html += ' <div class="item-header-right"><span class="follow-bt invite-bt bg-gray" data-sid="'+List[index].userid+'">已邀请</span></div>';
+                    }else{
+                        Html += ' <div class="item-header-right"><span class="follow-bt invite-bt" data-sid="'+List[index].userid+'" onclick="inviteHongren(this,event);">+邀请</span></div>';
+                    }
+
+                    Html += '</div>';
+                    Html += '</div>';
+                                    
+                }
+                $('#main').append(Html);
+            }
+            function inviteHongren(self,e){
+                var e = e || window.event;
+                if(e){
+                    e.cancelBubble = true;
+                }
+                api_ajax(1,'my_invite_answer.php',{
+                    tid:tid,
+                    sid:$(self).data('sid')
+                },function(ret){
+                    console.log(ret);
+                    if(ret.code == 100){
+                        $(self).addClass('bg-gray').text('已邀请');
+						 myToast(ret.msg, 2000);
+                    }else{
+                        myToast(ret.msg, 2000);
+                    }
+                    
+                },null,0);
+                
+            }
+        </script>
+    </body>
+</html>

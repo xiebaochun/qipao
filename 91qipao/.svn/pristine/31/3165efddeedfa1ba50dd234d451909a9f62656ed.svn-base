@@ -1,0 +1,834 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>个人空间</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+ <!--    <link rel="stylesheet" type="text/css" href="../css/awesome-font/font-awesome.min.css" /> -->
+    <link rel="stylesheet" type="text/css" href="../css/user.css" />
+    <link rel="stylesheet" type="text/css" href="../css/topic-list.css" />
+    <link rel="stylesheet" type="text/css" href="../css/user-list.css" />
+    <style>
+         #header{background-color:none;position:fixed;top:-2px;left:0;z-index:40;background-color:transparent!important}
+         #header .back-icon{background-image:url(../image/arr-white-l.png)!important}
+         #main{background-color: #eee;}
+         .nav-active>span{color:#ffc72a!important}
+         .nav-item{width:32%!important}
+         .hongren-wrap{position:absolute;display:block;top:3rem;right:1.8rem;width:3rem;text-align:center;z-index:5}
+         .hongren-wrap>.hongren-ico{display:inline-block;margin-top:.6rem;width:1rem;height:1rem;}
+         .hongren-wrap>.hongren-txt{font-size:.6rem;color:#eee}
+         .none-expression{width:5rem}
+         .user-name{font-size:.7rem}
+         #cover{height:12rem}
+         .setting-ico{display:inline-block;z-index:6}
+         #user-info-edit{z-index:6}
+         .cover-bt{display:inline-block;width:6rem;padding:.25rem 0;border-radius:.8rem;margin:0 .5rem}
+         .cover-bt>div{font-size: 0.55rem;}
+         #login_register{margin:.5rem 0}
+         #private-mail-wraper{background-color:#eee}
+         #follow-wraper{background-color:#fed600}
+         .report-user{display:none;z-index:50;position:fixed}
+         .pop-wrap{position:fixed;z-index:100}
+         .dialog-box{position:absolute;left:50%;top:50%;margin-left:-6rem!important;width:12rem;margin:0 auto;margin-top:-6rem;border-radius:.5rem;background-color:#fff;text-align:center;padding:0!important}
+         .dialog-body>.item{position:relative;border-bottom:1px solid #eee;padding-bottom:.7rem}
+         .dialog-box input{border:none}
+         .dialog-box .dialog-close-bt{position:absolute;width:1.2rem;height:1.2rem;right:.5rem;top:-1.5rem;text-align:center}
+         .dialog-box .dialog-close-bt>i{display:inline-block;position:absolute;width:1.2rem;height:1.2rem;background-size:100% 100%;background-image:url(../image/close_x_ico.png)}
+         .dialog-box .dialog-close-bt>i:before{content:none}
+         .dialog-title{text-align:center;margin-top:.2rem;padding:.3rem 0;border-bottom:1px solid #eee}
+         .dialog-title .title1{font-size:.8rem}
+         .dialog-title .title2{font-size:.5rem;color:#999}
+         .valid-input-wrap{margin:0 auto;width:8rem;margin-top:.5rem;border:1px solid #999;border-radius:2rem;font-weight:.7rem;padding-left:.5rem;font-size:.5rem}
+         .dialog-body{padding:.5rem 0!important;line-height:.8rem}
+         .dialog-body span{line-height:1rem;margin-right:1rem;font-size:.7rem}
+         .dialog-body .label{margin-right:4.5rem}
+         .dialog-body .bt{position:absolute;display:inline-block;width:2.5rem;top:0;right:.2rem;background-color:#ffc72a;margin-left:.5rem;border-radius:.2rem;padding:.1rem .5rem;font-size:.6rem}
+         #send-pm{display:none}
+         .more-bt{position:absolute;display:inline-block;right:0;bottom:19px;width:22px;height:12px;margin-top:16px;margin-right:16px;background-image:url(../image/header-more-bt.png);background-size:22px 12px}
+         .choose-item-list{position:absolute;bottom:0;width:100%}
+         .choose-item-list>li{background-color:#FFF;text-align:center;line-height:2rem}
+         .choose-item-list>li>span{display:inline-block;width:95%;border-bottom:1px solid #EEE}
+         .info-wrap{background-color:#fff;text-align:right;margin-top:.5rem}
+         .input-wrap{position:relative;margin:0 .5rem;border-bottom:1px solid #eee;line-height:2rem;font-size:.6rem}
+         .input-wrap>.input{margin-bottom:0;outline:0;width:10.5rem;font-size:.6rem;text-align:left;outline:0;border:none}
+         .input-label{width:4rem;text-align:left}
+         .user-stamp{color:#ffc72a!important;margin-top:.1rem;font-size:.5rem}   
+         .content{margin-top:12rem;}
+         #avatar {
+             margin: 0 auto;
+             top:0;
+             padding: 2.3rem 0 5px 0;
+         }
+         #headImg{
+
+         }
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <a class="back-icon" tapmode="" onclick="api.closeWin()"></a>
+            <h1></h1>
+            <a class="more-bt" href="javascript:;" style="display:none;"></a>
+        </div>
+        <div id="main"> 
+
+            <div id="cover">
+                <!-- <i class="edit fa fa-pencil-square-o" id="user-info-edit" onclick="openWin('user-info-edit');"></i>
+                <i class="setting-ico fa fa-cog" id="setting-ico" onclick="openWin('user-setting')"></i> -->
+                <!-- <img class="cover" /> -->
+                <div id="avatar" onclick="get_profile();">
+                    <div class="headImg default-avator" id="headImg"/></div><br>
+                    <label class="user-name" id="usernickname"></label><br>
+                    <label class="user-stamp" id="user_title"></label><br>
+                    <div id="login_register" style="display:none;">
+                        <a class="cover-bt" id="private-mail-wraper" tapmode="" onclick="">
+                            <div id="login-register-label">
+                                <i class="fa fa-envelope-o"></i>&nbsp;私信
+                                <!-- <i class="edit fa fa-pencil-square-o"></i> -->
+                            </div>
+                        </a>
+                        <a class="cover-bt" id="follow-wraper" data-isFollowed="1">
+                            <div id="follow-label">+关注
+                                <!-- <i class="edit fa fa-pencil-square-o"></i> -->
+                            </div>
+                        </a>
+                    </div>
+                </div>
+               <div class="hongren-wrap" style="display:none;">
+                    <img class="hongren-ico" src="../image/hr_article_ico.png" alt=""><br>
+                    <span class="hongren-txt">ta的文章</span>
+                </div>
+                
+                
+                <div class="nav">
+                    <li class="nav-item nav-active" data-id="t-section">
+                        <span id="t_count">0</span><br>
+                        <span>话题</span>
+                    </li>
+                    <li class="nav-item" data-id="f-section">
+                        <span id="f_count">0</span><br>
+                        <span>关注</span>
+                    </li>
+                    <li class="nav-item" data-id="bf-section">
+                        <span id="bf_count">0</span><br>
+                        <span>粉丝</span>
+                    </li>
+                </div>
+
+                <div id="user_info"></div>
+            </div>
+            <div class="content">
+                <!-- 话题 -->
+                <div class="section t-section">
+                    <div class="nopost-topic-wrap" id="t_none" style1="display:none;">
+                        <img class="none-expression" src="../image/none_ico.png" alt=""><br>
+                        <span>Ta暂无发表话题哦！</span><br>
+                        <a class="btn" href="javascript:;" style="display:none;">去话题圈</a>
+                    </div>
+                    <div class="topic-list" id="t_list" style="display:none;">
+  
+                    </div>
+                </div>
+                <!-- 关注 -->
+                <div class="section f-section none">
+                    <div class="nopost-topic-wrap" id="f_none" style="display:none;">
+                        <img class="none-expression" src="../image/none_follow_ico.png" alt=""><br>
+                        <span>Ta暂无关注别人哦！</span><br>
+                        <a class="btn" href="javascript:;" style='display:none;'></a>    
+                    </div>
+                    <div class="user-list" id="f_list" style="display:none;">
+  
+                    </div>
+                </div>
+                <!-- 粉丝 -->
+                <div class="section bf-section none">
+                    <div class="nopost-topic-wrap" id="bf_none" style="display:none;">
+                        <img class="none-expression" src="../image/none_follower_ico.png" alt=""><br>
+                        <span>暂无粉丝关注ta~</span><br>
+                        <a class="btn" href="javascript:;" style="display:none;">提高自己的逼格</a>    
+                    </div>
+                    <div class="user-list" id="bf_list" style="display:none;">
+ 
+                    </div>
+                </div>
+               <!-- 用户资料 -->
+  		<!--
+           <div class="profile-section info-wrap" style="display:none;">
+               <div class="input-wrap">
+                   <span class="input-label">昵称</span>
+                   <input class="input" id="nick-name" type="text"  readonly="true">
+               </div>
+               <div class="input-wrap">
+                   <span class="input-label">气泡号</span>
+                   <input class="input" id="uniqueid" type="text"  readonly="true">
+               </div>
+               <div class="input-wrap more-get">
+                   <span class="input-label">个人简介</span>
+                   <input class="input" id="resume" type="text"  readonly="true">
+			   </div>
+               <div class="input-wrap more-get">
+                   <span class="input-label">城市</span>
+                   <input class="input" id="city" type="text"  readonly="true">
+			   </div>
+               <div class="input-wrap more-get">
+                   <span class="input-label">年龄</span>
+                   <input class="input" id="age" type="text"  readonly="true">
+			   </div>			                                
+               <div class="input-wrap more-get">
+                   <span class="input-label">性取向</span>
+                   <input class="input" id="sex-trend" type="text"  readonly="true">
+			   </div>	
+			   
+               <div class="nopost-topic-wrap" id="profile_more" style="display:none;"  onclick="openWin('my-info-edit');">
+                     <a class="btn" href="javascript:;">完善资料，了解TA更多...</a>    
+               </div>
+           </div>                  
+          //-->                   
+                <div class="pop-wrap report-user fixed" style="display:none;">
+                    <ul class="choose-item-list">
+                        <li class="report-option" data-msg="头像违规"><span>头像违规</span></li>
+                        <li class="report-option" data-msg="昵称违规"><span>昵称违规</span></li>
+                        <li class="report-option" data-msg="发表违规内容"><span>发表违规内容</span></li>
+                        <li class="report-option" data-msg="bl" id="blacklist"><span>加入黑名单</span></li>
+                        <li class="mt5 select-cancel-bt"><span class="color-999">取消</span></li>
+                    </ul>
+                </div>
+
+                <div class="pop-wrap dialog" id="send-pm" style="display:none;">
+                    <div class="dialog-box">
+                        <div class="dialog-close-bt"><i class="fa fa-times"></i></div>
+                        <div class="dialog-title">
+                            <span class="title1 f16">发起私信</span><br>
+                            <span class="title2 phone">(需要满足以下条件)</span>
+                        </div>
+                        <div class="dialog-body"> 
+                            <div class="item"><span class="label" id="t_count_1">发表话题(1/3)</span>
+                            <span class="bt" id="t_btn_1">去话题</span></div>
+                            <div class="item" style="border:none;margin-top:0.4rem;"><span class="label" id="t_count_2">关注话题(1/3)</span>
+                            <span class="bt" id="t_btn_2">已完成</span></div> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/mui.min.js"></script>
+<script>
+function getData(cur_index) {
+ 	canMore[cur_index] = 0;
+	api_ajax(2, 
+		url[cur_index], 
+		{	
+			sid: sid,
+			page: page[cur_index],
+			psize: psize[cur_index],
+			t:	'topic'
+		}, 
+		after_getData,
+		cur_index,
+		0
+		);    
+}
+
+function after_getData(ret, _, _, cur_index){
+		if (ret.code == 988)
+		{
+			canMore[cur_index] = 1;
+			return;
+		}
+		if (ret.code == 101) {
+	  		$("#"+item[cur_index]+"_none").show();
+	  		$("#"+item[cur_index]+"_list").hide();		
+		} else if (ret.code == 100) {
+	  		$("#"+item[cur_index]+"_none").hide();
+	  		$("#"+item[cur_index]+"_list").show();
+    		data = ret.data;
+			createHtml(data.info.list, cur_index);
+			
+    		if (data.info.pageinfo.curpage >= data.info.pageinfo.totalpage)
+    			page[cur_index] = -1;  	  					
+        } else {
+    		page[cur_index]  = -1;
+    	}
+    	canMore[cur_index] = 1;	
+}
+
+function createHtml(dlist, cur_index) {
+	var uid = $api.getStorage('uid'); 
+	if (page[cur_index] == 1) $("#"+item[cur_index]+"_list").empty();
+	var cHtml = '';	
+	switch(cur_index) {
+			case 0:
+                console.log(dlist);
+                listTopics(dlist,'#t_list');
+                return false;	
+				break;
+			case 1:
+              for(var index in dlist){
+				cHtml +='<div class="user-item" ';
+				cHtml +=' onclick="openUserSpace('+dlist[index].userid+');">';				
+                cHtml += '        <div class="avator-wrap">';
+                cHtml += '            <img class="default-avator avator-img" src="'+dlist[index].ui+'" alt="">';
+                if (dlist[index].tag != '')
+                	cHtml += '            <img class="avator-tag" src="../image/user_tag_ico.png">';
+                cHtml += '        </div>';
+                cHtml += '        <div class="user-info">';
+                cHtml += '            <p>';
+                cHtml += '                <span class="user-name">'+dlist[index].nickname+'</span>';
+                if (dlist[index].sex == 1)
+                	cHtml += '                <i class="gender-ico gender-male-ico fa fa-mars"></i>';
+                else if (dlist[index].sex == 2)
+                	cHtml += '                <i class="gender-ico gender-female-ico fa fa-mars"></i>';                	
+                cHtml += '            </p>';
+                cHtml += '            <span class="user-tag">'+dlist[index].tag+'</span>';
+                cHtml += '        </div>';
+             if (dlist[index].me_fav_ta == 1 || dlist[index].userid == uid)
+                	cHtml += '        <span id="fav_1_'+dlist[index].userid+'" class="arrow-right"></span>';
+                else if (dlist[index].me_fav_ta == 0)
+                	cHtml += '        <span id="fav_1_'+dlist[index].userid+'" class="follow-bt fav-ta-'+page[cur_index]+'" data-user="'+dlist[index].userid+'">关注</span>';
+                cHtml += '    </div>';  
+             }              
+ 				break;
+			case 2:
+                //listArticle(dlist,'#a_list');  
+             	for(var index in dlist){
+					cHtml +='<div class="user-item" ';
+					cHtml +=' onclick="openUserSpace('+dlist[index].userid+');">';
+	                cHtml += '        <div class="avator-wrap">';
+	                cHtml += '            <img class="default-avator avator-img" src="'+dlist[index].ui+'" alt="">';
+	                if (dlist[index].tag != '')
+	                	cHtml += '            <img class="avator-tag" src="../image/user_tag_ico.png">';
+	                cHtml += '        </div>';
+	                cHtml += '        <div class="user-info">';
+	                cHtml += '            <p>';
+	                cHtml += '                <span class="user-name">'+dlist[index].nickname+'</span>';
+	                if (dlist[index].sex == 1)
+	                	cHtml += '                <i class="gender-ico gender-male-ico fa fa-mars"></i>';
+	                else if (dlist[index].sex == 2)
+	                	cHtml += '                <i class="gender-ico gender-female-ico fa fa-mars"></i>';                	
+	                cHtml += '            </p>';
+	                cHtml += '            <span class="user-tag">'+dlist[index].tag+'</span>';
+	                cHtml += '        </div>';
+	                if (dlist[index].me_fav_ta == 1 || dlist[index].userid == uid)
+	                	cHtml += '        <span id="fav_2_'+dlist[index].userid+'" class="arrow-right"></span>';
+	                else if (dlist[index].me_fav_ta == 0) {
+	                	cHtml += '        <span id="fav_2_'+dlist[index].userid+'" ';
+	                	cHtml += 'class="follow-bt ta-fav-'+page[cur_index]+'" ';
+	                	cHtml += 'data-user1="'+dlist[index].userid+'">关注</span>';
+	                	}
+	                cHtml += '    </div>';	 
+                }               
+  				break;
+			default:
+				break;
+			}
+    
+	var content = $("#"+item[cur_index]+"_list");
+	if (page[cur_index] == 1) content.empty();
+	content.append(cHtml);
+	
+	if (cur_index == 1 ){
+	    $('.fav-ta-'+page[cur_index]).click(function(){
+	    	$this = $(this);	    	
+	    	favoriteUser($this.data('user'), 'add');
+	    	return false;
+	    });	
+    }
+	if (cur_index == 2 ){
+	    $('.ta-fav-'+page[cur_index]).click(function(){
+	    	$this = $(this);
+	    	favoriteUser($this.data('user1'), 'add');
+	    	return false;
+	    });	
+    }   
+    openGuide('user-zone-guide'); 
+}
+
+function afterBlacklistUser(sid, act) {
+	if (act == 'add') {
+		bl_ta = 1;
+		myToast('将ta加入了黑名单');
+	} else {
+		bl_ta = 0;
+		myToast('取消ta黑名单成功');
+	}
+	if (bl_ta == 0)
+		$("#blacklist").html('加入黑名单');
+	else
+		$("#blacklist").html('取消黑名单');			
+}
+
+function afterFavoriteUser(userid, act) {
+	if (act == 'add') {
+		if (userid == sid) {
+			me_fav_ta = 1;
+		    $("#follow-wraper").css('background-color','#eee');
+			$("#follow-label").text('取消关注');
+			$("#follow-wraper").show();
+			var count = parseInt($("#"+item[2]+"_count").text());
+			$("#"+item[2]+"_count").text(count+1);
+		} else {
+			$("#fav_"+cur_index+"_"+userid).html('').removeClass('follow-bt').addClass('arrow-right');
+		}
+	} else {
+		me_fav_ta = 0;
+		$("#follow-wraper").css('background-color','#ffc72a');
+		$("#follow-label").text('关注');
+		$("#follow-wraper").show();
+		var count = parseInt($("#"+item[2]+"_count").text());
+		$("#"+item[2]+"_count").text(count-1);		
+	}
+	if (userid == sid) {
+		canMore[2] = 1;
+		page[2] = 1;
+		getData(2);
+	}	
+}
+
+function init(index) {
+    var uid = $api.getStorage('uid');
+	if(!uid || typeof(uid) == "undefined"){
+	    var jsfun = "openTab('main', '71bbe');set_gd_new(0);";
+	    api.execScript({
+	        name: 'root',
+	        script: jsfun
+	    });
+	    return true;	
+	} else {
+		if (index >= 0 && canMore[0]+canMore[1]+canMore[2] < 3) return;
+		if (index < 0) {
+			if (index == -1) {
+				page = new Array(1,1,1);	
+				canMore = new Array(0,0,0);
+			} else if (index == -2) {
+				page[1] = 1; canMore[1] = 1;
+				page[2] = 1; canMore[2] = 1;
+			}
+		} else {
+			page[index] = 1;
+			canMore[index] = 0;
+		}
+		
+		api_ajax(2, 
+			'user_info_get.php', 
+			{	
+				sid:sid
+			}, 
+			after_init,
+			index,
+			0
+			); 
+	}
+}
+
+function after_init(ret, _, _, index) {
+	if (ret.code == 988)
+	{
+		return;
+	}
+   	console.log(ret);
+	if(ret.code == 100){
+		var uid = $api.getStorage('uid');
+		
+		data = ret.data;	
+		user_info = data;
+		username = data.nickname;
+		
+		$("#headImg").css({"background-image":'url('+data.userimage+')'});
+		var nickname = data.nickname;
+		//nickname = nickname + "("+sid+")";
+		$("#usernickname").text(nickname);
+		$("#user_title").text(data.tag);		
+	
+		/*
+		set_profile();
+		$("#nick-name").val(data.nickname);
+		$("#uniqueid").val(data.uniqueid);
+		if (data.resume == '')
+			$("#resume").val('(未填写)');
+		else
+			$("#resume").val(data.resume);
+		if (data.city == '')
+			$("#city").val('(未填写)');
+		else
+			$("#city").val(data.city);
+		if (data.age == '' || data.age == 0)
+			$("#age").val('(未填写)');
+		else
+			$("#age").val(data.age);
+		if (data.lookingfor == '')
+			$("#sex-trend").val('(未填写)');
+		else
+			$("#sex-trend").val(data.lookingfor);		
+		*/
+		
+  		if (data.ta_article > 0) {
+  			$('.hongren-wrap').show();
+  			taHongren = 1;
+  		} else {
+  			$('.hongren-wrap').hide();
+  			taHongren = 0;
+  		}
+  		
+  		if (uid == sid) {
+  			$("#login_register").hide();
+  			$(".more-bt").hide();
+  		} else {
+  			$("#login_register").show();
+  			$(".more-bt").show();
+  			//alert(data.me_fav_ta);
+      		if (data.me_fav_ta == 1) {
+      			me_fav_ta = 1;
+      			$("#follow-wraper").css('background-color','#eee');
+      			$("#follow-label").text('取消关注');
+      			$("#follow-wraper").show();
+      		} else {
+      			me_fav_ta = 0;
+      			$("#follow-wraper").css('background-color','#ffc72a');
+      			$("#follow-label").text('关注');
+      			$("#follow-wraper").show();
+      		}
+	  		bl_ta = data.bl;
+	  	 	if (bl_ta == 0)
+	 			$("#blacklist").html('加入黑名单');
+	 		else
+	 			$("#blacklist").html('取消黑名单');	
+  		}
+  					
+  		var d_count = Array(data.ta_post, data.ta_fav_user, data.fav_ta_user);
+ 		for (var i=0; i<3; i++)
+ 			$("#"+item[i]+"_count").text(d_count[i]);
+ 			
+   		if (index < 0) {
+   			if (index == -1) {
+   				var for_f = 0; 
+   				var for_t = 3;
+   			} else if (index == -2) {
+   				var for_f = 1; 
+   				var for_t = 3;   			
+   			}
+   		} else {
+   			var for_f = index; 
+   			var for_t = index;
+   		}
+   		for (var i=for_f; i<for_t; i++)	{
+	  		if (d_count[i] <= 0) {
+	  			$("#"+item[i]+"_none").show();
+	  			$("#"+item[i]+"_list").hide();
+	  		} else {
+	  			$("#"+item[i]+"_none").hide();
+	  			$("#"+item[i]+"_list").show();
+	  			canMore[i] = 1;
+	  			getData(i);
+	  		}    		
+   		}	
+ 			          		
+	}else{
+  		myToast(ret.code+"/"+ret.msg);
+	}
+	isFirst = 0;
+}
+
+
+function checkSendPM(sid, username) {
+	var canSendPM = $api.getStorage('canSendPM');
+	if(!canSendPM || typeof(canSendPM) == "undefined") {
+		api_ajax(2, 
+			'gd_pm_add_cond.php', 
+			{	
+			}, 
+			after_checkSendPM,
+			{
+				sid:sid,
+				username:username
+			},
+			0
+			);
+		return;
+	}	
+    openPM(sid, username);
+}   	
+
+function after_checkSendPM(ret, _, _, others) {
+	if (ret.code == 988)
+	{
+		return;
+	}
+	if (ret.code == 100) {
+    //取消私信条件
+    openPM(others.sid, others.username);
+    return;
+
+		if (ret.data.my_forum_count >= 	ret.data.need_forum_count
+			&& ret.data.my_like_forum_count >= ret.data.need_like_forum_count) {
+				$api.setStorage('canSendPM', 1);
+				openPM(others.sid, others.username);
+				return;
+			}
+			/*
+			                            <div><span class="label" id="t_count_1">发表话题(1/3)</span>
+                            <span class="bt" id="t_btn_1">去话题</span></div>
+                            <div><span class="label" id="t_count_2">关注话题(1/3)</span>
+                            <span class="bt" id="t_btn_2">已完成</span></div> 
+			 */
+    ret.data.my_forum_count = ret.data.my_forum_count > ret.data.need_forum_count?ret.data.need_forum_count:ret.data.my_forum_count;
+    ret.data.my_like_forum_count = ret.data.my_like_forum_count > ret.data.need_like_forum_count?ret.data.need_like_forum_count:ret.data.my_like_forum_count;
+		var t_count_1 = "发表话题("+ret.data.my_forum_count+"/"+ret.data.need_forum_count+")";	
+		var t_count_2 = "关注话题("+ret.data.my_like_forum_count+"/"+ret.data.need_like_forum_count+")";
+		$('#t_count_1').html(t_count_1);
+		$('#t_count_2').html(t_count_2);
+		if (ret.data.my_forum_count >= 	ret.data.need_forum_count) {
+			$('#t_btn_1').html('已完成').css('background-color','#ddd');
+			$('#t_btn_1').click(function(){
+				return false;
+			});
+		} else {
+			$('#t_btn_1').html('发表话题');
+			$('#t_btn_1').click(function(){
+				openWin('publish-topic');
+			});
+		}
+		if (ret.data.my_like_forum_count >= ret.data.need_like_forum_count) {
+			$('#t_btn_2').html('已完成').css('background-color','#ddd');;
+			$('#t_btn_2').click(function(){
+				return false;
+			});
+		} else {
+			$('#t_btn_2').html('关注话题');
+			$('#t_btn_2').click(function(){
+				openWin('topicAllCircle');
+			});
+		}
+		$('#send-pm').show();	
+	}
+}    	
+
+//打开发布话题页面
+function openPublishWin(){
+        api.openWin({
+            name:'publish-topic',
+            url:'publish-topic.html',
+            pageParam:{
+                fid:fid
+            }
+        });
+    }
+  
+function get_profile(){
+	var uid = $api.getStorage('uid');
+	if (uid == sid) return; 
+	//$('.nav-item').removeClass('nav-active');
+	//$('.section').hide();
+	//$('.profile-section').show();
+	  api.openWin({
+	    name:'user-info',
+	    url:'user-info.html',
+	    pageParam:{
+	    	sid:sid,
+	    	user_info:user_info
+	    	}
+	  });
+	//cur_index = 3;
+}
+    
+$(function(){
+    $('.nav-item').click(function(){
+    	$('.profile-section').hide();
+        $this = $(this);
+        switch($this.data('id')){
+            case 't-section':
+            	cur_index = 0;
+            	break;
+            case 'f-section':
+            	cur_index = 1;
+            	break;
+            case 'bf-section':
+				cur_index = 2;
+            	break;
+            default:
+            	break;
+        } 
+               
+        $this.siblings().removeClass('nav-active');
+   		$this.addClass('nav-active');
+        $('.section').hide();
+        $('.'+$this.data('id')).show();
+    });
+    
+    $('#headImg').click(function(){
+    	//cur_index = -1;
+    });
+    
+    $('#private-mail-wraper').click(function(event){
+    	checkSendPM(sid, username);
+        var e = event;
+        if(e.stopPropagation){
+            e.stopPropagation();
+          }else{
+            e.cancelBubble = true;
+        }
+	});
+	
+    $('#follow-wraper').click(function(event){
+        var e = event;
+        if(e.stopPropagation){
+            e.stopPropagation();
+          }else{
+            e.cancelBubble = true;
+         }
+    	if(me_fav_ta == 1){
+	    	api.confirm({
+	    			title:'',
+	    			msg:'确定取消关注?',
+	    			buttons:['取消', '确定']
+	    			}, function(ret,err) {
+	    				if (ret.buttonIndex == 2) {
+	    					favoriteUser(sid, 'cancel');
+				    		return false;    				
+	    				}
+	    			});
+		    	    	
+        } else {
+    		favoriteUser(sid, 'add');
+    	}
+	});
+	    
+    $('#t_none').click(function(){
+ 		gotoIndexTab('topic','21c8cf');
+ 		api.closeWin();
+    });
+      
+    $('#a_none').click(function(){
+		gotoIndexTab('main','71bbe');
+		api.closeWin();
+    });
+     
+    //举报用户
+    $('.more-bt').click(function(){
+        $('.report-user').fadeIn(200);
+        $('.report-user').show();
+        //$('.choose-item-list').slideToggle();
+        switchScroll(0);   
+    }); 
+    $('.select-cancel-bt').click(function(){
+        
+        $(this).parent().parent().fadeOut(200);
+        //$('.choose-item-list').slideToggle();
+        switchScroll(1);   
+    });
+    $('.pop-wrap').click(function(){
+        $(this).fadeOut(200);
+        switchScroll(1);    
+    });   
+    
+    $('.dialog-close-bt').click(function(){        
+        $(this).parent().parent().hide();
+        //$('.choose-item-list').slideToggle();
+    });
+    
+   $('.hongren-wrap').click(function(){
+         api.openWin({
+            name:'user_topic_list',
+            url: 'my-hr-sc.html',
+            pageParam:{
+            	userid:sid,
+            	page_title: username+'的文章',
+            	api_file:'user_topic_list.php',
+            	t: 'article'
+            }
+        });
+    });
+    
+    $('.report-option').click(function(){
+   			$this = $(this);		
+   			if ($this.data('msg') == "bl") {
+	   	    	var act = 'add';
+		    	if (bl_ta == 1)
+		    		act = 'cancel';
+		    	blacklistUser(sid, act);			
+   			} else {
+    			var message = "被举报人："+sid+"。[个人空间]。理由："+$this.data('msg');    		
+    			myReport(message);
+    		}    		
+    		$('.report-user').fadeOut(200);
+    		$('.report-user').hide();
+    });  
+
+    initDev();
+
+});
+
+var sid = 0;
+var user_info = null;
+var username = "";
+var taHongren = 0;
+var item = new Array('t','f','bf');
+var url = new Array('user_topic_list.php','user_favorite_user_list.php','user_favorite_ta_list.php');	
+var page = new Array(1,1,1);	
+var psize = new Array(5,10,10);
+var canMore = new Array(1,1,1);	
+var cur_index = 0;
+var me_fav_ta = 0;
+var bl_ta = 0;
+var isFirst = 1;  
+
+apiready = function () {
+    	var header = $api.byId('header');
+    	$api.fixIos7Bar(header);
+    
+        isDev = false;
+        // console.log($api.getStorage('uid'));
+		sid = api.pageParam.sid;
+	
+	    api.addEventListener({
+	      name:'viewappear'
+	    },function(ret,err){
+	    	//$("#login_register").hide();
+	    	//$(".more-bt").hide();
+	    	if (isFirst == 1)
+	    		init(-1) 
+	    	else
+	        	init(-2);	     
+	    });
+
+	    
+	    api.setRefreshHeaderInfo({
+	        visible: true,
+	        loadingImg: '../image/refresh.png',
+	        bgColor: '#f2f2f2',
+	        textColor: '#4d4d4d',
+	        textDown: '下拉刷新...',
+	        textUp: '松开刷新...',
+	        showTime: false
+	    }, function (ret, err) {
+	    	api.hideProgress();
+	    	if (canMore[cur_index])
+		       		init(cur_index);
+	        api.refreshHeaderLoadDone();
+	    });
+	  
+	    api.addEventListener({
+	        name: 'scrolltobottom',
+	        extra:{
+	        	threshold:200
+	    	}
+	    }, function (ret, err) {	    	
+	   	   if (page[cur_index]>0 && canMore[cur_index])
+		        {
+			       page[cur_index] = page[cur_index] + 1;
+			       getData(cur_index);
+		        } 	
+ 	    }); 
+ 	    
+		closeWinAboutLogin(); 	      
+};
+
+</script>
+
+</html>

@@ -1,0 +1,420 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=0, width=device-width"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>qipao</title>
+    <link rel="stylesheet" type="text/css" href="./css/common.css" />
+    <link rel="stylesheet" type="text/css" href="./css/index.css" />
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <div class="main header active">
+                <h1></h1>
+            </div>
+            <div class="topic header">
+                <h1></h1>
+            </div>
+            <div class="gouda header">
+                <h1></h1>
+            </div>
+ 
+            <div class="my header">
+                <h1 id="headerText">我的</h1>
+            </div>
+        </div>
+        <div id="main">
+                
+        </div>
+
+        <div id="nav">
+            <ul>
+                <li class="active"><a class="main" tapmode="active" onclick="openTab('main','71bbe')">推荐</a></li>
+                <li><a class="topic" tapmode="active" onclick="openTab('topic','21c8cf')">话题</a></li>         
+                <li><a class="gouda" tapmode="active" onclick="openTab('gouda','1c8d0')">
+                	<div id="gd_new"></div>勾搭</a></li>
+                <li><a class="my" tapmode="active" onclick="openTab('my','1c8d1')">我的</a></li>        
+            </ul>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="./script/api.js"></script>
+<script type="text/javascript" src="./script/common.js"></script>
+<script type="text/javascript" src="./script/zepto.js"></script>
+<script>
+//previous page id, current page id
+var prevPid = '', curPid = '';
+//save opened frame name
+var frameArr = [];
+
+//frame whether open
+function isOpened(frmName) {
+	for (var i = 0; i < frameArr.length; i++) {
+		if (frameArr[i] === frmName) {
+			return true;
+		}
+	}
+	return false;
+}
+
+//toggle header
+function showHeader(type) {
+	if (!type) {
+		return;
+	}
+	var header = $api.dom('#header .active');
+	$api.removeCls(header, 'active');
+	var thisHeader = $api.dom('#header .' + type);
+	$api.addCls(thisHeader, 'active');
+}
+
+//open tab
+var isFirstOpenTab = 1;
+function openTab(type, tabid) {
+    api.bringFrameToFront({
+        from:'bottom-nav'
+    });
+	 if(type === 'gouda' || type === 'my'){
+	 	var action = "openTab('"+type+"', '"+tabid+"')";
+	 	if (!checkLogin(action, 'root')) 
+	 		return;
+	 }
+	showHeader(type);
+	var width = api.winWidth;
+	var nav = $api.byId('nav');
+	var navPos = $api.offset(nav);
+	var header = $api.byId('header');
+	var headerPos = $api.offset(header);
+	var height = api.winHeight - navPos.h+2; 
+	//alert(api.winHeight);
+	//alert(api.winHeight+':'+headerPos.h+':'+navPos.h);
+
+	type = type || 'main';
+
+	var actTab = $api.dom('#nav .active');
+	$api.removeCls(actTab, 'active');
+	var thisTab = $api.dom('#nav .' + type);
+	thisTab = thisTab.parentNode;
+	$api.addCls(thisTab, 'active');
+	
+	if (!isFirstOpenTab) {
+		var jsfun = ''; 
+		if (type == 'main') {
+			jsfun = 'slideSwitch(1);';
+		}
+		else {
+			jsfun = 'slideSwitch(0);';
+		}
+        api.execScript({
+            name: 'root',
+            frameName:'main',
+            script: jsfun
+        });		
+	}
+
+	//record page id
+	prevPid = curPid;
+	curPid = type;
+	if (prevPid !== curPid) 
+	{
+		api.setFrameAttr({
+			name : 'topicExplore',
+			hidden : true
+		});
+		 api.setFrameAttr({
+			name : 'topicFollow',
+			hidden : true
+		});
+		api.setFrameAttr({
+			name : 'goudaCon',
+			hidden : true
+		});
+		// alert(type+':'+isOpened(type));
+
+		if (isOpened(type)) {
+			api.setFrameAttr({
+				name : type,
+				hidden : false
+			});
+			if(type=='my'){
+				set_my_change();
+			}
+			if(type=='topic'){
+				// api.setFrameAttr({
+				// 	name : 'topicExplore',
+				// 	hidden : false
+				// });
+				// api.setFrameAttr({
+				// 	name : 'topicFollow',
+				// 	hidden : false
+				// });
+				api.execScript({
+					frameName:'topic',
+					script:'setTopicFrame();'
+				});
+			}
+			if(type == 'gouda'){
+				 api.setFrameAttr({
+					name : 'goudaCon',
+					hidden : false
+				});
+			}
+		} else {
+			api.openFrame({
+				name : type,
+				url : 'html/' + type + '.html',
+				reload: false,
+				bounces: false,
+				opaque: true,
+				vScrollBarEnabled : false,
+				// bgColor:'rgba(0,0,0,0.8)',
+				pageParam : {
+					headerHeight : headerPos.h,
+					tid : tabid,
+					navHeight:navPos.h
+				},
+				rect : {
+					x : 0,
+					y : 0,
+					w : width,
+					h : height
+				}
+			});
+		}
+
+		if (prevPid) {
+			api.setFrameAttr({
+				name : prevPid,
+				hidden : true
+			});
+		}
+
+		if (!isOpened(type)) {
+			//save frame name
+			frameArr.push(type);
+		}
+	}
+	isFirstOpenTab = 0;
+}
+
+function checkCurPid(name, frameName) {
+	
+console.log("CurPid___"+curPid+"____" + name +"/"+frameName);
+
+	if (curPid == 'main'  && frameName == 'main') {
+        api.execScript({
+            name: 'root',
+            frameName: 'main',
+			script:  'view_appear();'
+        });	
+	} else if (curPid == 'my' && frameName == 'my') {
+		set_my_change();
+	} else if (curPid == 'topic' && frameName == 'topicFollow') {
+        api.execScript({
+            name: 'root',
+            frameName: 'topicFollow',
+            script:  'view_appear();'
+        });	
+	} else if (curPid == 'gouda' && frameName == 'goudaCon') {
+        api.execScript({
+            name: 'root',
+            frameName: 'goudaCon',
+            script:  'view_appear();'
+        });	
+	}
+}
+
+
+function set_my_change() {
+	var set_my_change = $api.getStorage('set_my_change');
+	$api.rmStorage('set_my_change');
+	$api.rmStorage('set_my_change_topic');
+	if (set_my_change){
+        api.execScript({
+            name: 'root',
+            frameName: 'my',
+            script:  'view_appear();'
+        });	        	
+	}
+}
+
+function login_to_server() {
+	 var uid = $api.getStorage('uid');
+	 if(!uid || typeof(uid) == "undefined") {return;}	
+	 var platform = $api.getStorage('platform');
+	 var app_file = "";
+	 var parms = null;
+	 if (platform == 'qp_phone') {
+	 	 app_file = 'util_login.php';
+		 parms = {
+        		phone:$api.getStorage('phone'),
+        		authcode:$api.getStorage('authcode'),
+        		isphone:$api.getStorage('isphone'),
+        		platform: platform
+        		}		 
+	 } else {
+		 app_file = 'util_SDKlogin.php'; 
+		 parms = 
+        		{
+	              userid: $api.getStorage('platform_userid'),
+	              username: $api.getStorage('platform_username'),
+	              headimgurl: $api.getStorage('platform_headimgurl'),
+	              platform: platform
+	            }	 
+	 }	
+
+	api_ajax(0, 
+			app_file, 
+			parms,
+			after_login_to_server,
+			null,
+			0
+		);	
+}
+
+function after_login_to_server(ret, _, parms, _) {
+	if (ret.code == 988) {
+		return;
+	}
+	if (ret.code == 100) {
+	   if (parms.platform == 'qp_phone') {
+			    $api.setStorage('phone', $api.getStorage('phone'));
+			    $api.setStorage('authcode', $api.getStorage('authcode'));
+			    $api.setStorage('uid', ret.uid);		
+			    $api.setStorage('token', ret.token);
+			    $api.setStorage('userimage',ret.userimage);
+			    $api.setStorage('username',ret.username);	
+			    $api.setStorage('platform', 'qp_phone');			    
+			    $api.setStorage('is_ours', ret.is_ours);	
+		} else {
+				$api.setStorage('uid', ret.uid);
+				$api.setStorage('token', ret.token);
+				$api.setStorage('username', ret.username);
+				$api.setStorage('userimage', ret.headimg);
+				$api.setStorage('platform', parms.platform);
+				$api.setStorage('platform_userid', parms.id);
+				$api.setStorage('platform_username', parms.username);
+				$api.setStorage('platform_headimgurl', parms.headimgurl);
+				$api.setStorage('is_ours', ret.is_ours);		          		
+		}	      	       
+	} 
+}
+
+function set_gd_new(dd) {
+		var gd_new = $("#gd_new");
+   		if (dd == 1) {
+   			gd_new.css('display','block'); 
+	        api.execScript({
+	            name: 'root',
+	            frameName: 'goudaCon',
+	            script:  'view_appear();'
+	        });   			
+	   			
+   			}
+   		else
+   			gd_new.css('display','none');   
+}   	       
+
+function getChannel() {
+	api.readFile({
+	    path:'widget://qipaoChannel.txt'
+	}, function(ret, err){
+		var channel = '';
+	    if(ret.status){
+	    	channel = ret.data;
+	    } 
+	    $api.setStorage('qipaoChannel', channel);
+	});   
+}
+
+apiready = function() {
+
+	getChannel();
+	
+	api.setFullScreen({
+		fullScreen : false
+	});
+
+	var header = $api.byId('header');
+	$api.fixIos7Bar(header);
+
+	api.setStatusBarStyle({
+		style : 'light'
+	});
+
+	api.addEventListener({
+		name : 'keyback'
+	}, function(ret, err) {
+		api.closeWidget();
+	});
+	
+	api.addEventListener({
+	    name:'online'
+	},function(ret,err){
+	    var connectionType = ret.connectionType;
+	    console.log('connectionType='+connectionType);
+	    if (!isNetConnected) {
+	    	login_to_server();
+	    }
+	});
+	
+	api.addEventListener({
+	    name:'offline'
+	},function(ret,err){
+		console.log('network offline');
+	});
+
+	openTab('main', '71bbe');
+
+	$api.setStorage('is_ours', 0);
+	
+	setTimeout(function () {
+			login_to_server();
+  	}, 5*1000);
+ 
+ 	api.addEventListener({
+	    name:'pause'
+	},function(ret,err){
+		isAppInFront = false;
+	});
+
+	api.addEventListener({
+	    name:'resume'
+	},function(ret,err){
+	    isAppInFront = true;
+	});
+	
+ 	/*
+ 	if (api.systemType == 'android') {
+	 	var myQipao = api.require('myQipao');
+	 	myQipao.startUM();
+		var param = {msg:"Hello APICloud!"};
+		myQipao.showAlert(param, function(ret, err){
+	    	alert(JSON.stringify(ret));
+	    });
+    }
+    */
+    //open bottom nav
+    // api.openFrame({
+    //     name:'bottom-nav',
+    //     url:'html/bottom-nav.html',
+    //     bounces:false,
+    //     bgColor:'rgba(0,0,0,0.5)',
+    //     rect:{
+    //         x:0,
+    //         y:300,
+    //         w:api.winWidth,
+    //         h:50
+    //     }
+    // });
+    // api.addEventListener({
+    //     name:'openTab'
+    // },function(ret){
+    //     alert(ret.value.frameName);
+    // });
+}
+
+</script>
+</html>

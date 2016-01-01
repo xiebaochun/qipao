@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <title>my-info-edit-header</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <style type="text/css">
+        html,body{background-color:transparent!important;}
+        #header{position: fixed;top:0; background-color:transparent!important;z-index:50;}
+        #header h1{
+            background: url(../image/logo.png) no-repeat center;
+            -webkit-background-size: 100px 25px;
+            background-size: 100px 25px;
+            font-size: 0px;
+        }
+        #header-bg{position: fixed;opacity: 1; top:0;z-index:49;width: 100%;z-index: 49; background-color: rgba(0,0,0,0);}
+        #header-bg>.inner{display:inline-block;height: 50px;}
+        .back-icon{background-image:url(../image/arr-white-l.png)!important}
+        .info-complete-bt{display:inline-block;position:absolute;right:0;bottom:0;line-height:50px;padding:0 .8rem;color:#fff;font-size:.65rem}
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <a class="back-icon" tapmode="" onclick="api.closeWin()"></a>
+            <h1></h1>
+            <a class="info-complete-bt" href="javascript:;" onclick="complete();">完成</a>
+        </div>
+        <div id="header-bg"><div class="inner"></div></div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript">
+    apiready = function(){
+        var header = $api.byId('header');
+        var header_bg = $api.byId('header-bg');
+        $api.fixIos7Bar(header);
+        $api.fixIos7Bar(header_bg);
+        // if(api.systemType == 'ios'){
+        //     $('#header-bg>.inner').css({'height':'65px'});
+        // }
+    };
+    function setHeaderOpacity(opacity){
+        $('#header-bg').css({'background-color':'rgba(50,50,50,'+opacity+')'});
+    }
+    function complete(){
+        api.execScript({
+            name:'my-info-edit',
+            script:'checknick()'
+        });
+    }
+</script>
+</html>

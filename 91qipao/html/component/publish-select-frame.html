@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+        <meta name="format-detection"content="telephone=no">
+        <title></title>
+        <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+         <link rel="stylesheet" type="text/css" href="../../css/ui.css" />
+        <style>
+            html,body{background-color: transparent !important;}
+            #wrap{
+                height: 100%;
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -webkit-flex-flow: column;
+                       flex-flow: column;
+            }
+            #main{
+                -webkit-box-flex: 1; 
+                -webkit-flex: 1;
+                flex: 1;
+            }
+            #nav{position: relative; background-color: rgba(0,0,0,0.5) !important;overflow: hidden; box-shadow:none;border-top:none;z-index: 100;}
+            #nav ul{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:horizontal;-webkit-flex-direction:row;flex-direction:row;padding-top:4px}
+            #nav ul li{position:relative;-webkit-box-flex:1;-webkit-flex:1;flex:1}
+            #nav ul li>a{font-size:9px}
+            .icon-close{margin-top:4px;padding-top:0px !important;font-size: 30px !important;color:#fdd600 !important;}
+            .publish-active{
+                    -webkit-animation:rotate .2s forwards;animation:rotate .2s forwards;
+                    /*-webkit-transform:rotate(45deg);transform:rotate(45deg);*/-webkit-transform-origin:39px 24px;transform-origin:39px 24px;
+            }
+            .publish-return{ -webkit-animation:rotateR .2s forwards;animation:rotateR .2s forwards;-webkit-transform-origin:39px 24px;transform-origin:39px 24px;}
+            .modal{background-color: transparent;bottom:70px;top:auto;}
+          
+            .nav-item{margin-top:1rem;/*line-height: 5rem;*/line-height: 0.8rem;color:#fff;}
+            .nav-item > img{display: inline-block;width: 2.6rem;}
+            .nav-item>span{color:#fff;}
+            @-webkit-keyframes rotate{
+                0%{
+                    
+                }
+                100%{
+                    -webkit-transform:rotate(135deg);transform:rotate(135deg);
+                }
+            }
+            @keyframes rotate{
+                0%{
+                    
+                }
+                100%{
+                    -webkit-transform:rotate(135deg);transform:rotate(135deg);
+                }
+            }
+            @-webkit-keyframes rotateR{
+                0%{
+                   /* -webkit-transform:rotate(0deg);transform:rotate(0deg);}*/
+                }
+                100%{
+                    -webkit-transform:rotate(-90deg);transform:rotate(-90deg);
+                }
+                
+            @keyframes rotateR{
+                0%{
+                     /*-webkit-transform:rotate(0deg);transform:rotate(0deg);}*/
+                }
+                100%{
+                   -webkit-transform:rotate(-90deg);transform:rotate(-90deg);
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div id="wrap" onclick="closePop();">
+            <div id="main">
+                <div class="modal-wrap publish-modal" style="display:none;">
+                     <div class="modal-mask"></div>
+                     <div class="modal animated" style="display:none;">
+                        <div class="">
+                            <div class="nav">
+                                <div class="nav-item">
+                                    <img src="../../image/interview_ico.png" alt="" onclick="openPublishWin(120,'求勾搭');"><br>
+                                    <span class="f5">求勾搭</span>
+                                </div>
+                                <div class="nav-item">
+                                    <img src="../../image/saizao_ico.png" alt="" onclick="openPublishWin(113,'晒照片');"><br>
+                                    <span class="f5">晒照片</span>
+                                </div>
+                                <div class="nav-item">
+                                    <img src="../../image/story_ico.png" alt="" onclick="openPublishWin(119,'说故事');"><br>
+                                    <span class="f5">说故事</span>
+                                </div>    
+                            </div>
+                        </div>
+                     </div>
+                 </div>
+                 
+            </div>
+             <div id="nav">
+                <ul>
+                    <li><a></a></li>
+                    <li><a></a></li>
+                    <li><a class="publish-topic iconfont icon-close" style="z-index:100;" onclick="closePop();"></a></li>                
+                    <li><a ></a></li>
+                    <li><a></a></li>        
+                </ul>
+            </div>
+        </div>
+        <script type="text/javascript" src="../../script/api.js"></script>
+        <script type="text/javascript" src="../../script/common.js"></script>
+        <script type="text/javascript" src="../../script/util/ui.modal.js"></script>
+        <script>
+            var modal = null;
+            $(function(){
+                initDev();
+             });
+            apiready = function(){
+                modal = new UI.modal({
+                    closed:function(){
+                        api.execScript({
+                            name:'root',
+                            script:'closePublishPop()'
+                        });
+	               },
+                    startClose:function(){
+                    }
+                });
+            } 
+            function addAnimate(){
+                modal.show();
+            }
+            function closePop(){
+                modal.close();
+            }
+
+            //打开发布话题页面
+            function openPublishWin(fid,name){
+                 api.execScript({
+                    name:'root',
+                    script:'openPublishWin(\''+fid+'\',\''+name+'\')'
+                 }); 
+                modal.close();
+             }
+        </script>
+    </body>
+</html>

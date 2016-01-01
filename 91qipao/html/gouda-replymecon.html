@@ -1,0 +1,194 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>回复我的</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <style>
+        body{background-color:#fff}
+        #main{background-color:#fff}
+        .user-avator{display:inline-block;width:2rem;height:2rem;border-radius:50%;background-color:#eee;vertical-align:middle}
+        .info-item{position:relative; margin:0 .5rem;padding:.5rem 0;/*border-bottom:1px solid #ccc*/}
+        .info-item:after{
+            position: absolute;
+            right: 0rem;
+            bottom: 0;
+            left: 0rem;
+            height: 1px;
+            content: '';
+            -webkit-transform: scaleY(.5);
+            transform: scaleY(.5);
+            background-color: #eee;
+        }
+        .info-item-middle{margin-left:.3rem;vertical-align:middle}
+        .info-item-middle>.user-name{font-size:.7rem}
+        .gender-ico{display:inline-block;width:.6rem;height:.6rem;font-size:.3rem;line-height:.6rem;text-align:center;color:#fff;border-radius:50%;background-color:#ff6263}
+        .create-time{font-size:.5rem}
+        .summary{margin-top:.5rem;background-color:#eee}
+        .summary>img{display:inline-block;width:3rem;height:3rem;vertical-align:middle}
+        .summary>span{margin-left:.5rem;vertical-align:middle}
+        .from{display:inline-block;position:absolute;right:.5rem;color:#ccc;font-size:.45rem}
+        .reply-content{margin-top:.5rem}
+    </style>
+</head>
+<body>
+    <div id="wrap">
+<!--         <div id="header">
+            <a class="back-icon" tapmode="" onclick="api.closeWin()"></a>
+            <h1 class="">回复我的</h1>
+        </div> -->
+        <div id="main">
+            <ul class="info-list" id="main_ul">
+            <div class="no-content-tip none">
+                <img src="../image/none_reply_expression.png" alt=""><br>
+                <span>暂时没有人回复你喔~</span>
+            </div>
+<!--            
+                <li class="info-item">
+                    <img class="user-avator" src="">
+                    <a class="info-item-middle" href="javascript:;">
+                        <span class="user-name">泡泡</span><i class="gender-ico "><i class="fa fa-venus"></i></i><span class="color-999">赞了我</span><br>
+                        <span class="create-time">3分钟前</span>  
+                        <span class="from">#吐槽区#</span>  
+                    </a>
+                    <p class="reply-content">不错不错哦</p>
+                    <div class="summary">
+                        <img  src="" alt="">
+                        <span>情趣用品怎么用？</span>
+                    </div> 
+                </li>
+//-->                
+            </ul>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src='../script/common.js'></script>
+<script>
+    $(function(){
+        initDev();
+    });
+    
+    function getData() {
+        canMore = 0;
+        api_ajax(2, 
+                'gd_comment_me_get.php', 
+                {   
+                    page: page,
+                    psize: psize
+                }, 
+                createHtml,
+                0,
+                1
+            );    
+    }
+    
+    function createHtml(ret, _, _, _){
+		if (ret.code == 988)
+		{
+			canMore = 1;
+			return;
+		}
+        if (ret.code == 101) {
+            $('.no-content-tip').show();
+            page = -1;
+        } else if (ret.code == 100) {
+            data = ret.data;
+            console.log();
+            var userlist = data.info.ulist;
+            var topiclist = data.info.tlist;
+            var dlist = data.info.clist;    
+            var cHtml = '';
+            for(var index in dlist){                
+                cHtml +='<li class="info-item">';
+                cHtml +='<img class="default-avator user-avator" ';
+                cHtml +='src="'+userlist[dlist[index].cuid].uimage+'" ';
+                cHtml +='onclick="openUserSpace(\''+dlist[index].cuid+'\');">';
+                cHtml +='<a class="info-item-middle" href="javascript:;">';
+                cHtml +='<span class="user-name">'+userlist[dlist[index].cuid].uname+'</span>'
+                //cHtml +='<i class="gender-ico"><i class="fa fa-venus"></i></i>';
+                cHtml +='<span class="color-999">&nbsp;&nbsp;&nbsp;回复了我</span><br>';
+                cHtml +='<span class="create-time color-999">'+dlist[index].date+'</span>';
+                if(dlist[index].fup == '1'){
+                    cHtml +='<span class="from" ';
+                    cHtml +='onclick="openTopicCircle(\''+dlist[index].fid+'\',\''+dlist[index].fname+'\');">#'+dlist[index].fname+'#</span>'; 
+                }
+                //cHtml +='<span class="from color-999" onclick="openTopicCircle(\''+dlist[index].fid+'\',\''+dlist[index].fname+'\');">#'+dlist[index].fname+'</span>'; 
+                cHtml +='</a>';
+                cHtml +='<p class="reply-content color-333">'+dlist[index].c_msg+'</p>';
+                cHtml +='<div class="summary" onclick="openTopicDetail(\''+dlist[index].tid+'\',\''+dlist[index].fid+'\',0);">';
+                if (topiclist[dlist[index].tid].images.length > 0)
+                    cHtml +='<img src="'+topiclist[dlist[index].tid].images[0]+'" alt="">';
+                else
+                    cHtml +='<img src="'+topiclist[dlist[index].tid].aimage+'" alt="">';
+                if(dlist[index].fup == '1'){
+                    cHtml +='<span>'+topiclist[dlist[index].tid].t_summary+'</span>';
+                }else if(dlist[index].fup == '57'){
+                    cHtml +='<span>'+topiclist[dlist[index].tid].title+'</span>';
+                }
+                
+                cHtml +='</div>';
+                cHtml +='</li>';
+            }
+            var main_ul = $api.byId('main_ul');
+            if (page == 1) main_ul.innerHTML = "";
+            main_ul.innerHTML += cHtml; 
+            if (data.info.pageinfo.curpage >= data.info.pageinfo.totalpage)
+                page = -1;          
+        }
+        else{
+            page = -1;
+        }    
+        canMore = 1;
+    }
+        
+    var page = 1;   
+    var psize = 5;
+    var canMore = 1;
+    var lastTime = 0;
+    
+    apiready = function(){   
+        //var header = $api.byId('header');
+        //$api.fixIos7Bar(header); 
+        
+         lastTime = (new Date()).valueOf();
+        api.setRefreshHeaderInfo({
+            visible: true,
+            // loadingImgae: 'wgt://image/refresh-white.png',
+            bgColor: '#f2f2f2',
+            textColor: '#4d4d4d',
+            textDown: '下拉刷新...',
+            textUp: '松开刷新...',
+            showTime: false
+        }, function (ret, err) {
+            api.hideProgress();
+            var nowTime = (new Date()).valueOf();
+            if (nowTime-lastTime > 60000) {     //60*1000 = 60000
+                lastTime = nowTime;  
+                if (canMore) {      
+                    page = 1;
+                    getData();
+                }
+            }
+            api.refreshHeaderLoadDone();
+        });
+    
+        api.addEventListener({
+            name: 'scrolltobottom',
+            extra:{
+                threshold:200
+            }
+        }, function (ret, err) {
+           if (page > 0 && canMore)
+            {
+                page = page + 1;
+                getData();
+            }
+        });    
+        
+        getData();
+    }
+</script>
+</html>

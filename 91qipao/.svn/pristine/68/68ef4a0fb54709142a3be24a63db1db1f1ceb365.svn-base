@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+        <meta name="format-detection"content="telephone=no">
+        <title>泡币</title>
+        <link rel="stylesheet" type="text/css" href="../css/common.css" />
+        <style>
+            #wrap{
+                height: 100%;
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -webkit-flex-flow: column;
+                       flex-flow: column;
+            }
+            #main{
+                -webkit-box-flex: 1; 
+                -webkit-flex: 1;
+                flex: 1;
+                background-color: #eee;
+            }
+            .banner{padding:1rem 0.5rem;}
+            .task-item{padding:0.5rem;border-bottom:1px solid #666;}
+            .start-bt{margin-top:-0.5rem;background-color: #300;line-height: 1rem;}
+            .start-bt>span{background-color: #900;}
+            .nav{background-color: #fff;border-bottom:1px solid #666;}
+        </style>
+    </head>
+    <body>
+        <div id="wrap">
+            <div class="fixed-header" id="header">
+                <a class="back-icon iconfont icon-arrow-left" tapmode onclick="api.closeWin();"></a>
+                <h1>泡币</h1>
+                <a class="header-right-txt" onclick="openWin('paobi-rule');">规则</a>
+            </div>
+            <div style="height:50px;"></div>
+            <div id="main">
+                <div class="banner">
+                    <img class="item-avator" src="../image/version_logo.png" alt="">
+                    <div class="item-header-right">123泡币</div>
+                </div>
+                <div class="nav" style="border-top:1px solid #666;">
+                    <div class="nav-item" style="border-right:1px solid #666;">泡币商城(未开放)</div>
+                    <div class="nav-item" onclick="openWin('rich-list');">富豪榜</div>
+                </div>
+                <div class="item" style="margin-top:0.5rem">
+                    <div class="item-header" style="border-bottom:1px solid #666;">新人奖励</div>
+                    <div class="task-item">
+                        <span>关注5个红人</span><br>
+                        <span>奖励5个泡币</span>
+                        <div class="start-bt pull-right"><span>开始任务</span></div>
+                    </div>
+                    <div class="task-item">
+                        <span>绑定手机号</span><br>
+                        <span>奖励10个泡币</span>
+                        <div class="start-bt pull-right"><span>开始任务</span></div>
+                    </div>
+                </div>
+                <div class="item" style="margin-top:0.5rem">
+                    <div class="item-header" style="border-bottom:1px solid #666;">日常奖励</div>
+                    <div class="task-item">
+                        <span>每日签到</span><br>
+                        <span>奖励1个泡币</span>
+                        <div class="start-bt pull-right"><span>开始任务</span></div>
+                    </div>
+                    <div class="task-item">
+                        <span>给动态回复</span><br>
+                        <span>奖励1个泡币,每天最多可获10个泡币</span>
+                        <div class="start-bt pull-right"><span>开始任务</span></div>
+                    </div>
+                    <div class="task-item">
+                        <span>发个动态</span><br>
+                        <span>奖励5个泡币,每天最多可获10个泡币</span>
+                        <div class="start-bt pull-right"><span>开始任务</span></div>
+                    </div>
+                    <div class="task-item">
+                        <span>给动态点赞</span><br>
+                        <span>奖励5个泡币,每天最多可获10个泡币</span>
+                        <div class="start-bt pull-right"><span>开始任务</span></div>
+                    </div>
+                    <div class="task-item">
+                        <span>分享气泡</span><br>
+                        <span>奖励30个泡币,每天最多可获150个泡币</span>
+                        <div class="start-bt pull-right"><span>开始任务</span></div>
+                    </div>
+                </div>
+                <div class="item" style="margin-top:0.5rem">
+                    <div class="item-header" style="border-bottom:1px solid #666;">连续奖励</div>
+                    <div class="task-item">
+                        <span>连续签到（已经连续签到7天）</span><br>
+                        <span>连续签到7天+10泡币，以7的倍数递增+10泡币，不封顶</span>
+                        <div class="start-bt pull-right"><span>开始任务</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="../script/api.js"></script>
+        <script type="text/javascript" src="../script/common.js"></script>
+        <script>
+            $(function(){
+                initDev();
+            });
+            apiready = function(){
+                
+            } 
+        </script>
+    </body>
+</html>

@@ -1,0 +1,184 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>话题首页</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <style>
+        #header{background-color:#fff}
+        .header-bt{display:inline-block;height:47px;font-size:16px;color:#fff;padding:0 20px}
+        .top-nav-active{border-bottom:3px solid #ffc72a;color:#ffc72a}
+        .daren-slide{position:relative;height:5rem;background-color:#fff}
+        .daren-item-list{padding:0.5rem 0;text-align:center}
+        .daren-item{width:3.6rem;display:inline-block}
+        .daren-item .daren-avator{display:inline-block;width:2rem;height:2rem;border:2px solid #666;border-radius:50%}
+        .slide-nav{position:absolute;width:100%;left:0;height:1rem;bottom:.1rem;text-align:center}
+        .slide-nav>.slide-nav-item{display:inline-block;width:.5rem;height:.5rem;border:1px solid #666;background-color:#fff;border-radius:50%}
+        .topic-list .topic-item{background-color:#fff;margin:0;margin-top:.5rem}
+        .topic-list .topic-item .topic-item-header{padding:.5rem .5rem}
+        .topic-list .topic-item .topic-item-header .user-avator{display:inline-block;width:1.5rem;height:1.5rem;background-color:#eee;vertical-align:middle;border-radius:50%}
+        .gender-ico{display:inline-block;width:.5rem;height:.5rem;background-color:#55f;border-radius:50%}
+        .from-where{display:inline-block;float:right;color:#ffd600}
+        .topic-item-body>img{display:inline-block;height:7rem;width:100%;background-color:#eee}
+        .topic-list .topic-item .topic-item-footer{height:3rem;color:#999}
+        .topic-item-title{margin:0;padding:0 .5rem}
+        .create-time{padding:.5rem;color:#999}      
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <div class="header active">
+                <h1><a class="header-bt header-explore" href="javascript:;" tabmode="">发现</a><a class="header-bt header-follow" href="javascript:;" tabmode="">关注</a></h1>
+               
+            </div>
+           
+        </div>
+        <div id="main">
+            <!-- <ul class="mui-table-view news-list" id="forum-list">
+                <li class="mui-table-view-cell">
+                    <a class="mui-navigate-right"><img src="../image/user/my_message.png" alt=""><span>最爱自拍</span></a>
+                </li>
+            </ul> -->
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src='../script/common.js'></script>
+<script>
+function openTopicFrame(name){
+    api.openFrame({
+                name : name,
+                url : name + '.html',
+                bounces : false,
+                opaque : true,
+                vScrollBarEnabled : false,
+                pageParam : {
+                    headerHeight : headerPos.h,
+                    // tid : tid
+                },
+                rect : {
+                    x : 0,
+                    y : headerPos.h,
+                    w : width,
+                    h : height
+                }
+            });
+}
+function showFollow(){
+    if(!isFollowOpened){
+        openTopicFrame('topicFollow');
+        isFollowOpened =true; 
+        //alert('打开follow');   
+    }else{
+        api.setFrameAttr({
+            name : 'topicFollow',
+            hidden : false
+        });
+        //alert('显示follow');
+    }
+    
+    api.setFrameAttr({
+        name : 'topicExplore',
+        hidden : true
+    });
+    
+    $('.header-bt').removeClass('top-nav-active');
+    $('.header-follow').addClass('top-nav-active');
+    currentFrame = 1;
+}
+
+function showExplore(){
+    api.setFrameAttr({
+        name : 'topicExplore',
+        hidden : false
+    });
+    if(isFollowOpened){
+        api.setFrameAttr({
+            name : 'topicFollow',
+            hidden : true
+        });
+    }
+    
+    // api.closeFrame({
+    //     name: 'topicFollow'
+    // });
+    //openTopicFrame('topicExplore');
+    $('.header-bt').removeClass('top-nav-active');
+    $('.header-explore').addClass('top-nav-active');
+    currentFrame = 0;
+}
+
+function hideExplore(){
+    api.setFrameAttr({
+        name : 'topicExplore',
+        hidden : true
+    });
+    //alert('close explore');
+}
+function hideFollow(){
+    api.setFrameAttr({
+        name : 'topicFollow',
+        hidden : true
+    });
+    //alert('close follow');
+}
+function setTopicFrame(){
+    if(currentFrame){
+        showFollow();
+    }else{
+        showExplore();
+    }
+}
+var width,header,headerPos,height,nav,navPos;
+var isFollowOpened = false;
+var currentFrame = 0;
+apiready = function () {
+    //updateForumsAllread();
+    //getBanner(api.pageParam.tid);
+    //initPage(api.pageParam.tid);
+
+    //pull to refresh
+    // api.setRefreshHeaderInfo({
+    //     visible: true,
+    //     // loadingImgae: 'wgt://image/refresh-white.png',
+    //     bgColor: '#f2f2f2',
+    //     textColor: '#4d4d4d',
+    //     textDown: '下拉刷新...',
+    //     textUp: '松开刷新...',
+    //     showTime: false
+    // }, function (ret, err) {
+    //     getBanner(api.pageParam.tid);
+    //     initPage(api.pageParam.tid);
+    //     api.refreshHeaderLoadDone();
+    // });
+    // api.addEventListener({
+    //     name: 'scrolltobottom'
+    // }, function (ret, err) {
+    //     //getBanner(api.pageParam.tid);
+    //     //initPage(api.pageParam.tid);
+    // });
+    var header = $api.byId('header');
+    $api.fixIos7Bar(header);
+    
+    width = api.winWidth;
+    navHeight = api.pageParam.navHeight;
+    // nav = $api.byId('nav');
+    // navPos = $api.offset(nav);
+    headerPos = $api.offset(header);
+    height = api.winHeight - headerPos.h - 50;
+
+    openTopicFrame('topicExplore');
+    $('.header-explore').addClass('top-nav-active');
+    $('.header-follow').click(function(){
+        showFollow();
+    });
+    $('.header-explore').click(function(){
+        showExplore();
+    });
+};
+</script>
+
+</html>

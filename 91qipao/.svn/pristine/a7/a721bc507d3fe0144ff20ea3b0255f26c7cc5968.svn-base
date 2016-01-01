@@ -1,0 +1,469 @@
+<!doctype html>
+<html>
+<head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+        <meta name="format-detection"content="telephone=no">
+        <title>推荐</title>
+        <link rel="stylesheet" type="text/css" href="../css/common.css" />
+        <link rel="stylesheet" type="text/css" href="../css/main.css" />
+        <style>
+            body{background-color: #fff;}
+            #scroll-top-bt{
+                position: fixed;
+                width: 2rem;
+                bottom:2rem;
+                right: 0.5rem;
+                z-index: 100;
+            }
+            #header{
+                position: fixed;
+                display: none;
+                top:0;
+                width: 100%;
+                height: 0px;
+                z-index: 100;
+                padding-top: 1.1rem;
+            }
+            .top-header-nav{
+                display: flex;
+                display: -webkit-flex;
+            }
+            .top-header-nav>.nav-item-box{
+                flex: 1;
+                -webkit-flex: 1;
+                text-align: center;
+            }
+            .top-header-nav>.nav-item-box>.nav-item{
+                display: inline-block;
+                height: 2rem;
+                width: 2rem;
+                margin:0.5rem 0;
+                background-color: #fff;
+                font-size: 12px;
+                text-align: center;
+                border:1px solid #999;
+                border-radius:50%;
+            }
+            .prefecture{margin:0 0.5rem 0.5rem 0.5rem;background-color: #990;}
+            .prefecture>.p-header{height:2rem;line-height:2rem;text-align: center;color:#fff;}
+            .prefecture>.p-body{height:6rem;}
+            .prefecture>.p-body>.p-item{float:left;width:50%;height: 6rem;background-color: #900;text-align:center;color:#fff;}
+            .prefecture>.p-body>.p-item:last-child{background-color: #099;}
+        </style>
+</head>
+<body>
+    <div id="header">
+    </div>
+    <div id="wrap">
+        
+        <div id="main">
+        <!--
+            <img id="scroll-top-bt" style="display:none;" src="../image/scroll_top_ico.png" alt="">
+        // -->   
+            
+            <div id='slide' class='swipe'>
+                <div class='swipe-wrap' id="banner-content">
+                </div>
+                <ul id="pointer" style="display:none;">
+                    <div class="pointer-bg"></div>
+                    <div class="pointer-content"><span class="color-333" id="current-slide">1</span>/<span class="color-333" id="total-slides">4</span></div>                    
+                </ul>
+            </div>
+            <div class="top-header-nav">
+                <div class="nav-item-box" onclick="openWin('special-channel');"><span class="nav-item">情报局</span></div>
+                <div class="nav-item-box" onclick="openWin('signin-everyday');"><span class="nav-item">签到</span></div>
+                <div class="nav-item-box" onclick="openWin('special-channel');"><span class="nav-item">大牌驾到</span></div>    
+            </div>
+            <div class="prefecture">
+                <div class="p-header">专区</div>
+                <div class="p-body">
+                    <div class="p-item" tapmode onclick="openWin('special-channel');">
+                        气泡测评
+                    </div>
+                    <div class="p-item" tapmode onclick="openWin('expert-qa');">
+                        专家答疑
+                    </div>
+                </div>
+            </div>
+            <div class="v2-main-content">
+                <div class="v2-article-item">
+                    <div class="v2-article-header">
+                        <div class="v2-article-author-info-wrap">
+                            <img class="item-avator v2-article-author-avator" src="../image/version_logo.png"/>
+                            <span class="item-name v2-article-author-name">作者名字</span>
+                        </div>
+                        <div class="v2-article-author-tag-wrap">
+                            <span class="v2-article-author-tag">作者标签</span>
+                        </div>
+                        <div class="v2-article-right">
+                            <span class="v2-article-follow-bt">关注</span>
+                        </div>
+                    </div>
+                    <div class="v2-article-body">
+                        <div class="v2-article-img-wrap">
+                            <img class="v2-article-img" src="" alt="">
+                            <img class="v2-article-img" src="" alt="">
+                            <img class="v2-article-img" src="" alt="">
+                        </div>
+                        <div class="v2-article-title">article title</div>
+                        <div class="v2-article-summary">
+                            article summary article summary article summaryarticle summaryarticle summary
+                        </div>
+                    </div>
+                    <div class="v2-article-footer">
+                        <div class="v2-article-footer-item">分享</div>
+                        <span>|</span>
+                        <div class="v2-article-footer-item">分享</div>
+                        <span>|</span>
+                        <div class="v2-article-footer-item">分享</div>
+                    </div>
+                </div>
+            </div>
+            <div id="activity">
+                <div id="topic-content">
+                </div>
+                <div id="bottom-tip"><span class="loader loader-double">&nbsp;</span>玩命加载中...</div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src='../script/swipe.js'></script>
+<script>
+
+var adlist = [];
+var topicListLen = 0;
+var lastTime = 0;
+var mySlider = null;
+var startSlide = 0;
+var slideHeight = 0;
+var slideWidth = 0;
+var $slide = $('#slide');
+var $currentSlide = $api.dom('#current-slide');
+var $bottomTip = $('#bottom-tip');
+var bannerLen = 0;
+
+function initSlide() {
+    var slide = $api.byId('slide');
+    var pointer = $api.domAll('#pointer a');
+	if (mySlider) {		
+		mySlider.reload();
+	} else {
+	    mySlider = Swipe(slide, {
+	        startSlide: startSlide,
+	        auto: 5000,
+	        continuous: true,
+	        disableScroll: true,        
+	        stopPropagation: true,
+	        callback: function (index, element) {
+	            if (bannerLen == 2)
+	                $api.text($currentSlide, (index+1) % 2 + 1);
+	            else
+	                $api.text($currentSlide,  (index+1));
+	        }
+	    });
+	    slideWidth = mySlider.getWidth(); 
+	    slideHeight = $('.swipe-wrap').height();
+    }
+    if (bannerLen == 2)
+        $('#total-slides').text(2);
+    else
+        $('#total-slides').text(mySlider.getNumSlides());
+}
+
+function slideSwitch(status) {
+    if (mySlider) {
+        if (status) {       
+            mySlider.next();      
+        }           
+        else {
+            mySlider.stop();
+        }
+    }
+}
+
+function initTopBanner(banner_list){
+	if (mySlider) {
+		mySlider.stop();
+    }
+    var bannerHtml = '';
+    bannerLen = 0;  
+    $api.text($currentSlide, startSlide+1);
+    for(var index in banner_list){
+    	if (slideHeight > 0 && slideWidth > 0) {
+    		var imgHtml = '<img src="' + banner_list[index].ad_image + '"'; 				
+    			imgHtml += ' style="width:'+slideWidth+'px;height:'+slideHeight+'px;" />';
+    	}else {
+        	var imgHtml = '<img src="' + banner_list[index].ad_image + '" />';
+        }
+        var html = '<div id="banner-slider-item-'+index+'" onclick="return clickAD(\''+ banner_list[index].ad_link+'\');">' +
+                '<a tapmode="" onclick="">' +
+                    imgHtml +
+                    '<div class="banner-title">' + banner_list[index].ad_name + '</div>' +
+                    '<div class="banner-content">' + banner_list[index].summary + '</div>' +
+                '</a>' +
+            '</div>';
+        bannerHtml += html;
+        bannerLen++;
+    }
+    $('#banner-content').empty();
+    $('#banner-content').append(bannerHtml);
+ 
+    if (bannerLen > 1) {
+        $('#pointer').show();
+        setTimeout(function () {
+                initSlide();
+        }, 1*1000);    
+    }
+}
+
+function getData(){
+    isTopicLoaded = false;
+    var parms =  {   
+            page:topic_page,
+            psize:psize
+        };   
+          
+    if (isFirstGetData) {
+    	$api.rmStorage('online_id');
+	    parms['online'] = 1;
+	    parms['sysinfo'] = getSysInfo();
+		parms['channel'] = $api.getStorage('qipaoChannel');
+		var appVersion = $api.getStorage('appVersion');
+	    if(typeof appVersion == 'undefined'){
+	    	appVersion = '';
+	    } 
+		if (appVersion != api.appVersion)
+		{
+			$api.rmStorage('active_id');
+			$api.rmStorage('appVersion');
+		}
+		var active_id = $api.getStorage('active_id');
+	    if(!active_id || typeof active_id == 'undefined'){
+	    	parms['active'] = 1;
+	    }  
+    }
+    
+    api_ajax(0, 
+        'index_api.php', 
+        parms,
+        after_getData,
+        0,
+        0
+    ); 
+}
+
+function after_getData(ret, _, _, _) {	
+    $bottomTip.hide();
+	if(ret.code == 988){
+		isTopicLoaded = true;
+		isFirstGetData = true;
+		return;
+	}
+	
+	if (isFirstGetData) {
+        if (ret.active_id > 0) {
+        	$api.setStorage('active_id', ret.active_id);
+			$api.setStorage('appVersion', api.appVersion);
+			}
+        if (ret.online_id > 0)
+        	$api.setStorage('online_id', ret.online_id);	
+	}
+    if(ret.code == 101){
+        topic_page = -1;   
+    } else if(ret.code == 100){
+    //  console.log(ret);
+        if (topic_page == 1) {
+            $('#topic-content').empty();
+            adlist = ret.data.home_topic; 
+            topicListLen = 0;
+        }   
+        
+        createArticle(ret.data.topics.topicslist);
+        
+        if (topic_page == 1) {
+            initTopBanner(ret.data.home_banner);
+        }           
+        if (ret.data.topics.pageinfo.curpage >= ret.data.topics.pageinfo.totalpage){
+            topic_page = -1;
+            $bottomTip.html('没有更多了哦！');
+            $bottomTip.show();
+        }
+    }else{
+        topic_page = -1;
+    }
+    isTopicLoaded = true;
+	isFirstGetData = false;
+}
+
+//添加文章
+function createArticle(topicList){
+    var topicHtml = '';
+    for(var index in topicList){
+        topicHtml += getArticleItem(topicList[index]);
+        topicListLen ++;
+        if (topicListLen == 3) {
+            topicHtml += getAdHtml();
+            topicListLen = 0;
+        }
+    }
+    $('#topic-content').append(topicHtml);
+}
+ 
+function getAdHtml(){
+   if (adlist.length <= 0) return "";
+   var index =0;
+   var adHtml = '';
+       adHtml += '<div class="item activity-item" onclick="return clickAD(\''+ adlist[index].ad_link+'\');">'+
+                        '<a tapmode="">'+
+                            '<img class="ad-img" src="'+adlist[index].ad_image+'">';
+        if(adlist[index].ad_type == 'topic'){                    
+        if(adlist[index].fname == ''){                            
+        adHtml +=            '<span onclick="openTopicCircle('+adlist[index].fid+', \''+adlist[index].fname+'\', 0, 500);">#'+adlist[index].fname+'#</span>';      
+        }
+        }
+        adHtml +=           '<div class="activity-content ad-content">';
+        if(adlist[index].ad_type == 'topic'){
+            adHtml +=           '<span class="ad-title">'+adlist[index].title+'</span><br>';
+            adHtml +=           '<span class="ad-desc"><span class="ad-lineheight">'+adlist[index].reply_num+'</span>个回复\/<span class="ad-lineheight">'+adlist[index].fav_num+'</span>人关注</span>';
+        } else if(adlist[index].ad_type == 'circle'){
+            adHtml +=           '<span class="ad-title">#'+adlist[index].fname+'#</span><br>';
+            adHtml +=           '<span class="ad-desc"><span class="ad-lineheight">'+adlist[index].topic_num+'</span>个话题\/<span class="ad-lineheight">';
+            adHtml +=  adlist[index].fav_num+'</span>人关注</span>';
+        }                                
+        adHtml +=           '</div>'+
+                        '</a>'+
+                    '</div>'; 
+        adlist.shift();         
+    return adHtml;      
+}
+
+var topic_page = 1;
+var psize = 5;
+var adlist = null;
+var isTopicLoaded = true;
+
+var topic_content = null;
+var banner_content = null;
+
+var lastScrollTime = 0;
+var isFirstScroll = 1;
+var $header;
+
+var isFirstGetData = true;
+
+apiready = function () {
+    isDev = false;
+	banner_content = $api.byId('banner-content');
+    topic_content = $api.byId('topic-content');
+
+    lastTime = (new Date()).valueOf();
+    api.setRefreshHeaderInfo({
+        visible: true,
+        // loadingImgae: 'wgt://image/refresh-white.png',
+        bgColor: '#f2f2f2',
+        textColor: '#4d4d4d',
+        textDown: '下拉刷新...',
+        textUp: '松开刷新...',
+        showTime: false
+    }, function (ret, err) {
+        api.hideProgress();
+        var nowTime = (new Date()).valueOf();
+        var refreshInterval = 180000;         //3*60*1000 = 180000
+        var is_ours = $api.getStorage('is_ours');
+        if (is_ours) {
+        	refreshInterval = 5000;        
+        }        
+        if (nowTime-lastTime > refreshInterval || isFirstGetData) {        //3*60*1000 = 180000
+            lastTime = nowTime;
+            if(isTopicLoaded){
+                topic_page = 1;
+                getData();
+             }
+         }
+        api.refreshHeaderLoadDone();
+    });
+
+    api.addEventListener({
+        name: 'scrolltobottom',
+        extra:{
+            threshold:200
+        }
+    }, function (ret, err) {
+       if (topic_page > 0 && isTopicLoaded)
+        { 
+            topic_page = topic_page + 1;
+            $bottomTip.show();
+            getData();
+        }
+        if (isFirstScroll)
+        {        	
+           $(window).scroll(function() {  
+                var scrollTop = $(document).scrollTop();
+                if (scrollTop<=slideHeight+50){
+                    slideSwitch(1);
+                }else{
+                    slideSwitch(0); 
+                }
+            });
+            isFirstScroll = 0;
+        }
+    });
+
+	if(api.systemType == 'ios'){
+ 	    $header = $('#header');
+	    $(window).scroll(function() {  
+	         var scrollTop = $(document).scrollTop();
+	         if(scrollTop<50){
+	             $header.hide();
+	         }else{
+	             $header.show();
+	         }
+	     });
+    }
+
+    getData();    
+
+    api.addEventListener({
+           name:'viewappear'
+      },function(ret,err){      
+        api.execScript({
+            name: 'root',
+            script: 'checkCurPid("root","main")'
+        });
+    });
+           
+	api.addEventListener({
+	    name:'noticeclicked'
+	},function(ret,err){
+	    var value = ret.value;
+        if (value == gouda_lasttime) {
+        	gouda_lasttime = '';
+        }
+	    if(ret.type == 0){
+	        //APICloud推送内容
+	    } else if(ret.type == 1){
+	        //开发者自定义消息
+	    }
+	});
+	                
+    //定时获取勾搭的基本数据条数
+    setInterval(function() {
+            get_gouda_datainfo(0);
+    }, 60000);      //60*1000  
+
+};
+
+function view_appear() {
+    slideSwitch(1);
+    console.log("view_appear(main)");
+} 
+
+$(function(){
+    initDev();
+});
+
+</script>
+</html>

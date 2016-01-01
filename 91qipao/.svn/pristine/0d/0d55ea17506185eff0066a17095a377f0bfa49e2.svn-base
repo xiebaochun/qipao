@@ -1,0 +1,665 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>个人空间</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+ <!--    <link rel="stylesheet" type="text/css" href="../css/awesome-font/font-awesome.min.css" /> -->
+    <link rel="stylesheet" type="text/css" href="../css/user.css" />
+    <link rel="stylesheet" type="text/css" href="../css/topic-list.css" />
+    <link rel="stylesheet" type="text/css" href="../css/user-list.css" />
+    <style>
+        html{background-color: #eee;}
+         #header{background-color:none;position:fixed;top:-2px;left:0;z-index:40;}
+         #main{background-color: #eee;}
+         /*.nav-active>span{color:#ffc72a!important}*/
+         .nav-item{width:32%!important}
+         .nav-item>*{color:#999;}
+         .nav{position: relative;background-color: #fff;}
+
+         .nav-active{color:#333;}
+         .nav-active>*{color:#333;}
+
+         .hongren-wrap{position:absolute;display:block;top:3rem;right:1.8rem;width:3rem;text-align:center;z-index:5}
+         .hongren-wrap>.hongren-ico{display:inline-block;margin-top:.6rem;width:1rem;height:1rem;}
+         .hongren-wrap>.hongren-txt{font-size:.6rem;color:#eee}
+         .none-expression{width:5rem}
+         .user-name{font-size:.7rem}
+         #cover{height:8.5rem;background-image: url(../image/user_zone_bg.png);background-size: 100% 100%;background-repeat: no-repeat;}
+         .setting-ico{display:inline-block;z-index:6}
+         #user-info-edit{z-index:6}
+         .cover-bt{display:inline-block;width:6rem;padding:.25rem 0;border-radius:.8rem;margin:0 .5rem}
+         .cover-bt>div{font-size: 0.55rem;}
+         #login_register{margin:.5rem 0}
+         #private-mail-wraper{}
+         #follow-wraper{background-color:#fed600}
+         .report-user{display:none;z-index:50;position:fixed}
+         .pop-wrap{position:fixed;z-index:100}
+         .dialog-box{position:absolute;left:50%;top:50%;margin-left:-6rem!important;width:12rem;margin:0 auto;margin-top:-6rem;border-radius:.5rem;background-color:#fff;text-align:center;padding:0!important}
+         .dialog-body>.item{position:relative;border-bottom:1px solid #eee;padding-bottom:.7rem}
+         .dialog-box input{border:none}
+         .dialog-box .dialog-close-bt{position:absolute;width:1.2rem;height:1.2rem;right:.5rem;top:-1.5rem;text-align:center}
+         .dialog-box .dialog-close-bt>i{display:inline-block;position:absolute;width:1.2rem;height:1.2rem;background-size:100% 100%;background-image:url(../image/close_x_ico.png)}
+         .dialog-box .dialog-close-bt>i:before{content:none}
+         .dialog-title{text-align:center;margin-top:.2rem;padding:.3rem 0;border-bottom:1px solid #eee}
+         .dialog-title .title1{font-size:.8rem}
+         .dialog-title .title2{font-size:.5rem;color:#999}
+         .valid-input-wrap{margin:0 auto;width:8rem;margin-top:.5rem;border:1px solid #999;border-radius:2rem;font-weight:.7rem;padding-left:.5rem;font-size:.5rem}
+         .dialog-body{padding:.5rem 0!important;line-height:.8rem}
+         .dialog-body span{line-height:1rem;margin-right:1rem;font-size:.7rem}
+         .dialog-body .label{margin-right:4.5rem}
+         .dialog-body .bt{position:absolute;display:inline-block;width:2.5rem;top:0;right:.2rem;background-color:#ffc72a;margin-left:.5rem;border-radius:.2rem;padding:.1rem .5rem;font-size:.6rem}
+         #send-pm{display:none}
+         
+         .choose-item-list{position:absolute;bottom:0;width:100%}
+         .choose-item-list>li{background-color:#FFF;text-align:center;line-height:2rem}
+         .choose-item-list>li>span{display:inline-block;width:95%;border-bottom:1px solid #EEE}
+         .info-wrap{background-color:#fff;text-align:right;margin-top:.5rem}
+         .input-wrap{position:relative;margin:0 .5rem;border-bottom:1px solid #eee;line-height:2rem;font-size:.6rem}
+         .input-wrap>.input{margin-bottom:0;outline:0;width:10.5rem;font-size:.6rem;text-align:left;outline:0;border:none}
+         .input-label{width:4rem;text-align:left}
+         .user-stamp{color:#ffc72a!important;margin-top:.1rem;font-size:.5rem}   
+         .content{margin-top:12rem;}
+         #avatar {
+             margin: 0 auto;
+             top:0;
+             padding: 1.2rem 0 5px 0;
+             border:none;
+         }
+         #headImg{
+
+         }
+         .level-wrap{margin-left:0.2rem;padding:0.1rem 0.3rem;background-color: #ffc72a; color:#333;border-radius: 0.8rem;font-size: 0.3rem;}
+         .follow-bt{padding:0.2rem 0.4rem;border-radius:0.2rem; margin-top:0.9rem;margin-right:0.5rem; background-color: #fdd600;}
+         .follow-bt-gray{background-color: #eee;}
+         .user-info-wrap{padding:0.5rem;padding-top: 1rem;}
+         .icon-female{padding:0.1rem;background-color: #ff9191;border-radius:50%;color:#fff;font-size:0.4rem !important;}
+         .icon-more{font-size:0.8rem !important;}
+         #usernickname{color:#fff !important;}
+         .follow-bt{width:2.5rem;text-align: center;}
+         /*#cover{-webkit-filter:blur(20px);}*/
+         #cover{position: relative;background-color: rgba(0,0,0,1) !important;}
+         #cover *{position: relative;z-index: 2;}
+         .cover-bg{position:absolute !important;left:0;top:0;width: 100%; height:8.5rem;z-index:0;-webkit-filter:blur(20px);background-size: cover;background-position: center;}
+         .cover-mask{position:absolute !important;left:0;top:0;width: 100%; height:8.5rem;z-index:1;background-color: rgba(0,0,0,0.3);}
+        .nav{background-color: #fff;z-index: 100;}
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="main"> 
+            <div id="cover">
+                <div class="cover-bg"></div>
+                <div class="cover-mask"></div>
+                <div id="avatar" onclick="get_profile();">
+                    <div class="headImg default-avator vm ml5" id="headImg"/></div>
+                    <div class="inline-block vm ml2">
+                        <label class="user-name color-fff" id="usernickname"></label>
+                        <label class="user-stamp" id="user_title">情趣测评专家</label>
+                        <span class="level-wrap">Lv<span id="user-level"></span></span><br>
+                        <span class="color-fff f5"><span class="color-fff" id="ta-fl-count"></span><span class="ml1 color-fff">关注</span></span>
+                        <span class="color-fff f5"><span class="color-fff" id="ta-fs-count"></span><span class="ml1 color-fff">粉丝</span></span>
+                    </div>
+                    <div class="follow-bt inline-block fr" onclick="followAuthor(this);">+关注</div>
+                </div>
+                <div class="user-info-wrap">
+                    <i class="iconfont icon-female"></i>
+                    <span class="address color-fff">广东</span>
+                    <span class="constellation color-fff">双鱼座</span>
+                    <p class="color-fff" id="user-signed" style="margin-top:0.3rem;">一直都想好好保护它，爱护它，但是到了一定的时间它还是会
+碎！那就是感情！</p>
+                </div>
+            </div>
+            <div class="nav">
+                <div class="nav-item nav-active"  data-cate=".a-section" onclick="switchNav(this);" style="border-right:1px solid #eee;">
+                    <i class="iconfont icon-clock"></i>
+                    <span>动态</span>
+                    <span class="activity-count"></span>
+                </div>
+                <div class="nav-item" data-cate=".q-section" onclick="switchNav(this);" >
+                    <i class="iconfont icon-question"></i>
+                    <span>提问</span>
+                    <span class="qa-count"></span>
+                </div>
+            </div>
+            <div class="content" style="margin-top:0.5rem;">
+                <div class="a-section">
+                    
+                </div>
+                <div class="q-section" style="display:none;">
+                        
+                </div>
+
+                <div class="pop-wrap more fixed" style="display:none;">
+                    <ul class="choose-item-list">
+                        <li class="more-option" id="private-mail-wraper"><span>私信</span></li>
+                        <li class="more-option" onclick="openReport();"><span>举报</span></li>
+                        <li class="more-option" id="blacklist" onclick="blackUser()"><span>拉黑</span></li>
+                        <li class="mt5 select-cancel-bt"><span class="color-999">取消</span></li>
+                    </ul>
+                </div>
+                <div class="pop-wrap report-user fixed" style="display:none;">
+                    <ul class="choose-item-list">
+                        <li class="color-999 f4">请选择举报原因</li>
+                        <li class="report-option" data-msg="头像违规"><span>垃圾广告</span></li>
+                        <li class="report-option" data-msg="昵称违规"><span>昵称违规</span></li>
+                        <li class="report-option" data-msg="发表违规内容"><span>敏感或淫秽色情信息</span></li>
+                        <li class="report-option" data-msg="内容涉及抄袭或版权问题"><span>内容涉及抄袭或版权问题</span></li>
+                        <li class="mt5 select-cancel-bt"><span class="color-999">取消</span></li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/mui.min.js"></script>
+<script>
+
+$(function(){
+    initDev();
+});
+function switchNav(self){
+    $($(self).data('cate')).show().siblings().hide();
+}
+function init(index) {
+    // console.log(sid);
+
+    //var uid = $api.getStorage('uid');
+
+    // if(!uid || typeof(uid) == "undefined"){
+    //     var jsfun = "openTab('main', '71bbe');set_gd_new(0);";
+    //     api.execScript({
+    //         name: 'root',
+    //         script: jsfun
+    //     });
+    //     return true;    
+    // } else {
+    //     api_ajax(0, 
+    //         'user_info_get.php', 
+    //         {   
+    //             sid:sid
+    //         }, 
+    //         after_init,
+    //         index,
+    //         0
+    //         ); 
+    // }
+    //console.log('dsfsd............................');
+    api_ajax(0, 
+        'user_info_get.php', 
+        {   
+            sid:sid
+        }, 
+        after_init,
+        index,
+        0
+    ); 
+
+    require('list_common',function(){
+        app_content = new QIPAO.list({
+            api_file:'user_topic_list.php',
+            postData:{ 
+                sid:sid,
+                psize: 10,
+                fup:105
+            },
+            holder:'.a-section',
+            listF:listArticle,
+            none:{
+                txt:'这个家伙很懒，啥动态也没发布过',
+                btTxt:'',
+                to:''
+            }
+        });
+    });
+    require('list_common',function(){
+        app_content = new QIPAO.list({
+            api_file:'user_topic_list.php',
+            postData:{ 
+                sid:sid,
+                psize: 10,
+                fup:104
+            },
+            holder:'.q-section',
+            listF:listQA,
+            none:{
+                txt:'这个家伙很懒，啥问题也没发布过',
+                btTxt:'',
+                to:''
+            }
+        });
+    });
+}
+
+function after_init(ret, _, _, index) {
+    if (ret.code == 988)
+    {
+        return;
+    }
+    console.log(ret);
+    if(ret.code == 100){
+        var uid = $api.getStorage('uid');
+        
+        data = ret.data;    
+        user_info = data;
+        username = data.nickname;
+        
+        $("#headImg").css({"background-image":'url('+data.userimage+')'});
+        var nickname = data.nickname;
+        //nickname = nickname + "("+sid+")";
+        $("#usernickname").text(nickname);
+        $("#user_title").text(data.tag);
+        $('#user-level').text(data.lv); 
+        $('.cover-bg').css({'background-image':'url('+data.userimage+')'}); 
+        $('#ta-fl-count').text(data.ta_fav_user);
+        $('#ta-fs-count').text(data.fav_ta_user);
+        $('.activity-count').text(data.ta_article);
+        $('.qa-count').text(data.ta_ask);
+        if(data.me_fav_ta){
+            isFollowd = true;
+            $('.follow-bt').text('取消关注').addClass('follow-bt-gray');
+        }
+        /*
+        set_profile();
+        $("#nick-name").val(data.nickname);
+        $("#uniqueid").val(data.uniqueid);
+        if (data.resume == '')
+            $("#resume").val('(未填写)');
+        else
+            $("#resume").val(data.resume);
+        if (data.city == '')
+            $("#city").val('(未填写)');
+        else
+            $("#city").val(data.city);
+        if (data.age == '' || data.age == 0)
+            $("#age").val('(未填写)');
+        else
+            $("#age").val(data.age);
+        if (data.lookingfor == '')
+            $("#sex-trend").val('(未填写)');
+        else
+            $("#sex-trend").val(data.lookingfor);       
+        */
+        
+        if (data.ta_article > 0) {
+            $('.hongren-wrap').show();
+            taHongren = 1;
+        } else {
+            $('.hongren-wrap').hide();
+            taHongren = 0;
+        }
+        
+        if (uid == sid) {
+            $("#login_register").hide();
+            $(".more-bt").hide();
+        } else {
+            $("#login_register").show();
+            $(".more-bt").show();
+            //alert(data.me_fav_ta);
+            if (data.me_fav_ta == 1) {
+                me_fav_ta = 1;
+                $("#follow-wraper").css('background-color','#eee');
+                $("#follow-label").text('取消关注');
+                $("#follow-wraper").show();
+            } else {
+                me_fav_ta = 0;
+                $("#follow-wraper").css('background-color','#ffc72a');
+                $("#follow-label").text('关注');
+                $("#follow-wraper").show();
+            }
+            bl_ta = data.bl;
+            if (bl_ta == 0)
+                $("#blacklist").html('加入黑名单');
+            else
+                $("#blacklist").html('取消黑名单');  
+        }
+                    
+        var d_count = Array(data.ta_post, data.ta_fav_user, data.fav_ta_user);
+        for (var i=0; i<3; i++)
+            $("#"+item[i]+"_count").text(d_count[i]);
+            
+        if (index < 0) {
+            if (index == -1) {
+                var for_f = 0; 
+                var for_t = 3;
+            } else if (index == -2) {
+                var for_f = 1; 
+                var for_t = 3;              
+            }
+        } else {
+            var for_f = index; 
+            var for_t = index;
+        }
+        for (var i=for_f; i<for_t; i++) {
+            if (d_count[i] <= 0) {
+                $("#"+item[i]+"_none").show();
+                $("#"+item[i]+"_list").hide();
+            } else {
+                $("#"+item[i]+"_none").hide();
+                $("#"+item[i]+"_list").show();
+                canMore[i] = 1;
+                //getData(i);
+            }           
+        }   
+                            
+    }else{
+        myToast(ret.code+"/"+ret.msg);
+    }
+    isFirst = 0;
+}
+
+
+function checkSendPM(sid, username) {
+    var canSendPM = $api.getStorage('canSendPM');
+    if(!canSendPM || typeof(canSendPM) == "undefined") {
+        api_ajax(2, 
+            'gd_pm_add_cond.php', 
+            {   
+            }, 
+            after_checkSendPM,
+            {
+                sid:sid,
+                username:username
+            },
+            0
+            );
+        return;
+    }   
+    openPM(sid, username);
+}       
+
+function after_checkSendPM(ret, _, _, others) {
+    if (ret.code == 988)
+    {
+        return;
+    }
+    if (ret.code == 100) {
+		//取消私信条件
+        if (ret.data.lv >=2) {
+                $api.setStorage('canSendPM', 1);
+                openPM(others.sid, others.username);
+                return;
+            }
+		else {
+			myToast('您需要达到LV2，才能使用私信功能。加油吧骚年~', 2000);
+			return;
+		}
+    }
+}       
+
+//打开发布话题页面
+function openPublishWin(){
+        api.openWin({
+            name:'publish-topic',
+            url:'publish-topic.html',
+            pageParam:{
+                fid:fid
+            }
+        });
+    }
+  
+function get_profile(){
+    var uid = $api.getStorage('uid');
+    if (uid == sid) return; 
+    //$('.nav-item').removeClass('nav-active');
+    //$('.section').hide();
+    //$('.profile-section').show();
+      api.openWin({
+        name:'user-info',
+        url:'user-info.html',
+        pageParam:{
+            sid:sid,
+            user_info:user_info
+            }
+      });
+    //cur_index = 3;
+}
+    
+$(function(){
+    $('.nav-item').click(function(){
+        $('.profile-section').hide();
+        $this = $(this);
+        switch($this.data('id')){
+            case 't-section':
+                cur_index = 0;
+                break;
+            case 'f-section':
+                cur_index = 1;
+                break;
+            case 'bf-section':
+                cur_index = 2;
+                break;
+            default:
+                break;
+        } 
+               
+        $this.siblings().removeClass('nav-active');
+        $this.addClass('nav-active');
+        $('.section').hide();
+        $('.'+$this.data('id')).show();
+    });
+    
+    $('#headImg').click(function(){
+        //cur_index = -1;
+    });
+    
+    $('#private-mail-wraper').click(function(event){
+        checkSendPM(sid, username);
+        var e = event;
+        if(e.stopPropagation){
+            e.stopPropagation();
+          }else{
+            e.cancelBubble = true;
+        }
+    });
+    
+    $('#follow-wraper').click(function(event){
+        var e = event;
+        if(e.stopPropagation){
+            e.stopPropagation();
+          }else{
+            e.cancelBubble = true;
+         }
+        if(me_fav_ta == 1){
+            api.confirm({
+                    title:'',
+                    msg:'确定取消关注?',
+                    buttons:['取消', '确定']
+                    }, function(ret,err) {
+                        if (ret.buttonIndex == 2) {
+                            favoriteUser(sid, 'cancel');
+                            return false;                   
+                        }
+                    });
+                        
+        } else {
+            favoriteUser(sid, 'add');
+        }
+    });
+        
+    $('#t_none').click(function(){
+        gotoIndexTab('topic','21c8cf');
+        api.closeWin();
+    });
+      
+    $('#a_none').click(function(){
+        gotoIndexTab('main','71bbe');
+        api.closeWin();
+    });
+     
+    
+
+    $('.select-cancel-bt').click(function(){
+        
+        $(this).parent().parent().fadeOut(200);
+        //$('.choose-item-list').slideToggle();
+        switchScroll(1);   
+    });
+    $('.pop-wrap').click(function(){
+        $(this).fadeOut(200);
+        switchScroll(1);    
+    });   
+    
+    $('.dialog-close-bt').click(function(){        
+        $(this).parent().parent().hide();
+        //$('.choose-item-list').slideToggle();
+    });
+    
+   $('.hongren-wrap').click(function(){
+         api.openWin({
+            name:'user_topic_list',
+            url: 'my-hr-sc.html',
+            pageParam:{
+                userid:sid,
+                page_title: username+'的文章',
+                api_file:'user_topic_list.php',
+                t: 'article'
+            }
+        });
+    });
+    
+    $('.report-option').click(function(){
+            $this = $(this);        
+            if ($this.data('msg') == "bl") {
+                var act = 'add';
+                if (bl_ta == 1)
+                    act = 'cancel';
+                blacklistUser(sid, act);            
+            } else {
+                var message = "被举报人："+sid+"。[个人空间]。理由："+$this.data('msg');          
+                myReport(message);
+            }           
+            $('.report-user').fadeOut(200);
+            $('.report-user').hide();
+    });  
+
+    //initDev();
+
+});
+
+var sid = 0;
+var user_info = null;
+var username = "";
+var taHongren = 0;
+var item = new Array('t','f','bf');
+var url = new Array('user_topic_list.php','user_favorite_user_list.php','user_favorite_ta_list.php');   
+var page = new Array(1,1,1);    
+var psize = new Array(5,10,10);
+var canMore = new Array(1,1,1); 
+var cur_index = 0;
+var me_fav_ta = 0;
+var bl_ta = 0;
+var isFirst = 1;  
+
+apiready = function () {
+        var header = $api.byId('header');
+        $api.fixIos7Bar(header);
+    
+        isDev = false;
+        // console.log($api.getStorage('uid'));
+        sid = api.pageParam.sid;
+    
+        api.addEventListener({
+          name:'viewappear'
+        },function(ret,err){
+            //$("#login_register").hide();
+            //$(".more-bt").hide();
+                     
+        });
+
+        
+        // api.setRefreshHeaderInfo({
+        //     visible: true,
+        //     loadingImg: '../image/refresh.png',
+        //     bgColor: '#f2f2f2',
+        //     textColor: '#4d4d4d',
+        //     textDown: '下拉刷新...',
+        //     textUp: '松开刷新...',
+        //     showTime: false
+        // }, function (ret, err) {
+        //  api.hideProgress();
+        //  if (canMore[cur_index])
+           //           init(cur_index);
+        //     api.refreshHeaderLoadDone();
+        // });
+      
+        api.addEventListener({
+            name: 'scrolltobottom',
+            extra:{
+                threshold:200
+            }
+        }, function (ret, err) {            
+
+        }); 
+        init();
+      
+};
+var isFollowd = false;
+function followAuthor(self){
+    var e = event || window.event;
+    e.cancelBubble = true;
+
+    if(isFollowd){
+        favoriteUser(sid,'cancel',function(ret){
+            if(ret.code == 100){
+                myToast('取消关注成功');
+                isFollowd = false;
+                $(self).text('+关注').removeClass('follow-bt-gray');
+            }
+        });
+    }else{
+        favoriteUser(sid,'add',function(ret){
+            if(ret.code == 100){
+                myToast('关注成功');
+                isFollowd = true;
+                $(self).text('取消关注').addClass('follow-bt-gray');
+            }else if(ret.code == 104){
+                myToast('你已关注过');
+                isFollowd = true;
+                $(self).text('取消关注').addClass('follow-bt-gray');
+            }
+        });
+    }
+
+    
+}
+function openReport(){
+    $('.report-user').fadeIn(200);
+    $('.report-user').show();
+    //$('.choose-item-list').slideToggle();
+    //switchScroll(0); 
+}
+function blackUser(){
+    var act = 'add';
+    if (bl_ta == 1)
+        act = 'cancel';
+    blacklistUser(sid, act);
+}
+
+function afterBlacklistUser(sid, act) {
+    if (act == 'add') {
+        bl_ta = 1;
+        myToast('将ta加入了黑名单');
+    } else {
+        bl_ta = 0;
+        myToast('取消ta黑名单成功');
+    }
+    if (bl_ta == 0)
+        $("#blacklist").html('加入黑名单');
+    else
+        $("#blacklist").html('取消黑名单');          
+}
+function showMore(){
+    //举报用户
+        $('.more').fadeIn(200);
+        $('.more').show();
+        //$('.choose-item-list').slideToggle();
+        switchScroll(0);   
+}
+</script>
+
+</html>

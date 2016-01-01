@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+        <meta name="format-detection"content="telephone=no">
+        <title>发现</title>
+        <link rel="stylesheet" type="text/css" href="../css/common.css" />
+        <link rel="stylesheet" type="text/css" href="../css/ui.css" />
+        <style>
+            html,body{background-color: #eee;}
+            #wrap{
+                height: 100%;
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -webkit-flex-flow: column;
+                       flex-flow: column;
+                       background-color: #eee;
+            }
+            #main{
+                -webkit-box-flex: 1; 
+                -webkit-flex: 1;
+                flex: 1;
+                background-color: #eee;
+            }
+            .item-avator{width:1.3rem;height:1.3rem;}
+            .banner{padding-top:1px;padding-bottom:1px;background-color: #fff;display: block;}
+            .recommend-user-list{margin:0.5rem;}
+            .recommend-user{line-height: 0rem; margin:0rem;}
+            .recommend-user-avator{height:3.5rem;margin:0.2rem;box-sizing:border-box;background-size: cover;/*border:1px solid #fafafa;*/border-radius: 0.1rem;overflow: hidden;box-shadow: 0 0 2px #eee;}
+
+            .new-content{padding:0.5rem;padding-top:0.1rem;}
+
+            .new-list{-moz-column-count: 2;
+                -webkit-column-count: 2;
+                column-count: 2;
+                -moz-column-width: 100%;
+                -webkit-column-width: 100%;
+                column-width: 100%;
+                -moz-column-gap: 0rem;
+                -webkit-column-gap: 0rem;
+                column-gap:0rem;    
+            }
+            .new-item-wrap{width: 100%;padding-top:0.1rem;margin-top:0rem;display: block;-moz-page-break-inside: avoid;
+                -webkit-column-break-inside: avoid;
+                break-inside: avoid;}
+            .new-item{margin:0.2rem;margin-top:0;padding-top:0rem;background-color: #fff;}
+            .new-bg-wrap{margin:0rem;}
+            .new-bg{display: block;width: 100%;height: 6.5rem;background-size: cover;background-position: center;}
+            .new-img{width: 100%;}
+            .new-item-footer{padding:0.3rem;}
+            .new-item-title{
+                margin:0 0.3rem;
+                color:#999;
+                /*overflow: hidden;*/
+                 /*text-overflow: ellipsis;*/
+                /* white-space: nowrap;*/
+                 width: 6.5rem;
+                 line-height: 0.8rem;
+             }
+             .follow-bt{float:right;margin-top:0.25rem; padding:0.1rem 0.3rem; background-color: #fdd600;border-radius:0.2rem;line-height: 0.8rem;}
+             .item-user-info{height: 1.3rem;line-height: 0.6rem;}
+             .modal{background-color: transparent;margin-top: -7.5rem;}
+             .hongren-wrap{min-height: 8rem;background-color:transparent;padding:0.5rem;}
+             .hongren-info-content{position: relative; margin:0 2rem; background-color:rgba(255,255,255,0.6);border-radius: 0.5rem;overflow: hidden; padding:0.5rem;}
+             .hongren-info-content>*{position:relative;z-index: 1;}
+             .hongren-bg{ position: absolute;width: 100%;height: 100%;left:0;top:0;width:100%;height: 100%; background-position: center;background-size: cover;-webkit-filter:blur(20px);z-index: 0;border-radius: 0.5rem;}
+             .hongren-nav{}
+             .hongren-info-box{padding:0.5rem;text-align: center;}
+             .hongren-avator{width:3rem;height:3rem;margin-bottom:0.3rem;}
+             .hongren-resume{text-shadow:0 0 4px #999;}
+             .nav-bt{display: inline-block;width: 2rem; background-color:#fdd600;line-height: 0.8rem;padding:0.3rem 0.9rem;border-radius:0.3rem;font-size: 0.5rem;}
+             .icon-close{display: inline-block;position: absolute;top:-1rem;right:2.5rem;background-color: #eee;height: 1rem;width: 1rem;border-radius: 1rem;z-index: 5;line-height: 1.02rem;font-size: 0.4rem !important;}
+             .icon-close:before{margin-left: 0.3rem;}
+             .followed{background-color: #eee;}
+             .icon-tuijian{font-size: 1rem !important;}
+             .icon-zuixin{font-size: 0.6rem !important;}
+             .viewport-flip {
+                -webkit-perspective: 1000;
+                perspective: 1000;
+                position: absolute;
+             }
+             .animated {
+               -webkit-animation-duration: 1s;
+               animation-duration: 1s;
+               -webkit-animation-fill-mode: both;
+               animation-fill-mode: both;
+             }
+             .flip {
+                -webkit-animation-name: flip;
+                animation-name: flip;
+             }
+             
+             @-webkit-keyframes flip {
+                 from { -webkit-transform: rotateY(0);transform: rotateY(0);  }
+                 25%{-webkit-transform: rotateY(-10deg) scale(1);transform: rotateY(-10deg) scale(1);}
+                 50%{-webkit-transform: rotateY(-90deg) scale(1);transform: rotateY(-90deg) scale(1);}
+                 75%{-webkit-transform: rotateY(-30deg) scale(1);transform: rotateY(-30deg) scale(1);}
+                 to { -webkit-transform: rotateY(0deg) scale(1); transform: rotateY(0deg) scale(1);}
+             }
+             @keyframes flip {
+                 from { -webkit-transform: rotateY(0);transform: rotateY(0); }
+                 25%{-webkit-transform: rotateY(-10deg) scale(1);transform: rotateY(-10deg) scale(1);}
+                  50%{-webkit-transform: rotateY(-90deg) scale(1);transform: rotateY(-90deg) scale(1);}
+                  75%{-webkit-transform: rotateY(-30deg) scale(1);transform: rotateY(-30deg) scale(1);}
+                 to { -webkit-transform: rotateY(0deg) scale(1); transform: rotateY(0deg) scale(1);}
+             }
+        </style>
+    </head>
+    <body>
+        <div id="wrap">
+            <!-- <div id="header">
+                <a class="back-icon iconfont icon-arrow-left" tapmode onclick="api.closeWin();"></a>
+                <h1>发现</h1>
+                <a class="header-right-txt"></a>
+            </div> -->
+            <div id="main">
+                <div style="padding-left:0.8rem;padding-top:0.2rem;line-height:1.5rem;">
+                    <i class="iconfont icon-tuijian vm"></i><span class="vm ml2" style="margin-top:-0.1rem;">用户推荐</span>
+                </div>
+                <div class="banner">
+                    <div class="nav recommend-user-list">
+                        <div class="nav-item recommend-user"><div class="recommend-user-avator"  data-index="0" style="background-image:url(../image/version_logo.png);" onclick="openHongrenInfo(this);"></div></div>
+                        <div class="nav-item recommend-user"><div class="recommend-user-avator"  data-index="1" style="background-image:url(../image/version_logo.png);" onclick="openHongrenInfo(this);"></div></div>
+                        <div class="nav-item recommend-user"><div class="recommend-user-avator"  data-index="2" style="background-image:url(../image/version_logo.png);" onclick="openHongrenInfo(this);"></div></div>
+                        <div class="nav-item recommend-user"><div class="recommend-user-avator"  data-index="3" style="background-image:url(../image/version_logo.png);" onclick="openHongrenInfo(this);"></div></div>
+                    </div>
+                    <div class="nav recommend-user-list">
+                        <div class="nav-item recommend-user"><div class="recommend-user-avator"  data-index="4" style="background-image:url(../image/version_logo.png);" onclick="openHongrenInfo(this);"></div></div>
+                        <div class="nav-item recommend-user"><div class="recommend-user-avator"  data-index="5" style="background-image:url(../image/version_logo.png);" onclick="openHongrenInfo(this);"></div></div>
+                        <div class="nav-item recommend-user"><div class="recommend-user-avator"  data-index="6" style="background-image:url(../image/version_logo.png);" onclick="openHongrenInfo(this);"></div></div>
+                        <div class="nav-item recommend-user"><div class="recommend-user-avator"  data-index="7" style="background-image:url(../image/version_logo.png);" onclick="openHongrenInfo(this);"></div></div>
+                    </div>
+                </div>
+                <div style="padding-left:0.8rem;padding-top:0.2rem;line-height:1.5rem;">
+                    <i class="iconfont icon-shapenew vm"></i><span class="vm ml2" style="margin-top:-0.1rem;">最新动态</span>
+                </div>
+                <div class="new-content">
+                    <ul class="new-list_">
+                        <!-- <li class="new-item-wrap">
+                            <div class="new-item">
+                                <div class="new-bg-wrap">
+                                    <img class="new-bg" src="" alt="">    
+                                </div>
+                                <span class="new-item-title">士大夫撒地方撒阿巴斯把伤口大厦啊对方巴萨</span>
+
+                                <div class="new-item-footer">
+                                    <img  class="item-avator" src="../image/version_logo.png" alt="">
+                                    <div class="item-user-info vm">
+                                        <span class="item-name f5">你满</span><br>
+                                        <span class="create-time f4 color-999 ml3">25分钟前</span>
+                                    </div>
+                                    <span class="follow-bt">+关注</span>
+                                </div>
+                            </div>
+                        </li> -->
+                        <div class="nav">
+                            <div class="nav-item nav-item-1"></div>
+                            <div class="nav-item nav-item-2"></div>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-wrap hongren-modal" style="display:none;">
+                 <div class="modal-mask"></div>
+                 <div class="modal animated"  style="display:none;">
+                    <div class="hongren-bg-wrap">
+                        
+                    </div>
+                    <div class="hongren-wrap" onclick="hongrenInfo.close();">
+                        <i class="iconfont icon-close" onclick="hongrenInfo.close();"></i>
+                        <div class="hongren-info-content" onclick="stopEvent(event);">
+                            <div class="hongren-bg"></div>
+                            <div class="hongren-info-box">
+                            <img class="item-avator hongren-avator" id="modal-hongren-avator" src="../image/version_logo.png" alt=""><br>
+                                <span class="f6 color-fff vm" id="modal-hongren-name">昵称</span><span class="level-wrap f3 vb">LV <span class="level f4 vm">8</span></span><br>
+                                <span class="user-tag color-yellow f5" style="line-height:1rem;" id="modal-hongren-tag">情趣测评专家</span>
+                            </div>
+                            <div class="nav" style="margin-top:0.5rem;">
+                                <div class="nav-item hongren-nav"><span class="nav-bt" onclick="openHongrenPM(this);"><i class="iconfont icon-email"></i>&nbsp;私信</span></div>
+                                <div class="nav-item hongren-nav"><span class="nav-bt" id="hongreninfo-follow-bt" onclick="followHongren(this);">+&nbsp;关注</span></div>
+                            </div>
+                            <div class="hongren-resume color-fff" style="margin-top:0.5rem;padding:0.5rem;" id="modal-hongren-resume">红人简介</div>
+                            <div class="tr"><span class="color-yellow f4" onclick="openHongrenSpace();">了解更多</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="../script/api.js"></script>
+        <script type="text/javascript" src="../script/common.js"></script>
+        <script type="text/javascript" src="../script/util/ui.modal.js"></script>
+        <script>
+            var hongrenList = [];
+            var hongrenListIndex = [];
+            var hongrenInfo = null;
+            var hongrenInfoFrame = null;
+            var app_content = null;
+            var current_hongren_selected = 0;
+            var hongrenListCount = 0;
+            var $hongren_bg = $('.hongren-bg');
+                $hongren_name = $('#modal-hongren-name'),
+                $hongren_avator = $('#modal-hongren-avator');
+                $hongren_tag = $('#modal-hongren-tag');
+                $hongren_resume = $('#modal-hongren-resume');
+
+            var topicCount = 0;
+            $(function(){
+                initDev();
+            });
+            apiready = function(){
+                getHongrenList();
+                console.log(UI);
+                hongrenInfo = new UI.modal({});
+				
+                require('list_common',function(){
+                    app_content = new QIPAO.list({
+                        api_file:'topic_list.php',
+                        postData:{ 
+                            psize: 5,
+                            t:2
+                        },
+                        holder:'.nav-item',
+                        listF:listArticle_v2,
+                        none:{
+                            txt:'暂无发现',
+                            btTxt:'',
+                            to:''
+                        }
+                    });
+                });
+
+                require('util/ui.frame',function(){
+                    hongrenInfoFrame = new Module['util/ui.frame']({moduleName:'util/ui.hongrenInfo'});
+                });
+            } 
+ 
+            function getHongrenList(){
+                api_ajax(0,
+                	'topic_user_list.php',
+                	{
+                		page: 1,
+                    	psize:48
+                	},
+                	function(ret){
+                    	afterHonren(ret);
+                	},
+                	null,
+                	0);
+            }
+            function afterHonren(ret){
+                console.log(ret);
+                if(ret.code == 100){
+                    listHongren(ret.data.info.list);
+                }
+            }
+            function listHongren(list){
+                hongrenList = list;
+                $('.recommend-user-avator').each(function(index){
+                    console.log(this);
+                    $(this).css({'background-image':'url('+hongrenList[index].ui+')'});
+                });
+                setInterval(function(){
+                    var index = parseInt(7*Math.random());
+                    var nextIndex = parseInt(47*Math.random());
+                    $('.recommend-user-avator').each(function(index){
+                        hongrenListIndex[index] = $(this).data('index');
+                    });
+                    while(true){
+                        nextIndex = parseInt(47*Math.random());
+                        //console.log(nextIndex);
+                        if(!isInHongrenList(nextIndex)){
+                            break;
+                        }     
+                    }
+                    $('.recommend-user-avator').eq(index).addClass('animated flip');
+                    setTimeout(function(){
+                        $('.recommend-user-avator').eq(index).data('index',nextIndex).css({'background-image':'url('+hongrenList[nextIndex].ui+')'});
+                    },500);
+                    
+                    setTimeout(function(){
+                         $('.recommend-user-avator').eq(index).removeClass('animated flip');
+                    },1000);
+                },4000);
+            }
+            function isInHongrenList(index){
+                for(var i in hongrenListIndex){
+                    if(index == hongrenListIndex[i]){
+                        return true;
+                    }
+                }
+                return false;
+            }
+            function  view_appear() {
+				//alert('topic_view_appear');
+				//    init();
+			} 
+            function followHongren(self){
+                //关注红人或者用户
+                var sid = hongrenList[current_hongren_selected].userid;
+
+                favoriteUser(sid,'add',function(){
+                    myToast('关注红人成功!');
+                    var $parent = $(self);
+                    $parent.html('已关注'); 
+                    $parent.addClass('followed');
+                });
+            }
+            function openHongrenSpace(){
+
+                openUserSpace(hongrenList[current_hongren_selected].userid);
+            }
+            function openHongrenInfo(self){
+
+                var index = parseInt($(self).data('index'));
+                current_hongren_selected = index;
+                var hongren = hongrenList[index];
+                console.log(hongren);
+                if(hongren.userid == $api.getStorage('uid')){
+                    return;
+                }
+                $hongren_name.text(hongren.nickname);
+                $hongren_avator.attr('src',hongren.ui);
+                $hongren_tag.text(hongren.tag);
+                $hongren_resume.text(hongren.brief);
+                $hongren_bg.css({'background-image':'url('+hongren.ui+')'});
+                //if(hongren.me)
+                if(hongren.me_fav_ta){
+                    $('#hongreninfo-follow-bt').text('已关注');
+                }else{
+                    
+                }
+                $api.setStorage('hongren',{hongrenInfo:hongren});
+
+                var _hongren =  $api.getStorage('hongren');
+                console.log(_hongren);
+                //hongrenInfo.show();
+                hongrenInfoFrame.setUp({hongrenInfo:hongren});
+                hongrenInfoFrame.open();
+            }
+            function follow_user(self){
+                var sid = $(self).data('sid');
+                favoriteUser(sid,'add',function(){
+                    myToast('关注成功!');
+                   
+                    $(self).remove();
+                });
+                $self = $(self);
+                $self.parent().html();
+            }
+            function openHongrenPM(self){
+                openPM(hongrenList[current_hongren_selected].userid,
+                	hongrenList[current_hongren_selected].nickname);
+            }
+
+        </script>
+    </body>
+</html>

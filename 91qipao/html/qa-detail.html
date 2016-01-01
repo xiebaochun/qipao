@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+        <meta name="format-detection"content="telephone=no">
+        <title>问答详情</title>
+        <link rel="stylesheet" type="text/css" href="../css/common.css" />
+        <link rel="stylesheet" type="text/css" href="../css/topicDetail.css" />
+        <link rel="stylesheet" type="text/css" href="../css/topicDetail_body.css" />
+        <style>
+            #wrap{
+                height: 100%;
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -webkit-flex-flow: column;
+                       flex-flow: column;
+            }
+            #main{
+                -webkit-box-flex: 1; 
+                -webkit-flex: 1;
+                flex: 1;
+                background-color: #eee;
+                padding-top:0;
+            }
+            .banner{background-color: #fff;}
+            .follow-bt{background-color: #fdd600;padding:0 0.5rem;line-height: 1rem;border-radius: 0.2rem;}
+            .author-avator{width:2.2rem;height: 2.2rem;}
+            .level-wrap{display: inline-block;background-color: #ffc72a;border-radius: 0.4rem;padding:0.1rem 0.3rem;}
+            .banner-tags-wrap{padding:0.5rem;}
+            .banner-tags{color:#fdd600;}
+            .icon-fav{color:#fdd600;}
+            .v2-qa-footer{padding-left: 0.5rem;}
+            .v2-qa-reply-count-wrap {margin-left:6rem;}
+            .answer-wrap{background-color: #fff;/*padding-top:0.5rem;*/}
+            .header-right-txt{color:#333;}
+            .fixed-header{z-index: 10;}
+            .comment-item:first-child{padding-top:0.5rem;}
+        </style>
+    </head>
+    <body>
+        <div id="wrap">
+            <div class="fixed-header" id="header">
+                <a class="back-icon iconfont icon-arrow-left" tapmode onclick="api.closeWin();"></a>
+                <h1>问答详情</h1>
+                <a class="header-right-txt" onclick="share();">分享</a>
+            </div>
+            <div class="header-bg" id="header-bg"><a class="header-right-txt" onclick="share();"></a></div>
+            <div id="main">
+                <div class="banner">
+                    <div class="item-header header">
+                        <div class="item-user-info author-info">
+                            <img class="item-avator author-avator" rc="../image/version_logo.png" alt="">
+                            <span class=".item-name author-name ml2"></span>
+                            <div class="level-wrap">    
+                                <span class="f3">LV<span class="f4">8</span></span>
+                            </div>
+                        </div>
+                        <div class="item-header-right header-right"><span class="follow-bt" onclick="followUser();">+关注</span></div>
+                    </div>
+                    <div class="body">
+                        <div class="item-content banner-content f6">
+                            
+                        </div>
+                        <div class="v2-qa-footer"><div class="v2-qa-tags-wrap"><span class="v2-qa-tag"><i class="iconfont icon-biaoqian color-999"></i><span class="ml2 color-999"></span></span></div><div class="v2-qa-reply-count-wrap inline-block"><span class="color-999"><span class="reply-count color-999"></span>条回答</span></div><div class="v2-qa-like-wrap"><i class="iconfont icon-xin color-999" id="dianzan-v" data-tid="38731" onclick="clickZan(this);"></i><span class="ml2 like-count color-999">0</span></div></div>
+                    </div>
+                    <div class="nav footer" style="background-color:#fff; border-top:1px solid #eee;">
+                        <div class="nav-item nav-0" onclick="inviteDaren('invite-qa');" style="border-right:1px solid #eee;"><i class="iconfont icon-tianjiahaoyou"></i><span class="ml2">邀请回答</span></div>
+                        <div class="nav-item nav-1" onclick="collect_qa();"><i class="collect-icon iconfont icon-fav-1 vm"></i><span class="ml2 vm">收藏</span></div>
+                    </div>
+                </div>
+                <div class="answer-wrap comment-list">
+                    <!-- <div class="item answer-item">
+                        <div class="item-header answer-header">
+                            <div class="user-info">
+                                <img class="item-avator user-avator" src="../image/version_logo.png" alt="">
+                                <span class="item-name user-name">名字</span>
+                                <span class="user-tag color-blue f4">标签</span>
+                                <div class="item-header-right answer-right">
+                                    <i class="iconfont icon-xin"></i><span class="ml2">32</span>
+                                    <i class="iconfont icon-chat ml5"></i><span class="ml2">12</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item-content answer-body f6" style="padding-top:0;">
+                            这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容这是内容
+                        </div>
+                    </div> -->
+                </div>
+                <div style="height:50px;"></div>
+                <div style="position:fixed;bottom:0;width:100%;background-color:#fff;border-top:1px solid #eee;"><a class="btn" href="" onclick="openAllComments();"><i class="iconfont icon-edit"></i><span class="ml2">我来回答</span></a></div>
+            </div>
+        </div>
+        <script type="text/javascript" src="../script/api.js"></script>
+        <script type="text/javascript" src="../script/common.js"></script>
+        <script type="text/javascript" src="../script/comment.js"></script>
+        <script>
+            var tid,fid,topic,isFavAuthor = false;
+            var COMMENT_MAX_LENGTH = 60;
+            $(function(){
+                initDev();
+            });
+            apiready = function(){
+                var header = $api.byId('header');
+                $api.fixIos7Bar(header);
+
+                
+                var header = $api.byId('header-bg');
+                $api.fixIos7Bar(header);
+                // fid = api.pageParam.fid;
+                tid = api.pageParam.tid;
+                getData();
+            } 
+            function getData(){
+                //var tid = 14686;
+                api_ajax(0,
+                	'topic_detail.php',
+                	{
+                    tid:tid
+                	},
+                	function(ret){
+                    	console.log(ret);
+                    	topic = ret.topics;
+                    	initTopic(topic);
+                        getReplyList();
+                	},
+                	null,2);
+            }
+            //缺少 tags level 
+            function initTopic(topic){
+
+                //topic.anonymous = '1';
+                if(topic.anonymous == '1'){
+                    topic.nickname = '匿名';
+                    topic.authorimage = '../image/avator_bg.jpg';
+                }
+                $('.author-name').text(topic.nickname);
+                $('.author-avator').attr('src',topic.authorimage);
+                // $('.banner-content').html(topic.summary+'<span style="background-color:#eee;padding:0.1rem 0.3rem;border-radius:0.3rem;cursor:pointer;" onclick="openContent();">查看更多</span>');
+                openContent();
+                $('#qa-tag').text(topic.fname);
+                $('.reply-count').text();
+
+                $('#dianzan-v').data('tid',tid);
+                if(topic.favorite){
+                    $('#dianzan-v').addClass('icon-xin-fill color-red').removeClass('icon-xin');
+                }
+
+                fid = topic.fid;
+                //alert($('#dianzan').data('tid'));
+
+                console.log(topic.favorite);
+                if(topic.favorite == 1){
+                    isCollected =true;
+                    $('.collect-icon').addClass('icon-fav').removeClass('icon-fav-1');
+                }else{
+                    isCollected =false;
+                }
+
+                if(topic.me_fav_ta){
+                    isFavAuthor = true;
+                    //$('.follow-bt').text('取消关注').addClass('bg_gray');
+                    $('.header-right').html('<span class="color-999 f5" style="line-height:1rem;">阅读数:'+topic.viewcount+'</span>');
+
+                }else{
+                    isFavAuthor =false;
+                }
+                if(topic.anonymous == '1' || topic.authorid == $api.getStorage('uid')){
+                    $('.follow-bt').remove();
+                    $('.level-wrap').remove();
+
+                    $('.header-right').html('<span class="color-999 f5" style="line-height:1rem;">阅读数:'+topic.viewcount+'</span>');
+
+
+                }
+                $('#main').show();
+
+                $('.author-info').click(function(){
+                    openUserSpace(topic.authorid);
+                });
+
+            }
+            var picCount = 0;
+            var picUrl = Array();
+            function openContent(){
+                //alert('dfg');
+                    var ajaxUrl = 'topic_detail_body.php';
+                    api_ajax(0,
+                        ajaxUrl,
+                        {
+                        tid:tid
+                        },
+                        function(ret, _, _, _) {
+                            if (ret.code == 988)
+                            {
+                                return;
+                            }
+                            //console.log(ret);
+                            //console.log(ret);
+                            //$('#main').show();
+                            if(ret.code == 100) {
+                                var isBreak = ret.result.isBreak;          
+                                ret = ret.result.content;   
+                                 
+                                //if(ret.indexOf('Powered by Discuz')>0) {
+                                //  ret = '你访问的话题('+tid+')被管理员禁止，请和管理员联系。';
+                                //}                 
+                                if (isBreak == 0) {  
+
+                                    if($api.getStorage('isLimitData')=='true'){
+                                        ret = ret.replace(/<img .*?>/g, '');
+                                    } 
+
+                                    var reg = new RegExp('<a href=\".*?</a>', 'g');
+                                    var reg1 = new RegExp('href=\".*?\"', 'g');
+                                    var reg2 = new RegExp('src=\".*?\"', 'g');
+                                    var cc = "";
+                                    var ret1 = ret;
+
+                                    while ((rr = reg.exec(ret1)) != null) {
+                                        //r += rr+"\r\n";
+                                        cc = "" + rr;
+                                        //r += "rr.input="+rr.input+"</br>";
+                                        ss = cc.match(reg2);
+                                        //r += "SS="+ss+"\r\n";
+                                        hh = cc.match(reg1);
+                                        //r += "HH="+hh+"\r\n";
+                                        //r += "rr.index="+rr.index+"\r\n";
+                                        //r += "rr.lastIndex ="+rr.lastIndex +"\r\n";
+                                        var cc1 = cc.replace("" + hh, "href=\"#\" onclick=\"return openImageBrowser(" + picCount + ");\"");
+                                        ret = ret.replace(cc, cc1); //+"__/"+picCount+"/"); 
+                                        var ss1 = "" + ss;
+                                        ss1 = ss1.replace("src=\"", "");
+                                        ss1 = ss1.replace("\"", "");
+                                        picUrl[picCount] = ss1;
+                                        picCount++;
+                                    }
+
+                                }
+
+                                $('.item-content').html(ret);
+                    
+                            } 
+                     
+                            if(isBreak){
+                                $('.dianzan-bt-wrap').hide();
+                                $('.dianzan-user-list-wrap').hide();
+                                $('#content_comment').hide();
+                            } else {
+                               // $('.dianzan-bt-wrap').show();
+                                //$('.dianzan-user-list-wrap').show();
+                                //$('#content_comment').show();
+                            }
+                     }, 0, 1);
+            }
+            function getReplyList(){
+                
+                getCommentList(tid,function(ret){
+                   
+                    if(!ret){
+                        $('.answer-wrap').hide();   
+                        $('.reply-count').text(0);
+                    }
+                    //console.log(ret);
+                    $('.comment-list').html(ret.html);  
+
+                    $('.reply-count').text(ret.count);
+
+                    $('.reply-to-user').on('click',function(){
+                        var comment_item = $(this).parent().parent().parent();
+                        var toUserInfo = $("<p>").append(comment_item.clone()).html();
+                        var pid = comment_item.data('pid');
+                        var position = $(this).data('position');
+                        api.openWin({
+                            name:   'replyUser',
+                            url:    'replyUser.html',
+                            pageParam: {toUserInfo: toUserInfo,
+                                        pid:pid,
+                                        position:position
+                                    },
+                            reload: false,
+                            bounces: true,
+                            opaque: true,
+                            vScrollBarEnabled: true,
+                            softInputMode: 'resize'
+                        });
+                        return false;
+                    });
+                });
+            }
+            var lastCollectTime = 0; 
+            var isCollected = false;
+            function collect_qa(){
+                var nowTime = (new Date()).valueOf();
+                if (nowTime-lastCollectTime < 1000) return;     
+                lastCollectTime = nowTime;
+            
+                var self = $('.collect-ico')
+                var act = 'add';
+
+                if(isCollected){
+                    act = 'cancel';
+                }
+                
+                var ajaxUrl = 'my_favorite_topic_set.php';
+
+                api_ajax(2,
+                    ajaxUrl,
+                    {
+                    tid:tid,
+                    act:act
+                    },
+                    function(ret, _, _, tid) {
+                        if (ret.code == 988)
+                        {
+                            return;
+                        }
+                        $api.setStorage('collect_tid', tid);
+                            
+                        console.log(ret);
+                        if(ret.code == 100||ret.code == 102){
+                            //setCollected(true);
+                           
+                            $api.setStorage('set_my_change', 1);
+                            $api.setStorage('set_my_change_topic', 1);
+                            if(isCollected){
+                               
+                                playStar();
+                                $('.collect-icon').removeClass('icon-fav').addClass('icon-fav-1');
+                                 isCollected = !isCollected;
+                                 myToast('已取消收藏！');
+                            }else{
+                                
+                                $('.collect-icon').addClass('icon-fav').removeClass('icon-fav-1');
+                                 isCollected = !isCollected;
+                                myToast('收藏成功！');
+                            }
+                            //myToast(ret.msg);
+                        }else if(ret.code = 104){
+                            myToast(ret.msg);
+                            isCollected = true;
+                            $('.collect-icon').addClass('icon-fav').removeClass('icon-fav-1');
+                        }else{
+                            myToast(ret.msg);
+                        }
+                    },
+                    tid,
+                    0
+                    );
+            }
+            function followUser(){
+                var action = 'add';
+                if(isFavAuthor) action = 'cancel';
+                favoriteUser(topic.authorid,action,function(ret){
+                    if(ret.code == 100){
+                        console.log(ret);
+                        
+                        if(ret.msg == '关注成功'){
+                            //$('.follow-bt').text('取消关注').addClass('bg_gray');
+                            $('.header-right').html('<span class="color-999 f5" style="line-height:1rem;">阅读数:'+topic.viewcount+'</span>');
+                            isFavAuthor = true;
+                        }else if(ret.msg == '取消关注成功'){
+                             $('.follow-bt').text('+关注').removeClass('bg_gray');
+                             isFavAuthor =false;
+                        }
+                    }
+                });
+            }
+            function share(){
+                openShare(topic.tid,topic.title,topic.summary,topic.images[0]);
+            }
+            function inviteDaren(name){
+                api.openWin({
+                    name:'invite-qa',
+                    url:'invite-qa.html',
+                    pageParam:{
+                        fid:fid,
+                        tid:tid
+                    }
+                });
+            }
+            function openAllComments(){
+                //console.log('open');
+                api.openWin({
+                    name: 'reply-'+tid,
+                    url: 'reply.html',
+                    pageParam: {fid: fid,tid:tid}
+                });
+            }
+        </script>
+    </body>
+</html>

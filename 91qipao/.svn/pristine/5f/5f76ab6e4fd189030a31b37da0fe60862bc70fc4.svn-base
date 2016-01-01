@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>红人计划</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <style>
+        #wrap{height:100%;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-flow:column;flex-flow:column}
+        #main{-webkit-box-flex:1;-webkit-flex:1;flex:1;background-color:#fff}
+        .banner{position:relative}
+        .banner>img{width:100%}
+        .banner>span{display:inline-block;position:absolute;top:50%;left:50%;margin-top:-.75rem;margin-left:-3rem;color:#fff;font-size:1.5rem}
+        .content{padding:.6rem;font-size:.6rem;line-height:.9rem;color:#666}
+        .footer{position:absolute;bottom:.5rem;text-align:center;width:100%;line-height:2rem;color:#999}
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <a class="back-icon" tapmode="" onclick="api.closeWin()"></a>
+            <h1></h1>
+        </div>
+        <div id="main">
+            <div class='banner'>
+                <img src="../image/hr_plan_bg.png" alt="">
+                <span>红人计划</span>
+            </div>
+            <div class="content">
+                <p>★获得内容打赏分成（邀请开放）</p>
+                <p class="mt20">★粉丝数达1万，可申请成为气泡红人合伙人，
+   认证成功可获得气泡期权奖励。</p>
+            </div>
+            <p class="footer">解释权归气泡所有</p>
+        </div>
+    </div>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/common.js"></script>
+    <script>
+     apiready = function(){
+         var header = $api.byId('header');
+         $api.fixIos7Bar(header);
+     }
+         
+    </script>
+</body>
+</html>

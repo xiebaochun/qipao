@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <style>
+            .bottom-nav{
+                height: 53px;
+                display: flex;
+                display: -webkit-flex;
+            }  
+            .nav-item-box{
+                flex:1;
+                -webkit-flex:1;
+                color:#fff;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="bottom-nav">
+            <div class="nav-item-box" onclick="openTab('tuijian')">
+                <i></i>
+                <span>推荐</span>
+            </div>
+            <div class="nav-item-box" onclick="openTab('explore')">
+                <i></i>
+                <span>推荐</span>
+            </div>
+            <div class="nav-item-box" onclick="openTab('gouda')">
+                <i></i>
+                <span>推荐</span>
+            </div>
+            <div class="nav-item-box" onclick="openTab('my')">
+                <i></i>
+                <span>推荐</span>
+            </div>
+        </div>
+        <script>
+            function openTab (frameName) {
+                alert(frameName);
+                api.sendEvent({
+                    name:'openTab',
+                    extra:{fameName:'' + frameName}
+                });
+            }
+        </script>
+    </body>
+</html>

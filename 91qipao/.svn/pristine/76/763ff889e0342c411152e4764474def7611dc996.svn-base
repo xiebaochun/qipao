@@ -1,0 +1,306 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="format-detection" content="address=no" />
+    <title>登录填写资料</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+     <style>
+        body{background-image:url(../image/login_bg.png);background-size:cover}
+        #header{position:relative;z-index:3;background-color:transparent!important}
+        ::-webkit-input-placeholder{color:#fff}
+        #wrap{position:relative;background-color:rgba(0,0,0,.4)}
+        #main{position:relative;z-index:2}
+        .back-icon{background-image:url(../image/arr-white-l.png)!important;background-size:18px 18px!important}
+        .info-complete-bt{display:inline-block;position:absolute;right:0;top:0;line-height:44px;padding:0 .8rem;color:#fff;font-size:.65rem}
+        .avator-wrap{position:relative;width:4rem;height:4rem;margin:3rem auto; margin-bottom: 1.2rem;}
+        .avator-wrap>.img-wrap{position:absolute;display:block;width:3.3rem;height:3.3rem;border:2px solid rgba(200,200,200,.9);border-radius:50%;box-sizing:border-box;overflow:hidden}
+        .avator-wrap>.img-wrap>img{position:absolute;display:block;margin-left:-1px;margin-top:-1px;width:3.3rem;height:3.3rem}
+        .camera-icon {
+            display: block;
+            position: absolute;
+            width: 23px;
+            height: 23px;
+            line-height: 23px;
+            right: 14px;
+            bottom: 15px;
+            background-color: #eed600;
+            background-image: url(../image/camera_ico.png);
+            background-size: 23px 23px;
+            color: #666;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 16px;
+        }
+        .camera-icon:before{
+            content:none;
+        }
+        .avator-wrap>span{display:block;position:absolute;top:50%;left:50%;font-size:16px;margin-top:-10px;margin-left:-16px;color:#999;z-index:0}
+        /*.camera-icon{display:block;position:absolute;width:20px;height:20px;line-height:20px;right:5px;bottom:5px;background-color:#eed600;color:#666;border-radius:50%;text-align:center}*/
+        .gender-wrap{position:relative;width:50%;height:3rem;margin:0 auto}
+        .gender{background-color:rgba(200,200,200,.8);height:2.3rem;width:2.3rem;position:absolute;top:0;border-radius:50%;text-align:center;line-height:2.3rem;font-size:.7rem}
+        .female{right:0}
+        .nickname-wrap{position:fixed;bottom:30%;width: 70%; margin:0rem 15%;margin-bottom:.1rem;padding:.2rem 0;background-color:transparent}
+        .nickname-wrap>input{display:inline-block;padding-left:2rem;outline:0;line-height: 0.9rem;color:#fff;font-size:.7rem;border-bottom:1px solid #eee}
+        .select-pic-box{display:none;background-color:rgba(0,0,0,.3)}
+        .choose-item-list{position:absolute;bottom:0;width:100%}
+        .choose-item-list>li{background-color:#FFF;text-align:center;line-height:2rem}
+        .choose-item-list>li>span{display:inline-block;width:95%;border-bottom:1px solid #EEE}
+        .image-clip-wrap{background-color:rgba(0,0,0,.8)}
+        #cut-canvas{width:100%;height:100%}
+        .clip-box{position:absolute;height:150px;width:150px;top:50%;left:50%;margin-top:-75px;margin-left:-75px;border:1px solid #fe4600}
+        .nickname-label{display: inline-block;position: absolute;left: 0;bottom: 0.3rem;font-size: 0.7rem; color:#eee;}
+        /*#nick-name{display:inline-block;outline:0;width:60%;margin:0rem auto 0 auto;border-bottom:1px solid #ddd;font-size:.8rem;color:#fff}*/
+        .bg{position:absolute;top:0;left:0;display:block;width:100%;height:100%;z-index:0}
+    </style>
+</head>
+
+<body>
+    <div id="wrap">
+        <div id="header">
+            <!-- <a class="back-icon" tapmode="" onclick="api.closeWin()"></a> -->
+            <h1></h1>
+            <a class="info-complete-bt" href="javascript:;">完成</a>
+        </div>
+        <div id="main">
+           <div class="avator-wrap">
+                <span>头像</span>
+                <div class="img-wrap">
+                    <img class="default-avator" id="user-avator" src="../image/usericon.jpg">
+                </div>
+                <i class="camera-icon fa fa-camera"></i>
+           </div>
+           <div class="gender-wrap">
+               <div class="gender male" data-gender="男">男</div>
+               <div class="gender female" data-gender="女">女</div>
+           </div>
+           <div class="nickname-wrap">
+                <span class="nickname-label">昵称：</span>
+                <input id="nick-name" type="text" placeholder="" oninput="check_name_len();"/>    
+           </div>
+           
+        </div>
+        <div class="pop-wrap select-pic-box">
+            <ul class="choose-item-list">
+                <li><span class="f12 color-999">更改头像</span></li>
+                <li id="select-by-camera"><span>拍照</span></li>
+                <li id="select-by-photo"><span>从相册中选择</span></li>
+                <li class="mt10 select-cancel-bt"><span class="color-999">取消</span></li>
+            </ul>
+        </div>
+        <img class="bg" src="../image/login_bg.png" alt="">
+        <!-- <div  class="pop-wrap image-clip-wrap none">
+            <canvas id="cut-canvas" width="320" height="568"></canvas>
+            <div class="clip-box"></div>
+        </div> -->
+
+    </div>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script>
+	function check_name_len() {
+		var name = $('#nick-name').val();
+		if (name.gblen() > 16)
+			myToast("昵称最长8个汉字");
+	}
+
+    $(function(){
+        console.log($(document).height());
+        var deviceHeight = $(document).height();
+        var deviceWidth = $(document).width();
+        // $('#cut-canvas').attr('width',deviceWidth);
+        // $('#cut-canvas').attr('height',deviceHeight);
+        $('#wrap').css({'height':deviceHeight+'px'});
+
+        $('.gender').click(function(){
+            // alert($(this).data('gender'));
+            // $('.'+)
+            $('.gender').removeClass('bg-color-primary-i');
+            $(this).addClass('bg-color-primary-i');
+
+        });
+        $('.avator-wrap').click(function(){
+            $('.select-pic-box').show();
+        });
+        $('.select-cancel-bt').click(function(){
+            $('.select-pic-box').hide();
+        });
+        //imageCut.init();
+        $('#select-by-camera').click(function(){
+            api.getPicture({
+                sourceType: 'camera',
+                encodingType: 'png',
+                mediaValue: 'pic',
+                destinationType: 'base64',
+                allowEdit: true,
+                quality: 100,
+                targetWidth:deviceWidth,
+                // targetHeight:200,
+                saveToPhotoAlbum: false
+            }, function(ret, err){ 
+                if (ret) {
+                    //api.alert({msg:ret.data});
+                    //api.alert({msg:ret.base64Data});
+                    avtarChange = 1;
+                    $('#user-avator').attr('src',ret.base64Data);
+                    $('.select-pic-box').hide();
+                    //imageClip(ret.base64Data);
+
+                } else{
+                    api.alert({msg:err.msg});
+                }
+            });
+        });
+        $('#select-by-photo').click(function(){
+            api.getPicture({
+                sourceType: 'album',
+                encodingType: 'jpg',
+                mediaValue: 'pic',
+                destinationType: 'base64',
+                allowEdit: true,
+                quality: 100,
+                targetWidth:deviceWidth,
+                // targetHeight:200,
+                saveToPhotoAlbum: false
+            }, function(ret, err){ 
+                if (ret) {
+                    //api.alert({msg:ret.data});
+                    //api.alert({msg:ret.base64Data});
+                    avtarChange = 1;
+                    $('#user-avator').attr('src',ret.base64Data);
+                    $('.select-pic-box').hide();
+                    //imageClip(ret.base64Data);
+
+                } else{
+                    api.alert({msg:err.msg});
+                }
+            });
+        });
+        $('.info-complete-bt').click(function(){
+        	checknick();
+        });
+    });
+    
+	function checknick() {
+		var name = $('#nick-name').val();
+		if (name.gblen() > 16) {
+			myToast("昵称最长8个汉字");
+			return false;
+		};
+	
+		api_ajax(2, 
+				'my_profile_set.php', 
+				{	
+					step:2,
+					nickname: name
+				}, 
+				after_checknick,
+				0,
+				0
+				); 
+	}
+	            
+	function after_checknick(ret, _, _, _) {
+			if (ret.code == 988) {
+				return;
+			}
+			if (ret.code == 100) {
+				submit_profile();
+			} else {
+				myToast(ret.msg);
+				$('#nick-name').focusEnd();
+			}
+	} 
+    
+    function imageClip(imageBase64){
+
+    }
+    function getGender(){
+        if($('.bg-color-primary-i').length>0){
+            return $('.bg-color-primary-i').data('gender');
+        }else{
+            return 0;
+        }
+   }
+    
+   function submit_profile() {
+   	  var uid = $api.getStorage('uid');
+	  var userAvatorBase64 = "";
+	  if (avtarChange == 1)   	  
+      	  userAvatorBase64 = $('#user-avator').attr('src');
+      var userGender = getGender();
+      var nickName = $('#nick-name').val(); 
+      var progress = 0;
+      if (userAvatorBase64 != "")
+      	 progress = 2;
+	  api_ajax(2, 
+			'my_profile_set.php', 
+			{
+        		sex:userGender,
+        		nickname:nickName,
+        		img:userAvatorBase64,
+        		step:0		
+			}, 
+			after_update_info,
+			nickName,
+			progress
+		);       
+   }
+   
+   function after_update_info(ret, _, _, nickName) {
+		if (ret.code == 988) {
+			return;
+		}
+        console.log(ret);
+        if (ret.code == 100) {
+ 
+		   $api.setStorage('username',nickName);
+		   $api.setStorage('userimage',ret.img);
+		   $api.setStorage('sex', ret.sex);
+
+		   after_login_action();
+        } else {
+        	myToast(ret.msg);
+    	}   		
+   }
+    
+    var avtarChange = 0;
+ 	apiready = function() {
+        var header = $api.byId('header');
+        $api.fixIos7Bar(header);
+		$('#nick-name').val($api.getStorage('username'));
+        // var inputBox;
+        // $('#nick-name').focus(function(){
+        //     //$(this).hide();
+        //     var inputBox = api.require('inputField');
+        //     inputBox.open({
+        //         bgColor:'#fff',
+        //         lineColor:'#eee',
+        //         fileBgColor:'#fff',
+        //         borderColor:'#eee',
+        //         placeholder:'输入昵称',
+        //         sendImg:'widget://image/ensureImg.png'
+        //     },function(ret,err) {
+        //         //api.alert({title: '输入的内容', msg: ret.msg});
+        //         //postReply(ret.msg);
+        //         $('#nick-name').val(ret.msg);
+        //         inputBox.close(function(ret,err){
+
+        //         });
+        //     });
+        // });
+        
+        
+        // $('#nick-name').blur(function(){
+
+        // });
+        
+
+	}        
+</script>
+</body>
+
+</html>

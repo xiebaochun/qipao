@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+        <meta name="format-detection"content="telephone=no">
+        <title>泡币规则</title>
+        <link rel="stylesheet" type="text/css" href="../css/common.css" />
+        <style>
+            #wrap{
+                height: 100%;
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -webkit-flex-flow: column;
+                       flex-flow: column;
+            }
+            #main{
+                -webkit-box-flex: 1; 
+                -webkit-flex: 1;
+                flex: 1;
+                background-color: #eee;
+            }
+            .banner{text-align: center;}
+            .paobi-mascot{
+                width: 5rem;
+                height: 3rem;
+                line-height: 3rem;
+                border:1px solid #999;
+                border-radius: 2rem;
+                margin:1rem auto;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="wrap">
+            <div class="fixed-header" id="header">
+                <a class="back-icon iconfont icon-arrow-left" tapmode onclick="api.closeWin();"></a>
+                <h1>泡币规则</h1>
+                <a class="header-right-txt"></a>
+            </div>
+            <div style="height:50px;"></div>
+            <div id="main">
+                <div class="banner">
+                    <div class="paobi-mascot">泡币吉祥物</div>
+                    <span>我的泡币</span><br>
+                    <span>现有泡币：12</span><br>
+                    <span>历史泡币：30</span><br>
+                </div>
+                <div class="title">泡币详细规则</div>
+                <div class="paobi-rule">
+                    <div class="content">
+                        <h1>泡币的价值</h1>
+                        <p>
+                            通过各种互动获得的泡币可以用户提升等级等级越高拥有的特权就越高。
+                        </p>
+                        <p>
+                            泡币可在泡币商城中兑换等价值的商品。
+                        </p>
+                        <p>
+                            100泡币＝1元，可兑换泡币商城所有物品。
+                        </p>
+                    </div>
+                </div>
+                <div class="paobi-caculate">
+                    <h1>如何获得泡币（主动获得）</h1>
+                    <div class="caculate-item">每日签到 <span>+1</span></div>
+                    <div class="caculate-item">连续签到7天（额外奖励）<span>+1</span></div>
+                    <div class="caculate-item">连续签到7天（额外奖励）<span>+1</span></div>
+                    <div class="caculate-item">连续签到7天（额外奖励）<span>+1</span></div>
+                    <div class="caculate-item">连续签到7天（额外奖励）<span>+1</span></div>
+                    <div class="caculate-item">连续签到7天（额外奖励）<span>+1</span></div>
+                    <div class="caculate-item">连续签到7天（额外奖励）<span>+1</span></div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="../script/api.js"></script>
+        <script type="text/javascript" src="../script/common.js"></script>
+        <script>
+            $(function(){
+                initDev();
+            });
+            apiready = function(){
+                
+            } 
+        </script>
+    </body>
+</html>

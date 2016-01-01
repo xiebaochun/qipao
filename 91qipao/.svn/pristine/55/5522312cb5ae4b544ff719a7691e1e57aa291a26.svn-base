@@ -1,0 +1,229 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="format-detection" content="address=no" />
+    <title>我的信息修改</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css" />
+     <style>
+        body{background-size:cover;background-position:0 -3rem;background-repeat:no-repeat;font-family:"微软雅黑";background-color:#eee}
+        ::-webkit-input-placeholder{color:#999}
+        #header{background-color:transparent!important;z-index:1;}
+        #wrap{position:relative}
+        #main{position:absolute;top:0;width:100%;padding-top:50px;background-image:url(../image/my_bg.png);background-size:100% auto;background-color:#eee}
+        .back-icon{background-image:url(../image/arr-white-l.png)!important}
+        .info-complete-bt{display:inline-block;position:absolute;right:0;top:0;line-height:50px;padding:0 .8rem;color:#fff;font-size:.8rem}
+        .avator-wrap{position:relative;width:3.2rem;height:3.2rem;margin:.3rem auto;margin-bottom:2rem}
+        .avator-wrap>.img-wrap{position:absolute;display:block;width:3.2rem;height:3.2rem;border:2px solid rgba(200,200,200,.5);border-radius:50%;box-sizing:border-box;overflow:hidden;z-index: 5;}
+        .avator-wrap>.img-wrap>img{position:absolute;display:block;top:-3px;left:-3px;width:3.3rem;height:3.3rem;border-radius: 50%; background-image:url(../image/avator_bg.jpg);background-size:120%;background-repeat:no-repeat;background-position:center;z-index: 0;}
+        .avator-wrap>span{display:block;position:absolute;top:50%;left:50%;font-size:16px;margin-top:-10px;margin-left:-16px;color:#999;z-index:0}
+        .camera-icon{display:block;position:absolute;width:23px;height:23px;line-height:23px;right:0;bottom:0;background-color:#eed600;background-image:url(../image/camera_ico.png);background-size:23px 23px;color:#666;border-radius:50%;text-align:center;font-size:16px}
+        .gender-wrap{position:relative;width:48%;height:3rem;margin:0 auto;margin-top:1.2rem}
+        .gender{background-color:rgba(200,200,200,.8);height:2.3rem;width:2.3rem;position:absolute;top:0;border-radius:50%;text-align:center;line-height:2.3rem;font-size:.7rem}
+        .female{right:0}
+        .nickname-wrap{width:80%;margin-bottom:.1rem;padding:.2rem 0}
+        .nickname-wrap>input{display:inline-block;width:80%;outline:0;color:#333;font-size:.8rem;border-bottom:1px solid #eee}
+        .select-pic-box{display:none;background-color:rgba(0,0,0,.3)}
+        .choose-item-list{position:absolute;bottom:0;width:100%}
+        .choose-item-list>li{background-color:#FFF;text-align:center;line-height:2rem}
+        .choose-item-list>li>span{display:inline-block;width:95%;border-bottom:1px solid #EEE}
+        .image-clip-wrap{background-color:rgba(0,0,0,.8)}
+        #cut-canvas{width:100%;height:100%}
+        .clip-box{position:absolute;height:150px;width:150px;top:50%;left:50%;margin-top:-75px;margin-left:-75px;border:1px solid #fe4600}
+        .info-wrap{background-color:#fff;text-align:right;margin-top:.5rem}
+        .input-wrap{position:relative;padding:0 .5rem;/*border-bottom:1px solid #eee;*/line-height:2rem;font-size:.6rem}
+        .input-wrap:after{
+          position: absolute;
+          right: 0.5rem;
+          bottom: 0;
+          left: 0.5rem;
+          height: 1px;
+          content: '';
+          -webkit-transform: scaleY(.5);
+          transform: scaleY(.5);
+          background-color: #eee;
+        }
+        .input-wrap>.input{margin-bottom:0;outline:0;width:10.5rem;font-size:.6rem;text-align:left;outline:0;border:none}
+        .input-label{width:4rem;text-align:left}
+        .cate-arrow{float:right;margin-right:.5rem;line-height:2rem;font-size:.9rem;color:#999}
+        .check-ok-ico{position:absolute;height:18px;width:18px;top:.7rem;right:.3rem;font-size:.8rem;background-image:url(../image/phone_check_ico.png);background-size:18px 18px;background-repeat:no-repeat}
+        .check-ok-ico:before{content:none}
+        .pop-wrap{position:fixed}
+        .dialog-box{position:absolute;left:50%;top:50%;margin-top:-6rem;margin-left:-6rem!important;width:12rem;margin:0 auto;border-radius:.3rem;background-color:#fff}
+        .dialog-box input{border:none}
+        .dialog-box .dialog-close-bt{position:absolute;width:.8rem;height:.8rem;right:0;top:0}
+        .dialog-box .dialog-close-bt>i{display:inline-block;position:absolute;font-size:.8rem}
+        .dialog-title{text-align:center;margin-top:1rem}
+        .valid-input-wrap{margin:0 auto;width:8rem;margin-top:.5rem;border:1px solid #999;border-radius:2rem;font-weight:.7rem;padding-left:.5rem;font-size:.5rem}
+        .valid-input-wrap input{width:2rem;line-height:.8rem;margin:0;margin-left:.2rem;padding:0;padding-left:.2rem;display:inline-block;border-left:1px solid #999;font-size:.5rem}
+        .valid-input-wrap .valid-time{float:right;background-color:#ccc;border-radius:2rem;line-height:1.5rem;margin-top:1px;margin-right:1px;padding:0 .5rem;color:#fff}
+        .valid-ensure-bt{display:block;margin:.7rem auto;padding:.3rem 1rem;background-color:#ffd600;width:6rem;text-align:center;color:#333}
+        .get-validcode-bt{position:absolute;line-height:.8rem;right:18%;bottom:.3rem;padding:5px;background-color:#ffd600;font-size:10px;border-radius:3px}
+        #loginTip{position:absolute;width:100%;height:70px;line-height:70px;top:0;left:0;text-align:center;background-color:#ffd600}
+        #loginTip span{line-height:40px;text-decoration:none;color:#000;font-size:1.2em;font-family:'微软雅黑'}
+        .nopost-topic-wrap{
+            padding: 0.5rem 0;
+            background-color: #eee;
+        }   
+        .nopost-topic-wrap > .btn{border-radius: 0;}       
+    </style>
+</head>
+
+<body>
+    <div id="wrap">
+        <div id="header">
+            <a class="back-icon" tapmode="" onclick="api.closeWin()"></a>
+            <h1></h1>
+        </div>
+        <div id="main">
+
+           <div class="avator-wrap">
+                <!-- <div class="img-wrap"> -->
+                <div class="default-avator img-wrap" id="user-avator"></div>
+               <!--  </div> -->
+                <!-- <i class="camera-icon"></i> -->
+           </div>
+           <div class="gender-wrap">
+               <div class="gender male" data-gender="1" id="sex_sel_1">男</div>
+               <div class="gender female" data-gender="2" id="sex_sel_2">女</div>
+           </div>
+           <div class="info-wrap" style="display:block;">
+               <div class="nickname-wrap">
+                    
+               </div>
+               <div class="input-wrap">
+                   <span class="input-label">昵称</span>
+                   <input class="input" id="nick-name" type="text" 
+                   placeholder="昵称" oninput="check_name_len();" readonly="true">
+               </div>
+              
+               <div class="input-wrap">
+                   <span class="input-label color-999" style="font-size:0.5rem;">气泡号</span>
+                   <span class="input color-999" id="uniqueid" style="padding-left:0.5rem;font-size:0.5rem;"></span>
+               </div>
+               <span class="input-label" style="background-color:#eee;width:100%;padding-top:0.2rem;padding-left:0.8rem;line-height:1.5rem;font-size:0.6rem;">个人简介</span>
+               <div class="input-wrap" style="border-top:0rem solid #eee;">
+                   <!-- <span class="input-label">个人简介</span> -->
+                   <div class="input" id="resume" rows="1" maxlength="100" type="text" style="width:100%;line-height:1rem;padding:0.2rem;resize:none;color:#999;overflow:auto;word-break:break-all;" readonly="true">这家伙很懒，什么都没写。</div>
+               </div>
+               <!-- <div class="input-wrap more-get" style="border-top:0.5rem solid #eee;">
+                   <span class="input-label">个人简介</span>
+                   <input class="input color-999" id="resume" type="text" placeholder="什么都没说" readonly="true">
+               </div> -->
+               <div class="input-wrap more-get" id="city-item" style="border-top:0.5rem solid #eee;">
+                   <span class="input-label">城市</span>
+                   <span class="input color-999" id="city" style="padding-left:0.5rem;"></span>
+               </div>
+               <div class="input-wrap more-get" id="age-item">
+                   <span class="input-label">年龄</span>
+                   <span class="input color-999" id="age" style="padding-left:0.5rem;"></span>
+               </div>
+               <div class="input-wrap more-get" id="sex-trend-item" style="border-top:0.5rem solid #eee;">
+                   <span class="input-label">性取向</span>
+                   <span class="input color-999" id="sex-trend" style="padding-left:0.5rem;"></span>
+               </div>
+               
+               <div class="nopost-topic-wrap" id="profile_more" style="//display:none;"  onclick="openWin('my-info-edit');">
+                     <a class="btn" href="javascript:;">完善资料，了解TA更多...</a>    
+               </div>
+                              
+           </div> 
+       
+        </div>
+        
+
+    </div>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/mui.min.js"></script>
+<script>
+    var sid;
+    var user_info = null;
+    apiready = function () {
+        var header = $api.byId('header');
+        $api.fixIos7Bar(header);   
+        sid = api.pageParam.sid;
+        user_info = api.pageParam.user_info; 
+	    api.addEventListener({
+	      name:'viewappear'
+	    },function(ret,err){
+	    	init();
+	    });
+	            
+    };
+    
+    function init(){
+        var uid = $api.getStorage('uid');
+        
+        var data = user_info;
+        switch(data.sex){
+            case '0':
+
+            break;
+            case '1':
+                $('#sex_sel_1').addClass('bg-color-primary-i');
+            break;
+            case '2':
+                $('#sex_sel_2').addClass('bg-color-primary-i');
+            break;
+            default:
+
+        }
+        username = data.nickname;
+        $("#user-avator").css({'background-image':'url('+data.userimage+')'});
+        var nickname = data.nickname;
+        //nickname = nickname + "("+sid+")";
+        $("#usernickname").text(nickname);
+        $("#user_title").text(data.tag);        
+    
+        set_profile();
+        
+        $("#nick-name").val(data.nickname);
+        $("#uniqueid").text(data.uniqueid);
+        if (data.resume == '')
+            $("#resume").text('这家伙很懒，什么都没写。');
+        else
+            $("#resume").text(data.resume);
+        if (data.city == '')
+            $("#city").text('');
+        else
+            $("#city").text(data.city);
+        if (data.age == '' || data.age == 0)
+            $("#age").text('');
+        else
+            $("#age").text(data.age);
+        if (data.lookingfor == '')
+            $("#sex-trend").text('');
+        else
+            $("#sex-trend").text(data.lookingfor);  
+            
+        $('.info-wrap').show();     
+    }
+    
+ 	function set_profile() {
+		var uid = $api.getStorage('uid');
+		var sex = $api.getStorage('sex');
+		var plaform = $api.getStorage('platform');
+		var mobile = $api.getStorage('mobile');
+		
+		if(typeof(sex) == "undefined"  || sex == 0
+			|| (plaform != 'qp_phone' && (typeof(mobile) == "undefined") || mobile == "")) { 
+			$('.more-get').hide();
+			$('#profile_more').show();
+		} else {
+			$('.more-get').show();
+			$('#profile_more').hide();
+		}
+	}   
+$(function() {
+  // body...
+  initDev();
+});
+</script>
+</body>
+
+</html>

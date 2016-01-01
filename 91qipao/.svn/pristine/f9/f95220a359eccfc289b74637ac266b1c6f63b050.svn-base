@@ -1,0 +1,409 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>api</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" /> 
+    <link rel="stylesheet" type="text/css" href="../css/topic-list.css" />
+    <style>
+        #header{background-color:#fff}
+        .header-bt{display:inline-block;height:43px;font-size:16px;color:#333;padding:0 10px}
+        .header-explore{border-bottom:1px solid #333;box-sizing:border-box}
+        .daren-slide{position:relative;height:4.7rem;background-color:#fff;overflow:hidden;visibility:hidden}
+        .daren-list{position:relative;overflow:hidden}
+        .daren-item-list{position:relative;float:left;width:100%;padding:0.5rem 0;padding-bottom:0}
+        .daren-item{position:relative; width:4rem;display:inline-block;text-align:center}
+        .daren-item .daren-avator{display:inline-block;width:2.2rem;height:2.2rem;border:2px solid #eee;border-radius:50%;}
+        .daren-item>label{width:3rem;overflow:hidden;font-size:0.5rem}
+        .slide-nav{position:absolute;width:100%;left:0;height:1rem;bottom:0.1rem;text-align:center}
+        .slide-nav>.slide-nav-item{display:inline-block;width:3px;height:3px;border:1px solid #999;background-color:#fff;border-radius:50%;overflow: hidden;}
+        .topic-list{background-color:#eee}
+        .danren-icon{position: absolute;right:0.9rem;top:1.7rem; width: 0.5rem;height: 0.5rem;background-image: url(../image/user_tag_ico.png);background-size: 100% 100%;}
+        .publish-topic-bt{position:fixed;right:0.8rem;bottom:3rem;width:2rem;z-index:100}
+        #bottom-tip{margin-top: 0;}
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="main">
+            <img class="publish-topic-bt" src="../image/publish_topic_bt.png" alt="" onclick="openPublishWin();">
+            <div id="bottom-tip"><span class="loader loader-double">&nbsp;</span>玩命加载中...</div>
+            <div class="daren-slide" id="daren-slide">
+                <div class="daren-list">
+                    <div class="daren-item-list">
+                        <div class="daren-item" id="daren-item-1">
+                            <img class="default-avator daren-avator" src="" alt=""><br>
+                            <label>达人名字</label>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="slide-nav">
+                    <div class="slide-nav-item"></div>
+                    <div class="slide-nav-item"></div>
+                    <div class="slide-nav-item"></div>
+                </div>
+            </div>
+            <div class="topic-list">
+  
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src='../script/swipe.js'></script>
+<script type="text/javascript" src='../script/common.js'></script>
+<script> 
+    //获相关数据
+    function getTopiciList(){
+        isTopicLoaded = false;   
+    	api_ajax(0,
+    			'topic_list.php',
+    			{
+					fid:  0,
+					version:'2.0.1',
+					lasttopictime: lasttopictime,
+					page: topic_page,
+					psize: psize
+				},
+				after_getTopiciList,
+				0,
+				0
+			);
+    }
+    
+    function after_getTopiciList(ret, _, _, _){
+		if(ret.code == 988){
+			isTopicLoaded = true;
+			isFirstGetData = true;
+			return;
+		}    
+		console.log(ret);
+		if(ret.code == 101){
+			//myToast('没有更多了', 1000, 'top');
+			topic_page = topic_page - 1;
+			noMoreData = true;
+			var data = ret.data; 
+			if (data && data.daren_list) {
+				listDaren(data.daren_list); 
+			}
+		} else if(ret.code == 100){
+			noMoreData = false;
+			var data = ret.data; 
+			if (data.daren_list) {
+				listDaren(data.daren_list);  
+			}	
+					
+			listExploreTopics(data.topicinfo.topicslist, true);
+
+		}
+		isTopicLoaded = true;
+		isFirstGetData = false;
+    }
+ 
+ 	var mySlider = null;
+
+ 	
+    function listDaren(darenList){
+        //创建达人滚动列表
+        var darenHtml = '';
+        var itemHtml = '';
+        for(var index in darenList){
+            var daren = darenList[index];
+          
+           if (typeof(daren.cache_time) != 'undefined') {
+             	if (getDarenTime == daren.cache_time) return; 
+            	getDarenTime = daren.cache_time; 
+            }
+			
+            if(daren.name == ''){
+                daren.name = '无名';
+            }
+            var html = '<div class="daren-item" data-uid="'+daren.uid+'" onclick="openUserSpace('+daren.uid+');">'+
+            '<div class="default-avator daren-avator" style="background-image:url('+daren.userimage+');"></div><br>'+
+                            '<i class="danren-icon"></i>'+
+                            '<label>'+daren.name.substring(0,5)+'</label>'+
+                        '</div>';
+            itemHtml += html;
+            var temp = parseInt(index) +1;
+            //console.log(temp);
+            if(temp%4 == 0){
+                darenHtml += '<div class="daren-item-list">' + itemHtml + '</div>';
+                itemHtml = '';
+            }
+        }
+        if(itemHtml != ''){
+            darenHtml += '<div class="daren-item-list">' + itemHtml + '</div>';
+        }
+        //console.log($(darenHtml));
+        var $darenList = $('.daren-list');
+        $darenList.empty();
+        $darenList.html(darenHtml);
+
+        //创建达人滚动指示
+        var navHtml = '';
+        for(var i = $('.daren-item-list').length; i>0; i--){
+            var html = '<div class="slide-nav-item"></div> ';
+            navHtml += html;
+        }
+        $('.slide-nav').html(navHtml);
+
+        $('.slide-nav-item').eq(0).css('background-color','#999');
+        
+		if (mySlider) {		
+			mySlider.reload();
+		} else {        
+        	mySlider = new Swipe(document.getElementById('daren-slide'), {
+          		startSlide: 0,
+          		speed: 400,
+          		auto: 0,
+          		continuous: true,
+          		disableScroll: false,
+          		stopPropagation: false,
+          		callback: function(index, elem) {},
+          		transitionEnd: function(index, elem) {
+             		$('.slide-nav-item').css('background-color','#fff');
+             		$('.slide-nav-item').eq(index).css('background-color','#999');
+         		 }
+        	});
+        	//slideWidth = mySlider.getWidth();
+        	//slideHeight = $('.daren-list').height();
+        }
+    }
+  
+	 function listExploreTopics(topics, isNew){
+	    var uid = $api.getStorage('uid');
+	    var topicHtml = '';
+	     for(var index in topics){
+	        var topic = topics[index];
+	        
+	        topic.tid = topic.tid || topic.id;
+	        topic.ui = topic.ui || topic.authorimage;
+	        topic.un = topic.un || topic.nickname;
+	        topic.date = topic.date || topic.createdate;
+	        topic.content = topic.content.replace(/\[.+\]|\[|\]/ig,'');
+	        topic.sex = topic.sex || topic.us;
+	        //topic.content = topic.content.substring(0,80);
+	        var sexHtml = '';
+	        switch(topic.sex){
+	            case '0':
+	            sexHtml = '';
+	            break;
+	            case '1':
+	            sexHtml = '<i class="gender-ico gender-male-ico fa fa-mars"></i>';
+	            break;
+	            case '2':
+	            sexHtml = '<i class="gender-ico gender-female-ico fa fa-venus"></i>';
+	            break;
+	            default:
+	            break;
+	        }
+	        //图片数量
+	        var picCountHtml = '';
+	        if(topic.pic_num>1){
+	            picCountHtml = '<span class="topic-pic-num"><div class="pic-num-wrap"><span style="font-size:0.5rem;vertical-align:top;">'+topic.pic_num+'</span><span style="font-size:0.4rem;vertical-align:top;margin-right:0.21rem;">张</span></div></span>';
+	        }
+	        
+	        var imgHtml = '';
+	        if(topic.images != ''){
+	            imgHtml = '<img class="topic-img" src="'+topic.images+'" alt="" >'
+	        }
+	        //topic.recommend = topic.recommend>99?'99+':topic.recommend;
+	        var dianzanHtml = '<i class="fa fa-heart-o" onclick="recommendTopic('+topic.tid+',this,event);"></i><div class="count">'+topic.recommend+'</div>';
+	        //console.log(uid);
+	
+	        if($api.getStorage(topic.tid+''+uid) == 1){
+	            dianzanHtml = '<i class="fa fa-heart-o" style="background-image:url(../image/dianzan_selected_ico.png);" onclick="recommendTopic('+topic.tid+',this,event);"></i><div class="count" style="color:rgb(255, 98, 99);">'+topic.recommend+'</div>';
+	        }
+	
+	        //来自哪个话题圈
+	        var fromWhereHtml = '';
+	        if(topic.fname){
+	            fromWhereHtml = '<span class="from-where" onclick="openTopicCircle('+topic.fid+',\''+topic.fname+'\',event);">#'+topic.fname+'</span>';
+	        }
+	
+	        
+	        //topic.commentcount = topic.commentcount>99?'99+':topic.commentcount;
+	
+	        var html = '<div class="topic-item topic-item-'+topic.tid+'" onclick="openTopicDetail(\''+topic.tid+'\','+topic.fid+', 0, \'' + topic.images + '\')">'+
+	
+	                        '<div class="topic-item-header">'+
+	                        '<div class="user-avator"  alt="" onclick="openUserSpace('+topic.authorid+',event);" style="background-image:url(../image/avator_bg.jpg);background-size:100% 100%;"><img src="'+topic.ui+'" alt="" onload="avatorOnload(this);" style="display:none;"/></div>'+
+	                            '<span class="user-name" onclick="openUserSpace('+topic.authorid+',event);">'+topic.un+'</span>'+
+	                                sexHtml+
+	                            fromWhereHtml+
+	                        '</div>'+
+	                        // '<p class="topic-item-title">'+topic.content+'</p>'+
+	                        '<div class="topic-item-body">'+
+	                            picCountHtml+
+	                            imgHtml+
+	                        '</div>'+
+	                        '<div class="topic-item-footer">'+
+	                            '<p class="topic-item-title">'+topic.content+'</p>'+
+	                            '<div class="footer-info">'+
+	                                '<span class="create-time">'+topic.date+'</span>'+
+	                                '<div class="topic-footer-ico comment-ico">'+
+	                                    '<i class="fa fa-commenting-o"></i>'+
+	                                    //'<i class="fa fa-commenting-o" onclick="replyTopic('+topic.fid+','+topic.tid+',event);"></i>'+
+	                                    '<div class="count">'+topic.commentcount+'</div>'+
+	                                '</div>'+  
+	                                '<div class="topic-footer-ico dianzan-ico">'+dianzanHtml
+	                                    +
+	                                '</div>'+  
+	                            '</div>'+
+	                        '</div>'+
+	                    '</div>';
+	        lasttopictime = topic.dateline;   
+	        if (isNew) {
+	        	$api.setStorage('lasttopictime', lasttopictime);
+	        	cachetopic.push(topic);
+	        	if (cachetopic.length > maxListLen) {
+	        		cachetopic.shift();
+	        	}
+	        }         
+	        topicHtml = html + topicHtml;
+	      	listCount++;  
+	        if (listCount > maxListLen) {
+	        	$('.topic-item:last-child').remove();
+	        }
+	    }
+        $('.topic-list').prepend(topicHtml);   
+        
+        if (isNew) {
+	       $api.setStorage('cachetopic', cachetopic);  
+	    }      
+	}
+   
+    //打开发布话题页面
+    function openPublishWin(){
+        checkLogin();
+        var uid = $api.getStorage('uid'); 
+        if(!uid || typeof(uid) == "undefined") {
+            return;
+        }
+        api.openWin({
+            name:'publish-topic',
+            url:'publish-topic.html',
+            pageParam:{
+                fid:0,
+                fname:0
+            }
+        });
+    }
+ 
+ 	function init() {
+		$('.topic-list').empty();
+ 		lasttopictime = $api.getStorage('lasttopictime');
+  		if(!lasttopictime || typeof(lasttopictime) == "undefined") {
+ 			lasttopictime = 0;
+ 		}
+ 		cachetopic = $api.getStorage('cachetopic');
+  		if(!cachetopic || typeof(cachetopic) == "undefined") {
+ 			cachetopic =  new Array();
+ 		}
+ 		listCount = cachetopic.length;
+ 		if (listCount > 0) {
+  			listExploreTopics(cachetopic, false);
+ 		}
+ 		getTopiciList();
+ 	}
+ 	
+    var uid = 0, topic_page = 1, psize = 5;
+    var isTopicLoaded = false;
+    var isFirstGetData = true;
+    var lastTime = 0;
+    var listCount = 0;
+    var maxListLen = 100;
+ 	var lasttopictime = 0;
+ 	var cachetopic = new Array();
+ 	var getDarenTime = 0;
+ 	var noMoreData = false;
+ 	    
+    var $bottomTip = $('#bottom-tip');
+
+    apiready = function(){
+        //var header = $api.byId('header');
+        //$api.fixIos7Bar(header);
+        isDev = false;
+        uid = $api.getStorage('uid');
+        console.log(uid);
+        
+/*
+        api.addEventListener({
+            name: 'scrolltobottom',
+            extra:{
+                threshold:200    //设置距离底部多少距离时触发，默认值为0，数字类型
+            }
+        }, function (ret, err) {
+           if (topic_page > 0  && isTopicLoaded)
+            {
+                topic_page = topic_page + 1;
+                getTopiciList();
+                $bottomTip.show();
+            }
+        });
+*/        
+        lastTime = (new Date()).valueOf();
+        api.setRefreshHeaderInfo({
+            visible: true,
+            // loadingImgae: 'wgt://image/refresh-white.png',
+            bgColor: '#f2f2f2',
+            textColor: '#4d4d4d',
+            textDown: '下拉刷新...',
+            textUp: '松开刷新...',
+            showTime: false
+        }, function (ret, err) {
+            api.hideProgress();
+           
+           	if (!noMoreData) {
+	            	topic_page = topic_page + 1;
+	            	getTopiciList();           	
+           	} else {
+		        var nowTime = (new Date()).valueOf();
+		        var refreshInterval = 60000;         //1*60*1000 =60000
+		        var is_ours = $api.getStorage('is_ours');
+		        if (is_ours) {
+		        	refreshInterval = 5000;        
+		        }	        
+		        if (nowTime-lastTime > refreshInterval && noMoreData) {		//3*60*1000 = 180000
+		        	lastTime = nowTime;            
+		            if (isTopicLoaded) {
+		            		topic_page = topic_page + 1;
+		            		getTopiciList();
+		            	}
+		          }  
+	         }	
+              
+            api.refreshHeaderLoadDone();
+        });
+
+        api.addEventListener({
+            name:'swipeleft'
+        },function(ret,err){
+            //operation
+            api.execScript({
+                frameName:'topic',
+                script:'showFollow();'
+            });
+        });
+        
+        init();
+        
+        $(window).scroll(function() {  
+            if ($(document).scrollTop()<=120){
+                //alert("滚动条已经到达顶部为0");
+                $('#daren-slide>*').show();
+            }else{
+                $('#daren-slide>*').hide();
+            }
+        }); 
+        openGuide('topic-guide');
+    }
+    $(function(){
+        initDev();
+    });
+</script>
+
+</html>

@@ -1,0 +1,160 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>红人申请</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <style>
+        body{background-color:#fff}
+        .input-wrap{margin:0 .5rem;padding-left:.3rem;border-bottom:1px solid #eee;line-height:2rem;font-size:.6rem}
+        .input-wrap>input{outline:0;width:10.1rem;font-size:.55rem;line-height:1rem}
+        .cate-arrow{float:right;margin-right:.5rem;line-height:2rem;font-size:.9rem;color:#999}
+        .select-box{border-radius:.3rem}
+        .cate-option{display:block;padding:0 .3rem;border-bottom:1px solid #eee;color:#999}
+        .submit-bt{margin:1.5rem .5rem 2rem .5rem;padding:.5rem .5rem;font-size:.6rem;color:#FFF;display:block;text-align:center;background-color:#f46f59}
+        .footer{text-align:center;line-height:.9rem}
+        .footer>span{color:#999}
+        .my-hr-plan{position:absolute;bottom:0;right:18px;line-height:50px;font-size:.6rem;color:#f46f59}
+        #cate{padding-left:0}
+        .cate-arrow {
+            display: inline-block;
+            width: 6px;
+            height: 2rem;
+            margin-left: 0.5rem;
+            background-image: url(../image/arr-l.png);
+            background-size: 6px 10px;
+            background-repeat: no-repeat;
+            background-position: center;
+            -webkit-transform: rotate(-90deg);
+            transform: rotate(-90deg);
+        }
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <a class="back-icon" tapmode="" onclick="api.closeWin()"></a>
+            <h1 class="">红人申请</h1>
+            <span class="my-hr-plan" onclick="openWin('my-hr-plan');">红人计划</span>
+        </div>
+        <div class="main">
+            <div class="input-wrap">
+                <span class="input-label">姓名：</span>
+                <input class="input" id="name" type="text" placeholder="真实姓名">
+            </div>
+            <div class="input-wrap">
+                <span class="input-label">手机：</span>
+                <input class="input" id="phone" type="text">
+            </div>
+            <div class="input-wrap">
+                <span class="input-label">邮箱：</span>
+                <input class="input" id="email" type="text">
+            </div>
+            <div class="input-wrap">
+                <span class="input-label">微信号：</span>
+                <input class="input" id="weixin" type="text">
+            </div>
+            <div class="input-wrap">
+                <span class="input-label">公众形象：</span>
+                <input class="input" id="other-id" type="text" placeholder="知乎ID、微博号、豆瓣、公众号、其他">
+            </div>
+            <div class="input-wrap" id="cate">
+                <span class="input-label" style="padding-left:0.3rem;">您感兴趣的分类：</span>&nbsp;&nbsp;<span class="input-label color-999" id="cate-val">情感</span>
+                <i class="cate-arrow fa fa-angle-down"></i>
+            </div>
+            <div class="input-wrap" style="padding-left:0;border-bottom:none;">
+                <div class="select-box none">
+                    <span class="cate-option" id="qinggan">情感</span>
+                    <span class="cate-option" id="jiqiao">技巧</span>
+                    <span class="cate-option" id="wanju">玩具</span>
+                    <span class="cate-option" id="sm" style="border-bottom:none;">SM</span>
+                </div>
+            </div>
+            <div class="input-wrap" style="background-color:#eee;">
+                <span class="input-label">介绍自己：</span>
+            </div>            
+            <div class="input-wrap" style="border-top:0rem solid #eee;">
+                   <textarea class="input" id="intro" rows="3" maxlength="60" type="text" placeholder="写写自己吧" style="width:100%;padding:0.2rem;resize:none;"></textarea>
+             </div> 
+                        
+            <span class="submit-bt">提交申请</span>
+            <div class="footer">
+                <span>红人认证成功后，可获得相关收益分成。</span>
+                <span>气泡小编邮箱：3183317032@qq.com</span>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src='../script/common.js'></script>
+<script>
+    $(function(){
+        $('#cate').click(function(){
+            $('.select-box').slideToggle();
+            $('.cate-arrow').toggleClass('fa-angle-down');
+        });
+        $('.cate-option').click(function(){
+            $('#cate-val').text($(this).text());
+            $('.select-box').slideToggle();
+            $('.cate-arrow').toggleClass('fa-angle-down');
+        });
+        $('.submit-bt').click(function(){
+            var name = $('#name').val();
+            var phone = $('#phone').val();
+            var email = $('#email').val();
+            var weixin = $('#weixin').val();
+            var other_id = $('#other-id').val();
+            var cat = $('#cate-val').text();
+            var intro = $('#intro').val();
+			if(name == ''){   
+				myToast('请填写真实姓名');
+				return;
+			}
+			
+     		var phone_reg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/; 
+			if(!phone_reg.test(phone)){   
+				myToast('请填写正确的手机号');
+				return;
+			}  
+			var email_reg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+			if(email != '') {
+				if(!email_reg.test(email)) {
+					myToast("请输入有效的邮箱地址！");
+					return;
+				}
+			}
+			
+			var info = {
+				name:name,
+				phone:phone,
+				email:email,
+				weixin:weixin,
+				other_id:other_id,
+				cat:cat,
+				intro:intro
+			};
+            api_ajax(2,
+            	'my_hr_apply.php',
+            	info,
+            	function(ret, _, _, _){
+        			if (ret.code ==100 ) {
+            			console.log(ret);
+            			api.alert({msg:'我们已接收到您的申请，将会及时和您联系'});
+            		} else {
+            			//alert(ret.code + "/" + ret.msg);	
+            		}
+                 	api.closeWin({});
+            	},
+            	0,
+            	0);
+            				       
+        });
+    });
+    apiready = function(){
+        var header = $api.byId('header');
+        $api.fixIos7Bar(header);
+    }
+</script>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>任务福利</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../css/task-item.css" />
+    <style>
+        #wrap{
+            height: 100%;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-flex-flow: column;
+                   flex-flow: column;
+        }
+        #main{
+            -webkit-box-flex: 1; 
+            -webkit-flex: 1;
+            flex: 1;
+            background-color: #eee;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <a class="back-icon iconfont icon-arrow-left" tapmode onclick="api.closeWin();"></a>
+            <h1>任务福利</h1>
+            <a class="header-right-txt"></a>
+        </div>
+        <div id="main">
+            <div class="item" style="margin-top:0.5rem">
+                <div class="item-header" style="border-bottom:1px solid #eee;"><i class="iconfont icon-task vm"></i><span class="item-name">日常任务</span></div>
+                <div class="task-item">
+                    <img src="../image/paobi/qiandao_ico.png" alt="">
+                    <div class="task-info inline-block">
+                        <span>每日签到</span><br>
+                        <span>奖励1个泡币</span>
+                    </div>
+                    <div class="start-bt pull-right" id="t210"><span>开始任务</span></div>
+                </div>
+                <div class="task-item">
+                    <img src="../image/paobi/publish_ico.png" alt="">
+                    <div class="task-info inline-block">
+                        <span>给动态回复</span><br>
+                        <span>奖励1个泡币,每天最多可获10个泡币</span>
+                    </div>
+                    <div class="start-bt pull-right" id="t230"><span>开始任务</span></div>
+                </div>
+                <div class="task-item">
+                    <img src="../image/paobi/publish_status_ico.png" alt="">
+                    <div class="task-info inline-block">
+                        <span>发个动态</span><br>
+                        <span>奖励5个泡币,每天最多可获10个泡币</span>
+                    </div>
+                    <div class="start-bt pull-right" id="t220"><span>开始任务</span></div>
+                </div>
+                <div class="task-item">
+                    <img src="../image/paobi/heart_ico.png" alt="">
+                    <div class="task-info inline-block">
+                        <span>给动态点赞</span><br>
+                        <span>奖励5个泡币,每天最多可获10个泡币</span>
+                    </div>
+                    <div class="start-bt pull-right" id="t240"><span class="task-active">已完成</span></div>
+                </div>
+                <div class="task-item">
+                    <img src="../image/paobi/share_ico.png" alt="">
+                    <div class="task-info inline-block">
+                        <span>分享气泡</span><br>
+                        <span>奖励30个泡币,每天最多可获150个泡币</span>
+                    </div>
+                    <div class="start-bt pull-right" id="t250"><span>开始任务</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/my_task_start.js"></script>
+<script>
+$(function(){
+    initDev();
+});
+   
+function init() {
+    $('#user-avator').attr('src',$api.getStorage('userimage'));
+	$('#user-name').html($api.getStorage('username')); 
+	
+	api_ajax(2, 
+		'my_task_status.php', 
+		{	
+		items:'210,220,230,240,250'
+		}, 
+		after_init,
+		0,
+		0
+		); 
+}
+
+function after_init(ret, _, _, _) {
+	if(ret.code == 988){
+		return;
+	}
+   //	console.log(ret);
+	if(ret.code == 100){
+		data = ret.data;
+		money = ret.money;		
+		$api.setStorage('my_money', money);
+		
+		$('#my_money').html(money.money+'泡币');
+		
+		var item = new Array('210','220','230','240','250');
+		for (var i=0; i<item.length; i++) {
+			if (data['t'+item[i]]){
+				if (data['t'+item[i]].finished == 1)
+					$('#t'+item[i]).html('<span class="task-active">已完成</span>');
+				else { 
+					if (data['t'+item[i]].task_count >= 1)
+						$('#t'+item[i]).html('<span>已完成：'+data['t'+item[i]].task_count+'</span>');
+					else
+						$('#t'+item[i]).html('<span>开始任务</span>');
+					}
+			} else {
+				$('#t'+item[i]).html('<span>开始任务</span>');
+			}
+			
+		}
+	}
+}
+       
+apiready = function(){
+    var header = $api.byId('header');
+    $api.fixIos7Bar(header);
+           
+    init();
+}
+   
+</script>
+</body>
+</html>

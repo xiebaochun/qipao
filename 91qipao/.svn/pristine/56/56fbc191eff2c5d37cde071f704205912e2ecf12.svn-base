@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>消息</title>
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <style>
+        body{
+            background-color: #fff;
+        }
+        #header{
+            /*border: 1px solid #eee;*/
+        }
+        #main{
+            background-color: #fff;
+        }
+        .info-list{
+
+        }
+        .user-avator{
+            display: inline-block;
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius:50%;
+            border: 1px solid #666;
+            background-color: #eee;
+        }
+        .info-item{
+            margin:0  0.5rem;
+            padding:0.5rem 0;
+            border-bottom:1px solid #ccc;
+        }
+        .info-item-middle{
+            margin-left: 0.3rem;
+        }
+        .info-item-middle > .user-name{
+            font-size: 0.7rem;    
+            vertical-align: middle;        
+        }
+        .info-item-middle > .info-summary{
+            color:#666;
+        }
+        .create-time{
+            display: inline-block;
+            position: absolute;
+            right: 0.5rem;
+            color:#999;
+        }
+        
+        .mui-table-view-cell{
+            border-bottom: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <a class="back-icon" tapmode="" onclick="api.closeWin()"></a>
+            <h1 class="">消息</h1>
+        </div>
+       
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src='../script/common.js'></script>
+<script>
+    apiready = function(){   
+        var header = $api.byId('header');
+        $api.fixIos7Bar(header); 
+        
+          var width,header,headerPos,height,nav,navPos;
+              width = api.winWidth;
+              header = $api.byId('header');
+              headerPos = $api.offset(header);
+              height = api.winHeight - headerPos.h -51;
+          api.openFrame({
+                      name: 'gouda-noticecon',
+                      url: 'gouda-noticecon.html',
+                      reload: false,
+                      bounces : false,
+                      //opaque: true,
+                      vScrollBarEnabled : false,
+                      pageParam : {
+                          headerHeight : headerPos.h,
+                          // tid : tid
+                      },
+                      rect : {
+                          x : 0,
+                          y : headerPos.h,
+                          w : width,
+                          h : height
+                      }
+                  });  
+    }
+</script>
+</html>

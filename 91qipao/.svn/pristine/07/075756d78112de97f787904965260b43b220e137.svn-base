@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0, width=device-width"/>
+    <meta name="format-detection"content="telephone=no">
+    <title>话题圈</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <style>
+        #header{background-color:none;position:fixed;top:0;left:0;z-index:40;background-color:#fff}
+        .more-bt{position:absolute;display:inline-block;right:0;bottom:0;width:30px;height:50px;margin-top:16px;margin-right:16px;}
+        .more-bt>i{display:inline-block;line-height:50px;font-size: 1rem;color:#333;}
+        .more-bt>i:before{display:inline-block;line-height: 50px;}
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <a class="back-icon iconfont icon-arrow-left" tapmode="" onclick="api.closeWin();"></a>
+            <h1 class="fname"></h1>
+            <a class="more-bt" href="javascript:;" style="display:_none;"><i class="iconfont icon-more"></i></a>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script>
+    apiready = function(){
+        var header = $api.byId('header');
+        $api.fixIos7Bar(header);
+        var fid = api.pageParam.fid;
+        var fname = api.pageParam.fname;
+        var width = api.winWidth;
+
+        var header = $api.byId('header');
+        var headerPos = $api.offset(header);
+        var height = api.winHeight - headerPos.h;
+        $('.fname').text(fname);
+        api.openFrame({
+            name: 'topic-circlecon',
+            url: 'topic-circlecon.html',
+            pageParam: {
+                fid:fid,
+                //imgUrl:imgUrl
+            },
+            rect: {
+                x: 0,
+                y: headerPos.h,
+                w: width,
+                h: height
+            },
+            reload: false,
+            bounces: false,
+            vScrollBarEnabled: true,
+            softInputMode: 'resize'
+        });
+        
+        closeWinAboutLogin();
+    }
+
+    //举报用户
+    $('.more-bt').click(function(){
+        var jsfun = 'openMore()';
+        api.execScript({
+            name: 'topic-circle',
+            frameName: 'topic-circlecon',
+            script: jsfun
+        });
+    });
+    $('.select-cancel-bt').click(function(){
+        setTimeout(function(){
+            $('.report-user').hide();
+        },500);
+        $(this).parent().parent().fadeOut();
+        $('.choose-item-list').slideToggle();
+    });
+    
+    function setForumName(name) {
+    	$('.fname').text(name);
+    } 
+    function showMore(){
+        $('.more-bt').show();
+    }
+</script>
+</html>
